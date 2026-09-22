@@ -1,3 +1,8 @@
-Calorie Count v15 Offline App
+# Calorie Count v16
 
-Update: repairs incomplete Support Lists by merging all 111 Excel defaults, adds Restore Default Support List, preserves custom foods and existing meal/season data, and uses a v15 service-worker cache for faster installed-app updates.
+Same v15 app and full built-in Support List, with a phone install prompt.
+
+- Android: uses the native PWA install prompt when available; otherwise shows the Chrome install path.
+- iPhone/iPad: shows Safari Add to Home Screen instructions because iOS requires manual confirmation.
+- The prompt does not appear when the app is already running in standalone/installed mode.
+- Works offline after installation.

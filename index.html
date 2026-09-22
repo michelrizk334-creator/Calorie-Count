@@ -77,7 +77,32 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Calorie Count">
 <link rel="apple-touch-icon" href="icon-180.png">
-</head><body><div id="desktopScaleRoot">
+
+<style id="installPromptStyles">
+#installPromptOverlay{position:fixed;inset:0;background:rgba(15,23,42,.58);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;font-family:inherit}
+#installPromptOverlay[hidden]{display:none}
+.install-prompt-card{width:min(430px,calc(100vw - 32px));background:#fff;border-radius:22px;box-shadow:0 24px 70px rgba(0,0,0,.28);padding:22px;color:#0f172a}
+.install-prompt-card h2{margin:0 0 8px;font-size:24px}.install-prompt-card p{margin:0 0 18px;line-height:1.45;color:#475569}.install-prompt-actions{display:flex;gap:10px;justify-content:flex-end}.install-prompt-actions button{min-height:44px;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer}.install-primary{background:#2563eb;color:#fff;border:1px solid #2563eb}.install-secondary{background:#fff;color:#334155;border:1px solid #cbd5e1}
+.install-ios-steps{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px;margin:0 0 18px}.install-ios-steps div{margin:8px 0}.install-note{font-size:13px!important;color:#64748b!important;margin-top:10px!important}
+</style>
+</head><body>
+<div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
+  <div class="install-prompt-card">
+    <h2 id="installPromptTitle">Download the app version?</h2>
+    <p id="installPromptText">Install Calorie Count for a standalone, offline experience.</p>
+    <div id="iosInstallSteps" class="install-ios-steps" hidden>
+      <div><strong>1.</strong> Open this page in Safari.</div>
+      <div><strong>2.</strong> Tap the <strong>Share</strong> button (□↑).</div>
+      <div><strong>3.</strong> Tap <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</div>
+    </div>
+    <div class="install-prompt-actions">
+      <button type="button" id="installNotNow" class="install-secondary">Not now</button>
+      <button type="button" id="installAppNow" class="install-primary">Install</button>
+    </div>
+    <p class="install-note" id="installPromptNote"></p>
+  </div>
+</div>
+<div id="desktopScaleRoot">
 <header><div><h1>Calorie Count</h1><p>Food, macros, Concept2 & daily deficit</p></div><div class="header-actions"><button id="settingsBtn" class="ghost">Settings</button></div></header>
 <nav class="app-tabs"><button id="trackerTab" class="tab active">Meals</button><button id="seasonsTab" class="tab">Seasons</button><button id="supportTab" class="tab">Support List</button></nav>
 <main><div id="trackerView"><section class="datebar"><button id="prevDay">‹</button><input id="date" type="date"><button id="nextDay">›</button><button id="todayBtn" class="ghost">Today</button></section>
@@ -195,4 +220,50 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 </script>
+
+<script id="installPromptLogic">
+(()=>{
+  let deferredInstallPrompt=null;
+  const overlay=document.getElementById('installPromptOverlay');
+  const installBtn=document.getElementById('installAppNow');
+  const notNow=document.getElementById('installNotNow');
+  const iosSteps=document.getElementById('iosInstallSteps');
+  const note=document.getElementById('installPromptNote');
+  const ua=navigator.userAgent||'';
+  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const isAndroid=/Android/i.test(ua);
+  const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+  const isMobile=isIOS||isAndroid;
+  const dismissed=sessionStorage.getItem('cc_install_prompt_dismissed')==='1';
+
+  function show(){if(isMobile&&!standalone&&!dismissed) overlay.hidden=false;}
+  function hide(){overlay.hidden=true;}
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;});
+  window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;hide();});
+  notNow.addEventListener('click',()=>{sessionStorage.setItem('cc_install_prompt_dismissed','1');hide();});
+  installBtn.addEventListener('click',async()=>{
+    if(isIOS){
+      iosSteps.hidden=false;
+      installBtn.textContent='Got it';
+      installBtn.onclick=hide;
+      note.textContent='Apple requires you to confirm Add to Home Screen manually.';
+      return;
+    }
+    if(deferredInstallPrompt){
+      deferredInstallPrompt.prompt();
+      try{await deferredInstallPrompt.userChoice;}catch(e){}
+      deferredInstallPrompt=null;hide();return;
+    }
+    if(isAndroid){
+      note.textContent='In Chrome, tap ⋮ → Add to phone / Install app, then confirm Install.';
+      installBtn.textContent='Got it';
+      installBtn.onclick=hide;
+      return;
+    }
+    hide();
+  });
+  setTimeout(show,650);
+})();
+</script>
+
 </body></html>
