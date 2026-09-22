@@ -1,8 +1,3 @@
-# Calorie Count v16
+# Calorie Count v17
 
-Same v15 app and full built-in Support List, with a phone install prompt.
-
-- Android: uses the native PWA install prompt when available; otherwise shows the Chrome install path.
-- iPhone/iPad: shows Safari Add to Home Screen instructions because iOS requires manual confirmation.
-- The prompt does not appear when the app is already running in standalone/installed mode.
-- Works offline after installation.
+Same v16 app and data, with corrected Android PWA install flow. On supported Android Chrome, the in-app Install button waits for the native `beforeinstallprompt` event and then opens Android’s native installation confirmation. iPhone keeps the required Safari Add to Home Screen instructions.

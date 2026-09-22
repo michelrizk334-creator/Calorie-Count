@@ -229,6 +229,7 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   const notNow=document.getElementById('installNotNow');
   const iosSteps=document.getElementById('iosInstallSteps');
   const note=document.getElementById('installPromptNote');
+  const text=document.getElementById('installPromptText');
   const ua=navigator.userAgent||'';
   const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   const isAndroid=/Android/i.test(ua);
@@ -236,33 +237,79 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   const isMobile=isIOS||isAndroid;
   const dismissed=sessionStorage.getItem('cc_install_prompt_dismissed')==='1';
 
-  function show(){if(isMobile&&!standalone&&!dismissed) overlay.hidden=false;}
   function hide(){overlay.hidden=true;}
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;});
-  window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;hide();});
-  notNow.addEventListener('click',()=>{sessionStorage.setItem('cc_install_prompt_dismissed','1');hide();});
+  function updateAndroidButton(){
+    if(!isAndroid) return;
+    if(deferredInstallPrompt){
+      installBtn.disabled=false;
+      installBtn.textContent='Install';
+      note.textContent='Ready to install. Tap Install to open Android’s native installation window.';
+    } else {
+      installBtn.disabled=true;
+      installBtn.textContent='Preparing…';
+      note.textContent='Preparing the Android installer…';
+    }
+  }
+  function show(){
+    if(!isMobile||standalone||dismissed) return;
+    overlay.hidden=false;
+    if(isAndroid) updateAndroidButton();
+  }
+
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredInstallPrompt=e;
+    updateAndroidButton();
+  });
+  window.addEventListener('appinstalled',()=>{
+    deferredInstallPrompt=null;
+    hide();
+  });
+  notNow.addEventListener('click',()=>{
+    sessionStorage.setItem('cc_install_prompt_dismissed','1');
+    hide();
+  });
   installBtn.addEventListener('click',async()=>{
     if(isIOS){
       iosSteps.hidden=false;
       installBtn.textContent='Got it';
-      installBtn.onclick=hide;
+      installBtn.disabled=false;
       note.textContent='Apple requires you to confirm Add to Home Screen manually.';
       return;
     }
-    if(deferredInstallPrompt){
-      deferredInstallPrompt.prompt();
-      try{await deferredInstallPrompt.userChoice;}catch(e){}
-      deferredInstallPrompt=null;hide();return;
-    }
-    if(isAndroid){
-      note.textContent='In Chrome, tap ⋮ → Add to phone / Install app, then confirm Install.';
-      installBtn.textContent='Got it';
-      installBtn.onclick=hide;
+    if(isAndroid && deferredInstallPrompt){
+      const promptEvent=deferredInstallPrompt;
+      deferredInstallPrompt=null;
+      try{
+        await promptEvent.prompt();
+        const choice=await promptEvent.userChoice;
+        if(choice && choice.outcome==='accepted') hide();
+        else {
+          note.textContent='Installation cancelled. Reload this page if you want to try again.';
+          installBtn.disabled=true;
+          installBtn.textContent='Install cancelled';
+        }
+      }catch(err){
+        note.textContent='Android could not open the installer. Reload the page in Chrome and try again.';
+        installBtn.disabled=true;
+        installBtn.textContent='Reload to retry';
+      }
       return;
     }
-    hide();
   });
-  setTimeout(show,650);
+
+  // Give Chrome time to validate the manifest/service worker and fire beforeinstallprompt.
+  setTimeout(show,900);
+  // If Chrome still has not exposed the native prompt, explain rather than sending the user
+  // straight to generic manual steps. A reload often makes the event available after an update.
+  setTimeout(()=>{
+    if(isAndroid && !standalone && !overlay.hidden && !deferredInstallPrompt){
+      installBtn.disabled=false;
+      installBtn.textContent='Reload to enable install';
+      note.textContent='Chrome has not enabled the native installer yet. Tap below to reload once, then wait for Install to become ready.';
+      installBtn.onclick=()=>location.reload();
+    }
+  },5000);
 })();
 </script>
 
