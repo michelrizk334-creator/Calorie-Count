@@ -70,7 +70,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   dialog{width:min(620px,calc(100% - 24px))!important;max-width:620px!important;max-height:90vh!important;margin:auto!important;inset:0!important;border-radius:18px!important;padding:18px!important}dialog form{gap:14px!important}.food-results{max-height:45vh!important}
 }
 </style>
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="/Calorie-Count/manifest.webmanifest">
 <meta name="theme-color" content="#10182b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -217,7 +217,7 @@ render();
 </script>
 <script>
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('/Calorie-Count/sw.js', {scope:'/Calorie-Count/'}).catch(()=>{}));
 }
 </script>
 
@@ -298,16 +298,14 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     }
   });
 
-  // Give Chrome time to validate the manifest/service worker and fire beforeinstallprompt.
+  // Chrome exposes beforeinstallprompt only when its installability checks pass.
+  // Show our prompt after the page has settled; enable Install only when Chrome supplies the event.
   setTimeout(show,900);
-  // If Chrome still has not exposed the native prompt, explain rather than sending the user
-  // straight to generic manual steps. A reload often makes the event available after an update.
   setTimeout(()=>{
     if(isAndroid && !standalone && !overlay.hidden && !deferredInstallPrompt){
-      installBtn.disabled=false;
-      installBtn.textContent='Reload to enable install';
-      note.textContent='Chrome has not enabled the native installer yet. Tap below to reload once, then wait for Install to become ready.';
-      installBtn.onclick=()=>location.reload();
+      installBtn.disabled=true;
+      installBtn.textContent='Use Chrome menu';
+      note.textContent='Chrome did not expose the native install button on this visit. In Chrome, tap ⋮ and choose Install app or Add to Home screen.';
     }
   },5000);
 })();

@@ -1,3 +1,3 @@
-# Calorie Count v17
+# Calorie Count v18
 
-Same v16 app and data, with corrected Android PWA install flow. On supported Android Chrome, the in-app Install button waits for the native `beforeinstallprompt` event and then opens Android’s native installation confirmation. iPhone keeps the required Safari Add to Home Screen instructions.
+Android native-install hardening for the GitHub Pages deployment at `/Calorie-Count/`. The manifest now uses an explicit app id, absolute start URL/scope/icon URLs, and the service worker is registered with an explicit project scope. Existing tracker functionality and local data format are unchanged.
