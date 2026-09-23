@@ -282,23 +282,43 @@ $('#settingsBtn').onclick=()=>$('#settingsDialog').showModal();$('#exportBtn').o
 render();
 </script></div><script>
 (function(){
-function adaptiveScale(w){
-  if(w<=360) return Math.min(w/760,0.50);
-  if(w<=430) return Math.min(w/800,0.55);
-  if(w<=520) return Math.min(w/830,0.63);
-  if(w<=700) return Math.min(w/860,0.80);
-  if(w<900) return Math.min(w/900,0.98);
-  return 1;
+function adaptiveScale(usable){
+  /* Preserve the 900px design canvas, but choose a readable target scale
+     without ever exceeding the actual usable viewport width. */
+  var viewportFit=usable/900;
+  var readable;
+  if(usable<=360) readable=Math.min(usable/760,0.50);
+  else if(usable<=430) readable=Math.min(usable/800,0.55);
+  else if(usable<=520) readable=Math.min(usable/830,0.63);
+  else if(usable<=700) readable=Math.min(usable/860,0.80);
+  else readable=Math.min(usable/900,0.98);
+  return Math.min(viewportFit,readable);
 }
 function fit(){
   var r=document.getElementById("desktopScaleRoot");if(!r)return;
   var support=document.getElementById("supportView");
-  var w=Math.max(document.documentElement.clientWidth||0,window.innerWidth||0);
-  var nativeSupport=w<900&&support&&!support.hidden;
+  var vw=document.documentElement.clientWidth||window.innerWidth||900;
+  var nativeSupport=vw<900&&support&&!support.hidden;
   r.classList.toggle("support-phone-native",nativeSupport);
-  if(nativeSupport){r.style.transform="none";document.body.style.height="";}
-  else if(w<900){var s=adaptiveScale(w);r.style.transform="scale("+s+")";document.body.style.height=(r.scrollHeight*s)+"px";}
-  else{r.style.transform="";document.body.style.height="";}
+
+  if(nativeSupport){
+    r.style.transform="none";
+    r.style.marginLeft="";
+    document.body.style.height="";
+  }else if(vw<900){
+    /* 8px safe gutter on each side prevents the right edge from being clipped
+       by mobile browser/PWA viewport rounding and safe-area behavior. */
+    var gutter=8;
+    var usable=Math.max(280,vw-(gutter*2));
+    var s=adaptiveScale(usable);
+    r.style.transform="scale("+s+")";
+    r.style.marginLeft=gutter+"px";
+    document.body.style.height=(r.scrollHeight*s)+"px";
+  }else{
+    r.style.transform="";
+    r.style.marginLeft="";
+    document.body.style.height="";
+  }
 }
 window.addEventListener("resize",fit);
 window.addEventListener("orientationchange",function(){setTimeout(fit,120)});

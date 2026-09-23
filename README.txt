@@ -1,11 +1,12 @@
-Calorie Count v21 — Adaptive Screen Scaling
+Calorie Count v21.1 — Meals Right-Edge Fix
 
-- Same interface and visual structure.
-- Adaptive scaling for small phones, normal phones, large phones, tablets and desktop/laptop.
-- Meals are more readable on phones: larger food text and stronger Meal headings.
-- Support List keeps the v20 full-width mobile layout.
-- Landscape and window-size changes recalculate automatically.
-- No changes to saved data, calculations, meals, seasons, workouts or Support List data.
+This is v21 with one targeted layout fix:
+- Fixes the entire right side of Meals being cut off on some phones.
+- + Add food now stays fully inside the screen.
+- Bottom/right edges of the Meals page stay inside the usable viewport.
+- Uses the real viewport width plus an 8 px safe gutter on both sides.
+- Keeps the v21 adaptive sizing and v20 full-width Support List.
+- No changes to calculations, saved data, meals, seasons, workouts or food database.
 
-Deploy exactly like previous versions: upload the contents to the existing GitHub repository,
-replace the old files, commit, wait for Pages to deploy, then reopen the installed app online.
+Deploy by replacing the existing repository files, commit, wait for GitHub Pages,
+then open the installed app online, fully close it, and reopen it.
