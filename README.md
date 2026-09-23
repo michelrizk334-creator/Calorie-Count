@@ -1,14 +1,11 @@
-# Calorie Count v21.1
+# Calorie Count v22 AI scanner backend
 
-Calorie Count v21.1 — Meals Right-Edge Fix
+Deploy this folder as a Cloudflare Worker (or adapt `worker.js` to another serverless host).
 
-This is v21 with one targeted layout fix:
-- Fixes the entire right side of Meals being cut off on some phones.
-- + Add food now stays fully inside the screen.
-- Bottom/right edges of the Meals page stay inside the usable viewport.
-- Uses the real viewport width plus an 8 px safe gutter on both sides.
-- Keeps the v21 adaptive sizing and v20 full-width Support List.
-- No changes to calculations, saved data, meals, seasons, workouts or food database.
+1. Create a Worker.
+2. Add `OPENAI_API_KEY` as a **secret**. Never put it in `index.html` or GitHub Pages.
+3. Optional: set `OPENAI_MODEL` if you want to use another vision-capable model.
+4. Deploy the Worker and copy its `https://...workers.dev` URL.
+5. In Calorie Count, open **Settings** and paste that URL into **AI label scanner endpoint**.
 
-Deploy by replacing the existing repository files, commit, wait for GitHub Pages,
-then open the installed app online, fully close it, and reopen it.
+The frontend sends only the label photo you explicitly choose to scan. Meals and tracker data remain in browser local storage.

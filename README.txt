@@ -1,12 +1,21 @@
-Calorie Count v21.2 — True Meals Responsive Fix
+Calorie Count v22 — AI Nutrition Label Scanner
 
-The previous v21.1 fix still inherited a legacy rule that forced Meals into a 900px canvas.
-v21.2 removes that forced canvas for Meals and Seasons on phones and uses the real viewport width.
+Based on the stable v21.2 responsive version.
 
-- Entire right edge of Meals now fits the screen.
-- + Add food stays visible.
-- Bottom/right edge no longer depends on transform scaling.
-- Typography and spacing scale fluidly with screen width.
-- Support List keeps the existing full-width mobile behavior.
-- Desktop remains unchanged.
-- No data/calculation changes.
+NEW:
+- Support List > + Add food > Scan nutrition label.
+- Take a photo or choose an image from the phone.
+- AI extracts the label's reference amount/unit, calories, carbs, protein and fat.
+- Handles per 100 g, per 100 ml, serving amounts, and per-unit labels.
+- Prefills the existing Add Food form; NOTHING is auto-saved.
+- User must review and press Save food.
+- Scanner warns when a value/basis needs verification.
+- Manual Add Food still works normally.
+- Existing tracker data remains local.
+
+SECURITY:
+GitHub Pages must NOT contain an OpenAI API key. The included /worker folder is a secure
+serverless backend starter. Deploy it, add OPENAI_API_KEY as a secret, then paste the
+Worker URL into Settings > AI label scanner endpoint.
+
+The scanner requires internet access. The rest of the PWA remains offline-capable.
