@@ -293,6 +293,72 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 <dialog id="qtyDialog"><form method="dialog"><div class="section-head"><h2 id="qtyTitle">Food</h2><button type="button" id="closeQtyDialog" class="ghost" aria-label="Close">✕</button></div><label>State<select id="state"><option>Raw</option><option>Cooked</option></select></label><label id="qtyLabel">Quantity<input id="qty" type="number" step="0.1" min="0"></label><p id="conversionNote" class="note"></p><button id="confirmFood" value="default">Add to meal</button></form></dialog>
 
 <dialog id="foodEditorDialog"><form method="dialog" id="foodEditorForm"><div class="section-head"><h2 id="foodEditorTitle">Add food</h2><button type="button" id="closeFoodEditor" class="ghost" aria-label="Close">✕</button></div>
+<button type="button" id="scanBarcodeBtn" class="scan-label-btn">
+  ▦ Scan barcode
+</button>
+
+<div id="barcodeScanBox" class="scan-box" hidden>
+
+  <video
+    id="barcodeVideo"
+    playsinline
+    muted
+    style="
+      width:100%;
+      max-height:280px;
+      border-radius:12px;
+      background:#050914;
+      object-fit:cover;
+    "
+  ></video>
+
+  <div class="scan-actions">
+
+    <button
+      type="button"
+      id="startBarcodeCamera"
+    >
+      📷 Start camera
+    </button>
+
+    <button
+      type="button"
+      id="stopBarcodeCamera"
+      class="ghost"
+    >
+      Stop
+    </button>
+
+  </div>
+
+  <label>
+    Or enter barcode manually
+
+    <input
+      id="barcodeManual"
+      inputmode="numeric"
+      autocomplete="off"
+      placeholder="e.g. 3017624010701"
+    >
+  </label>
+
+  <button
+    type="button"
+    id="lookupBarcodeBtn"
+    class="ghost"
+  >
+    Look up barcode
+  </button>
+
+  <p
+    id="barcodeScanStatus"
+    class="scan-status"
+  >
+    Point the camera at the barcode on the package.
+  </p>
+
+</div>
+ 
 <button type="button" id="scanNutritionBtn" class="scan-label-btn">📷 Scan nutrition label</button>
 <div id="labelScanBox" class="scan-box" hidden>
   <input id="labelScanFile" type="file" accept="image/*" capture="environment">
@@ -396,9 +462,581 @@ function setTab(tab){const tracker=tab==='tracker', seasons=tab==='seasons', sup
 $('#trackerTab').onclick=()=>setTab('tracker');$('#seasonsTab').onclick=()=>setTab('seasons');$('#supportTab').onclick=()=>setTab('support');$('#supportSearch').oninput=renderSupportFoods;
 $('#foodEditorForm').onsubmit=e=>{e.preventDefault();const mode=$('#customConversion').value,ratio=+$('#customRatio').value||null;const f={name:$('#customName').value.trim(),type:$('#customType').value,serving:+$('#customServing').value||1,unit:$('#customUnit').value,carbs:+$('#customCarbs').value||0,protein:+$('#customProtein').value||0,fat:+$('#customFat').value||0,kcal:+$('#customKcal').value||0,ratio:mode==='none'?null:ratio,conversion:mode};if(mode!=='none'&&(!ratio||ratio<1)){alert('Enter a conversion ratio of 1 or greater.');return}if(!f.name)return;if(editingFoodIndex===null)db.supportFoods.push(f);else db.supportFoods[editingFoodIndex]=f;localStorage.setItem(KEY,JSON.stringify(db));$('#foodEditorDialog').close();renderSupportFoods();render()};
 // Explicit close actions: closing an accidental Add/Edit never validates or saves the form.
-$('#closeFoodDialog').onclick=()=>$('#foodDialog').close();$('#closeQtyDialog').onclick=()=>{$('#qtyDialog').close();selectedFood=null;editingMealIndex=null;editingMealItemIndex=null;$('#confirmFood').textContent='Add to meal'};$('#closeFoodEditor').onclick=()=>{$('#foodEditorDialog').close();editingFoodIndex=null};
+$('#closeFoodDialog').onclick=()=>$('#foodDialog').close();$('#closeQtyDialog').onclick=()=>{$('#qtyDialog').close();selectedFood=null;editingMealIndex=null;editingMealItemIndex=null;$('#confirmFood').textContent='Add to meal'};$('#closeFoodEditor').onclick=()=>{   stopBarcodeCamera();   $('#foodEditorDialog').close();   editingFoodIndex=null; };
 $('#settingsBtn').onclick=()=>$('#settingsDialog').showModal();$('#exportBtn').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='calorie-tracker-backup.json';a.click();URL.revokeObjectURL(a.href)};$('#importFile').onchange=e=>{let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.supportFoods ||= structuredClone(DEFAULT_FOODS);if(!db.supportListIntentionallyCleared){const names=new Set(db.supportFoods.map(f=>String(f.name||'').trim().toLowerCase()));for(const f of DEFAULT_FOODS){const key=String(f.name||'').trim().toLowerCase();if(!names.has(key)){db.supportFoods.push(structuredClone(f));names.add(key)}}}save();$('#settingsDialog').close()}catch{alert('Invalid backup file')}};r.readAsText(e.target.files[0])};$('#clearBtn').onclick=()=>{if(confirm('Delete all locally stored tracker data and reset the Support List to the Excel defaults?')){localStorage.removeItem(KEY);db={days:{},settings:{bmr:1765},savedDays:{},supportFoods:structuredClone(DEFAULT_FOODS),supportListIntentionallyCleared:false};save();$('#settingsDialog').close()}};
+// =========================================================
+// BARCODE SCANNER
+// =========================================================
 
+let barcodeStream = null;
+let barcodeDetector = null;
+let barcodeFrame = null;
+let barcodeBusy = false;
+
+
+/* ---------------------------------------------------------
+   STATUS MESSAGE
+--------------------------------------------------------- */
+
+function setBarcodeStatus(message, type = "") {
+
+  const status = $("#barcodeScanStatus");
+
+  if (!status) return;
+
+  status.textContent = message;
+
+  status.className =
+    "scan-status" +
+    (type ? " " + type : "");
+}
+
+
+/* ---------------------------------------------------------
+   STOP CAMERA
+--------------------------------------------------------- */
+
+function stopBarcodeCamera() {
+
+  if (barcodeFrame) {
+    cancelAnimationFrame(barcodeFrame);
+    barcodeFrame = null;
+  }
+
+  if (barcodeStream) {
+
+    barcodeStream
+      .getTracks()
+      .forEach(track => track.stop());
+
+    barcodeStream = null;
+  }
+
+  const video =
+    $("#barcodeVideo");
+
+  if (video) {
+
+    video.pause();
+
+    video.srcObject = null;
+  }
+
+  barcodeBusy = false;
+}
+
+
+/* ---------------------------------------------------------
+   SEND BARCODE TO CLOUDFLARE
+--------------------------------------------------------- */
+
+async function lookupBarcode(barcode) {
+
+  barcode =
+    String(barcode || "")
+      .replace(/\D/g, "");
+
+  if (!barcode) {
+
+    setBarcodeStatus(
+      "No barcode detected.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  $("#barcodeManual").value =
+    barcode;
+
+
+  setBarcodeStatus(
+    "Looking up barcode " +
+    barcode +
+    "…"
+  );
+
+
+  try {
+
+    /*
+     * We use the SAME Cloudflare Worker
+     * as the nutrition-label AI scanner.
+     */
+
+    const endpoint =
+      "https://calorie-count-ai.michelrizk334.workers.dev";
+
+
+    const response =
+      await fetch(
+        endpoint +
+        "/barcode/" +
+        encodeURIComponent(barcode)
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "Barcode lookup failed."
+      );
+    }
+
+
+    const nutrition =
+      data.nutrition;
+
+
+    if (!nutrition) {
+
+      throw new Error(
+        "No nutrition information received."
+      );
+    }
+
+
+    /*
+     * Fill the EXISTING Add Food form.
+     *
+     * Nothing is automatically saved.
+     * You still review the values and
+     * press Save Food yourself.
+     */
+
+
+    if (nutrition.product_name) {
+
+      $("#customName").value =
+        nutrition.product_name;
+    }
+
+
+    $("#customServing").value =
+      Number(
+        nutrition.reference_amount
+      ) || 100;
+
+
+    /*
+     * Convert Cloudflare units to the
+     * exact values already used by
+     * your existing app.
+     */
+
+    if (
+      nutrition.unit ===
+      "milliliters"
+    ) {
+
+      $("#customUnit").value =
+        "ml";
+
+    } else if (
+      nutrition.unit ===
+      "units"
+    ) {
+
+      $("#customUnit").value =
+        "Unit";
+
+    } else {
+
+      $("#customUnit").value =
+        "grams";
+    }
+
+
+    $("#customCarbs").value =
+      Number(
+        nutrition.carbs_g
+      ) || 0;
+
+
+    $("#customProtein").value =
+      Number(
+        nutrition.protein_g
+      ) || 0;
+
+
+    $("#customFat").value =
+      Number(
+        nutrition.fat_g
+      ) || 0;
+
+
+    $("#customKcal").value =
+      Number(
+        nutrition.calories_kcal
+      ) || 0;
+
+
+    /*
+     * Automatically determine
+     * carbohydrate / protein / fat base
+     * using your EXISTING function.
+     */
+
+    $("#customType").value =
+      dominantBase(
+
+        Number(
+          nutrition.carbs_g
+        ) || 0,
+
+        Number(
+          nutrition.protein_g
+        ) || 0,
+
+        Number(
+          nutrition.fat_g
+        ) || 0
+
+      );
+
+
+    /*
+     * Barcode products don't automatically
+     * receive a raw/cooked conversion.
+     */
+
+    $("#customRatio").value =
+      "";
+
+    $("#customConversion").value =
+      "none";
+
+
+    stopBarcodeCamera();
+
+
+    let message =
+      "Product found";
+
+
+    if (
+      nutrition.basis_label
+    ) {
+
+      message +=
+        " — " +
+        nutrition.basis_label;
+    }
+
+
+    message +=
+      ". Review the values, then press Save Food.";
+
+
+    if (
+      nutrition.warning
+    ) {
+
+      message +=
+        " " +
+        nutrition.warning;
+    }
+
+
+    setBarcodeStatus(
+      message,
+      "ok"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Barcode lookup error:",
+      error
+    );
+
+
+    setBarcodeStatus(
+
+      error.message ||
+      "Could not look up this barcode.",
+
+      "error"
+
+    );
+  }
+}
+
+
+/* ---------------------------------------------------------
+   CONTINUOUS CAMERA SCANNING
+--------------------------------------------------------- */
+
+async function barcodeScanLoop() {
+
+  if (
+    !barcodeStream ||
+    !barcodeDetector
+  ) {
+
+    return;
+  }
+
+
+  try {
+
+    const codes =
+      await barcodeDetector.detect(
+        $("#barcodeVideo")
+      );
+
+
+    if (
+      codes.length > 0 &&
+      !barcodeBusy
+    ) {
+
+      barcodeBusy = true;
+
+
+      const barcode =
+        codes[0].rawValue;
+
+
+      await lookupBarcode(
+        barcode
+      );
+
+
+      return;
+    }
+
+  } catch (error) {
+
+    /*
+     * Individual detection failures are
+     * ignored because another camera
+     * frame will immediately be checked.
+     */
+
+  }
+
+
+  if (barcodeStream) {
+
+    barcodeFrame =
+      requestAnimationFrame(
+        barcodeScanLoop
+      );
+  }
+}
+
+
+/* ---------------------------------------------------------
+   OPEN / CLOSE BARCODE AREA
+--------------------------------------------------------- */
+
+$("#scanBarcodeBtn").onclick =
+  () => {
+
+    const box =
+      $("#barcodeScanBox");
+
+
+    box.hidden =
+      !box.hidden;
+
+
+    if (box.hidden) {
+
+      stopBarcodeCamera();
+    }
+  };
+
+
+/* ---------------------------------------------------------
+   START CAMERA
+--------------------------------------------------------- */
+
+$("#startBarcodeCamera").onclick =
+  async () => {
+
+    stopBarcodeCamera();
+
+
+    /*
+     * BarcodeDetector is available on
+     * supported browsers such as Chrome.
+     */
+
+    if (
+      !("BarcodeDetector" in window)
+    ) {
+
+      setBarcodeStatus(
+        "This browser does not support live barcode detection. You can enter the barcode number below.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    try {
+
+      const supportedFormats =
+        await BarcodeDetector
+          .getSupportedFormats();
+
+
+      const wantedFormats = [
+
+        "ean_13",
+        "ean_8",
+        "upc_a",
+        "upc_e",
+        "code_128"
+
+      ].filter(
+        format =>
+          supportedFormats.includes(
+            format
+          )
+      );
+
+
+      if (
+        wantedFormats.length
+      ) {
+
+        barcodeDetector =
+          new BarcodeDetector({
+
+            formats:
+              wantedFormats
+
+          });
+
+      } else {
+
+        barcodeDetector =
+          new BarcodeDetector();
+      }
+
+
+      barcodeStream =
+        await navigator
+          .mediaDevices
+          .getUserMedia({
+
+            video: {
+
+              facingMode: {
+                ideal:
+                  "environment"
+              }
+
+            },
+
+            audio: false
+
+          });
+
+
+      const video =
+        $("#barcodeVideo");
+
+
+      video.srcObject =
+        barcodeStream;
+
+
+      await video.play();
+
+
+      setBarcodeStatus(
+        "Point the camera at the barcode…"
+      );
+
+
+      barcodeFrame =
+        requestAnimationFrame(
+          barcodeScanLoop
+        );
+
+
+    } catch (error) {
+
+      console.error(
+        "Barcode camera error:",
+        error
+      );
+
+
+      stopBarcodeCamera();
+
+
+      setBarcodeStatus(
+        "Could not open the camera. Check camera permission or enter the barcode manually.",
+        "error"
+      );
+    }
+  };
+
+
+/* ---------------------------------------------------------
+   STOP BUTTON
+--------------------------------------------------------- */
+
+$("#stopBarcodeCamera").onclick =
+  () => {
+
+    stopBarcodeCamera();
+
+    setBarcodeStatus(
+      "Scanner stopped."
+    );
+  };
+
+
+/* ---------------------------------------------------------
+   MANUAL BARCODE LOOKUP
+--------------------------------------------------------- */
+
+$("#lookupBarcodeBtn").onclick =
+  () => {
+
+    lookupBarcode(
+      $("#barcodeManual").value
+    );
+  };
+
+
+/*
+ * Also allow Enter after typing
+ * the barcode.
+ */
+
+$("#barcodeManual")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key ===
+        "Enter"
+      ) {
+
+        event.preventDefault();
+
+        lookupBarcode(
+          event.target.value
+        );
+      }
+    }
+  );
 // v22 — AI nutrition-label scanner
 const LABEL_SCAN_ENDPOINT_KEY='calorieCountLabelScanEndpoint';
 let labelScanDataUrl='';
