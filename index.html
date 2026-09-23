@@ -1057,90 +1057,184 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 <script id="installPromptLogic">
 (()=>{
   let deferredInstallPrompt=null;
+
   const overlay=document.getElementById('installPromptOverlay');
   const installBtn=document.getElementById('installAppNow');
   const notNow=document.getElementById('installNotNow');
   const iosSteps=document.getElementById('iosInstallSteps');
   const note=document.getElementById('installPromptNote');
   const text=document.getElementById('installPromptText');
-  const ua=navigator.userAgent||'';
-  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  const isAndroid=/Android/i.test(ua);
-  const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-  const isMobile=isIOS||isAndroid;
-  const dismissed=sessionStorage.getItem('cc_install_prompt_dismissed')==='1';
 
-  function hide(){overlay.hidden=true;}
-  function updateAndroidButton(){
-    if(!isAndroid) return;
-    if(deferredInstallPrompt){
-      installBtn.disabled=false;
-      installBtn.textContent='Install';
-      note.textContent='Ready to install. Tap Install to open Android’s native installation window.';
-    } else {
-      installBtn.disabled=true;
-      installBtn.textContent='Preparing…';
-      note.textContent='Preparing the Android installer…';
-    }
+  const ua=navigator.userAgent||'';
+
+  const isIOS=
+    /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+
+  const isAndroid=/Android/i.test(ua);
+  const isSamsung=/SamsungBrowser/i.test(ua);
+  const isEdge=/EdgA|EdgiOS|Edg\//i.test(ua);
+
+  const standalone=
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone===true;
+
+  const dismissed=
+    sessionStorage.getItem('cc_install_prompt_dismissed')==='1';
+
+  function hide(){
+    overlay.hidden=true;
   }
+
   function show(){
-    if(!isMobile||standalone||dismissed) return;
+    if(standalone || dismissed) return;
+
     overlay.hidden=false;
-    if(isAndroid) updateAndroidButton();
+
+    // iPhone / iPad
+    if(isIOS){
+      text.textContent='Add Calorie Count to your Home Screen for an app-like experience.';
+      installBtn.textContent='Show instructions';
+      installBtn.disabled=false;
+      note.textContent='Installation on iPhone and iPad is completed from the browser Share menu.';
+      return;
+    }
+
+    // Samsung Internet
+    if(isSamsung){
+      text.textContent='Install Calorie Count on your Samsung device.';
+      installBtn.textContent=deferredInstallPrompt ? 'Install' : 'Show instructions';
+      installBtn.disabled=false;
+
+      note.textContent=deferredInstallPrompt
+        ? 'Ready to install.'
+        : 'Samsung Internet can add Calorie Count directly to your Home screen.';
+      return;
+    }
+
+    // Chrome / Edge / other Chromium browsers
+    if(deferredInstallPrompt){
+      text.textContent='Install Calorie Count for a standalone, offline experience.';
+      installBtn.textContent='Install';
+      installBtn.disabled=false;
+      note.textContent='Ready to install.';
+      return;
+    }
+
+    // Desktop browsers may provide the install event shortly after load
+    text.textContent='Install Calorie Count for quick access and offline use.';
+    installBtn.textContent='Preparing…';
+    installBtn.disabled=true;
+    note.textContent='Checking whether this browser can install the app.';
   }
 
   window.addEventListener('beforeinstallprompt',e=>{
     e.preventDefault();
     deferredInstallPrompt=e;
-    updateAndroidButton();
+
+    if(!overlay.hidden){
+      installBtn.disabled=false;
+      installBtn.textContent='Install';
+      note.textContent='Ready to install.';
+    }
   });
+
   window.addEventListener('appinstalled',()=>{
     deferredInstallPrompt=null;
     hide();
   });
+
   notNow.addEventListener('click',()=>{
     sessionStorage.setItem('cc_install_prompt_dismissed','1');
     hide();
   });
+
   installBtn.addEventListener('click',async()=>{
+
+    // iPhone / iPad
     if(isIOS){
       iosSteps.hidden=false;
       installBtn.textContent='Got it';
-      installBtn.disabled=false;
-      note.textContent='Apple requires you to confirm Add to Home Screen manually.';
+      note.textContent='Use Share → Add to Home Screen → Add.';
       return;
     }
-    if(isAndroid && deferredInstallPrompt){
+
+    // Native PWA installer:
+    // Chrome, Edge, Samsung Internet when available
+    if(deferredInstallPrompt){
       const promptEvent=deferredInstallPrompt;
       deferredInstallPrompt=null;
+
       try{
         await promptEvent.prompt();
         const choice=await promptEvent.userChoice;
-        if(choice && choice.outcome==='accepted') hide();
-        else {
-          note.textContent='Installation cancelled. Reload this page if you want to try again.';
-          installBtn.disabled=true;
-          installBtn.textContent='Install cancelled';
+
+        if(choice && choice.outcome==='accepted'){
+          hide();
+        }else{
+          installBtn.textContent='Install';
+          installBtn.disabled=false;
+          note.textContent='Installation cancelled. You can try again later.';
         }
       }catch(err){
-        note.textContent='Android could not open the installer. Reload the page in Chrome and try again.';
-        installBtn.disabled=true;
-        installBtn.textContent='Reload to retry';
+        installBtn.disabled=false;
+        installBtn.textContent='Install';
+        note.textContent='The browser could not open the installer.';
       }
+
       return;
     }
+
+    // Samsung Internet fallback
+    if(isSamsung){
+      iosSteps.hidden=false;
+      iosSteps.innerHTML=
+        '<div><strong>1.</strong> Tap the Samsung Internet menu (☰).</div>'+
+        '<div><strong>2.</strong> Tap <strong>Add page to</strong>.</div>'+
+        '<div><strong>3.</strong> Choose <strong>Home screen</strong>.</div>';
+
+      installBtn.textContent='Got it';
+      note.textContent='Samsung Internet requires this step to be confirmed manually.';
+      return;
+    }
+
+    // Edge fallback
+    if(isEdge){
+      note.textContent='Open the Edge menu (…) and choose Apps → Install Calorie Count.';
+      installBtn.textContent='Got it';
+      return;
+    }
+
+    // Generic Chrome / Chromium fallback
+    note.textContent='Open your browser menu and choose Install app or Add to Home screen.';
+    installBtn.textContent='Got it';
   });
 
-  // Chrome exposes beforeinstallprompt only when its installability checks pass.
-  // Show our prompt after the page has settled; enable Install only when Chrome supplies the event.
+  // Show on mobile AND desktop.
   setTimeout(show,900);
+
+  // If no native installer appears, switch from "Preparing…" to instructions.
   setTimeout(()=>{
-    if(isAndroid && !standalone && !overlay.hidden && !deferredInstallPrompt){
-      installBtn.disabled=true;
-      installBtn.textContent='Use Chrome menu';
-      note.textContent='Chrome did not expose the native install button on this visit. In Chrome, tap ⋮ and choose Install app or Add to Home screen.';
+    if(
+      !standalone &&
+      !overlay.hidden &&
+      !deferredInstallPrompt &&
+      !isIOS &&
+      !isSamsung
+    ){
+      installBtn.disabled=false;
+      installBtn.textContent='Installation help';
+
+      if(isEdge){
+        note.textContent='If Install is available, open the Edge menu (…) → Apps → Install Calorie Count.';
+      }else if(isAndroid){
+        note.textContent='Open the browser menu and choose Install app or Add to Home screen.';
+      }else{
+        note.textContent='Use your browser installation icon or menu to install Calorie Count.';
+      }
     }
   },5000);
+
 })();
 </script>
 
