@@ -1,12 +1,12 @@
-Calorie Count v21.1 — Meals Right-Edge Fix
+Calorie Count v21.2 — True Meals Responsive Fix
 
-This is v21 with one targeted layout fix:
-- Fixes the entire right side of Meals being cut off on some phones.
-- + Add food now stays fully inside the screen.
-- Bottom/right edges of the Meals page stay inside the usable viewport.
-- Uses the real viewport width plus an 8 px safe gutter on both sides.
-- Keeps the v21 adaptive sizing and v20 full-width Support List.
-- No changes to calculations, saved data, meals, seasons, workouts or food database.
+The previous v21.1 fix still inherited a legacy rule that forced Meals into a 900px canvas.
+v21.2 removes that forced canvas for Meals and Seasons on phones and uses the real viewport width.
 
-Deploy by replacing the existing repository files, commit, wait for GitHub Pages,
-then open the installed app online, fully close it, and reopen it.
+- Entire right edge of Meals now fits the screen.
+- + Add food stays visible.
+- Bottom/right edge no longer depends on transform scaling.
+- Typography and spacing scale fluidly with screen width.
+- Support List keeps the existing full-width mobile behavior.
+- Desktop remains unchanged.
+- No data/calculation changes.

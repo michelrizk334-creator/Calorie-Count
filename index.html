@@ -153,6 +153,102 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 }
 </style>
 
+
+<style id="v21_2TrueResponsiveFix">
+/* v21.2 — true viewport-width layout for Meals/Seasons.
+   This overrides the legacy v10 900px forced canvas that caused right-edge clipping. */
+@media (max-width:899px){
+  #desktopScaleRoot:not(.support-phone-native){
+    width:100%!important;
+    max-width:100%!important;
+    transform:none!important;
+    margin:0!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) header,
+  #desktopScaleRoot:not(.support-phone-native) main{
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) header{
+    padding:clamp(14px,4vw,24px) clamp(10px,3.5vw,18px) 12px!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) header h1{
+    font-size:clamp(24px,7vw,32px)!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .app-tabs{
+    width:auto!important;
+    max-width:none!important;
+    margin:0 clamp(10px,3vw,18px) 4px!important;
+    padding:0!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .datebar,
+  #desktopScaleRoot:not(.support-phone-native) .cards{
+    width:auto!important;
+    padding-left:clamp(10px,3vw,18px)!important;
+    padding-right:clamp(10px,3vw,18px)!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .macro-card,
+  #desktopScaleRoot:not(.support-phone-native) .panel{
+    width:auto!important;
+    margin-left:clamp(10px,3vw,18px)!important;
+    margin-right:clamp(10px,3vw,18px)!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .section-head{
+    min-width:0!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .section-head > div{
+    min-width:0!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) #addFoodBtn{
+    flex:0 0 auto!important;
+    max-width:42vw!important;
+    white-space:nowrap!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .cards{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .cards article{
+    min-width:0!important;
+    padding:clamp(9px,3vw,16px)!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .cards strong{
+    font-size:clamp(20px,6vw,30px)!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .macro-card{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .meal-title h3{
+    font-size:clamp(20px,5.5vw,26px)!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .food-row{
+    grid-template-columns:minmax(0,1fr) auto auto auto!important;
+    min-width:0!important;
+    font-size:clamp(14px,4vw,17px)!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .food-row > *{
+    min-width:0;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .food-row .sub{
+    font-size:clamp(11px,3.2vw,13px)!important;
+  }
+}
+@media (max-width:430px){
+  #desktopScaleRoot:not(.support-phone-native) .food-row{
+    grid-template-columns:minmax(0,1fr) auto auto!important;
+    gap:6px!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) .food-row .kcal{
+    white-space:nowrap!important;
+  }
+  #desktopScaleRoot:not(.support-phone-native) #addFoodBtn{
+    padding-left:10px!important;
+    padding-right:10px!important;
+    font-size:13px!important;
+  }
+}
+</style>
+
 </head><body>
 <div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
   <div class="install-prompt-card">
@@ -282,48 +378,20 @@ $('#settingsBtn').onclick=()=>$('#settingsDialog').showModal();$('#exportBtn').o
 render();
 </script></div><script>
 (function(){
-function adaptiveScale(usable){
-  /* Preserve the 900px design canvas, but choose a readable target scale
-     without ever exceeding the actual usable viewport width. */
-  var viewportFit=usable/900;
-  var readable;
-  if(usable<=360) readable=Math.min(usable/760,0.50);
-  else if(usable<=430) readable=Math.min(usable/800,0.55);
-  else if(usable<=520) readable=Math.min(usable/830,0.63);
-  else if(usable<=700) readable=Math.min(usable/860,0.80);
-  else readable=Math.min(usable/900,0.98);
-  return Math.min(viewportFit,readable);
-}
 function fit(){
   var r=document.getElementById("desktopScaleRoot");if(!r)return;
   var support=document.getElementById("supportView");
-  var vw=document.documentElement.clientWidth||window.innerWidth||900;
-  var nativeSupport=vw<900&&support&&!support.hidden;
+  var w=document.documentElement.clientWidth||window.innerWidth||900;
+  var nativeSupport=w<900&&support&&!support.hidden;
   r.classList.toggle("support-phone-native",nativeSupport);
-
-  if(nativeSupport){
-    r.style.transform="none";
-    r.style.marginLeft="";
-    document.body.style.height="";
-  }else if(vw<900){
-    /* 8px safe gutter on each side prevents the right edge from being clipped
-       by mobile browser/PWA viewport rounding and safe-area behavior. */
-    var gutter=8;
-    var usable=Math.max(280,vw-(gutter*2));
-    var s=adaptiveScale(usable);
-    r.style.transform="scale("+s+")";
-    r.style.marginLeft=gutter+"px";
-    document.body.style.height=(r.scrollHeight*s)+"px";
-  }else{
-    r.style.transform="";
-    r.style.marginLeft="";
-    document.body.style.height="";
-  }
+  r.style.transform="none";
+  r.style.marginLeft="";
+  document.body.style.height="";
 }
 window.addEventListener("resize",fit);
 window.addEventListener("orientationchange",function(){setTimeout(fit,120)});
 window.addEventListener("load",fit);
-new MutationObserver(function(){fit()}).observe(document.getElementById("desktopScaleRoot"),{childList:true,subtree:true,attributes:true});
+new MutationObserver(fit).observe(document.getElementById("desktopScaleRoot"),{childList:true,subtree:true,attributes:true});
 fit();
 })();
 </script>
