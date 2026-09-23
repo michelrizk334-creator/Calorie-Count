@@ -142,6 +142,17 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   #desktopScaleRoot.support-phone-native #customFoodList .custom-food-row .delete{font-size:11px!important;min-height:34px!important;padding:6px 8px!important}
 }
 </style>
+
+<style id="v21AdaptiveScaling">
+/* v21 — preserve the same UI while making it more readable across screen sizes. */
+@media (max-width:900px){
+  #desktopScaleRoot:not(.support-phone-native) .meal-title h3{font-size:1.7rem!important}
+  #desktopScaleRoot:not(.support-phone-native) .meal-total{font-size:1.05rem!important}
+  #desktopScaleRoot:not(.support-phone-native) .food-row{font-size:1.08rem!important}
+  #desktopScaleRoot:not(.support-phone-native) .food-row .sub{font-size:13px!important}
+}
+</style>
+
 </head><body>
 <div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
   <div class="install-prompt-card">
@@ -270,7 +281,31 @@ $('#closeFoodDialog').onclick=()=>$('#foodDialog').close();$('#closeQtyDialog').
 $('#settingsBtn').onclick=()=>$('#settingsDialog').showModal();$('#exportBtn').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='calorie-tracker-backup.json';a.click();URL.revokeObjectURL(a.href)};$('#importFile').onchange=e=>{let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.supportFoods ||= structuredClone(DEFAULT_FOODS);if(!db.supportListIntentionallyCleared){const names=new Set(db.supportFoods.map(f=>String(f.name||'').trim().toLowerCase()));for(const f of DEFAULT_FOODS){const key=String(f.name||'').trim().toLowerCase();if(!names.has(key)){db.supportFoods.push(structuredClone(f));names.add(key)}}}save();$('#settingsDialog').close()}catch{alert('Invalid backup file')}};r.readAsText(e.target.files[0])};$('#clearBtn').onclick=()=>{if(confirm('Delete all locally stored tracker data and reset the Support List to the Excel defaults?')){localStorage.removeItem(KEY);db={days:{},settings:{bmr:1765},savedDays:{},supportFoods:structuredClone(DEFAULT_FOODS),supportListIntentionallyCleared:false};save();$('#settingsDialog').close()}};
 render();
 </script></div><script>
-(function(){function fit(){var r=document.getElementById("desktopScaleRoot");if(!r)return;var support=document.getElementById("supportView");var nativeSupport=window.innerWidth<900&&support&&!support.hidden;r.classList.toggle("support-phone-native",nativeSupport);if(nativeSupport){r.style.transform="none";document.body.style.height="";}else if(window.innerWidth<900){var s=window.innerWidth/900;r.style.transform="scale("+s+")";document.body.style.height=(r.scrollHeight*s)+"px";}else{r.style.transform="";document.body.style.height="";}}window.addEventListener("resize",fit);window.addEventListener("orientationchange",function(){setTimeout(fit,100)});window.addEventListener("load",fit);new MutationObserver(function(){if(window.innerWidth<900)fit()}).observe(document.getElementById("desktopScaleRoot"),{childList:true,subtree:true,attributes:true});fit();})();
+(function(){
+function adaptiveScale(w){
+  if(w<=360) return Math.min(w/760,0.50);
+  if(w<=430) return Math.min(w/800,0.55);
+  if(w<=520) return Math.min(w/830,0.63);
+  if(w<=700) return Math.min(w/860,0.80);
+  if(w<900) return Math.min(w/900,0.98);
+  return 1;
+}
+function fit(){
+  var r=document.getElementById("desktopScaleRoot");if(!r)return;
+  var support=document.getElementById("supportView");
+  var w=Math.max(document.documentElement.clientWidth||0,window.innerWidth||0);
+  var nativeSupport=w<900&&support&&!support.hidden;
+  r.classList.toggle("support-phone-native",nativeSupport);
+  if(nativeSupport){r.style.transform="none";document.body.style.height="";}
+  else if(w<900){var s=adaptiveScale(w);r.style.transform="scale("+s+")";document.body.style.height=(r.scrollHeight*s)+"px";}
+  else{r.style.transform="";document.body.style.height="";}
+}
+window.addEventListener("resize",fit);
+window.addEventListener("orientationchange",function(){setTimeout(fit,120)});
+window.addEventListener("load",fit);
+new MutationObserver(function(){fit()}).observe(document.getElementById("desktopScaleRoot"),{childList:true,subtree:true,attributes:true});
+fit();
+})();
 </script>
 <script>
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
