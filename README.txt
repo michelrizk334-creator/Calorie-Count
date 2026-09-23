@@ -19,3 +19,6 @@ serverless backend starter. Deploy it, add OPENAI_API_KEY as a secret, then past
 Worker URL into Settings > AI label scanner endpoint.
 
 The scanner requires internet access. The rest of the PWA remains offline-capable.
+
+
+v22.1: Scanner now has separate Take photo and Upload image buttons. Both feed the same AI reader.

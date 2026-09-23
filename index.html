@@ -256,8 +256,8 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 .scan-preview{width:100%;max-height:230px;object-fit:contain;border-radius:12px;background:#080e1b}
 .scan-status{font-size:12px;color:#aeb9cc;line-height:1.4}
 .scan-status.error{color:#ff9baa}.scan-status.ok{color:#9ff0bd}
-.scan-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#labelScanFile{display:none}
+.scan-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scan-box>#analyzeLabelPhoto{width:100%}
+#labelScanFile,#labelUploadFile{display:none}
 @media(max-width:899px){.scan-actions button{font-size:13px;padding:9px 8px}}
 </style>
 
@@ -295,9 +295,11 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 <dialog id="foodEditorDialog"><form method="dialog" id="foodEditorForm"><div class="section-head"><h2 id="foodEditorTitle">Add food</h2><button type="button" id="closeFoodEditor" class="ghost" aria-label="Close">✕</button></div>
 <button type="button" id="scanNutritionBtn" class="scan-label-btn">📷 Scan nutrition label</button>
 <div id="labelScanBox" class="scan-box" hidden>
-  <input id="labelScanFile" type="file" accept="image/png,image/jpeg,image/webp" capture="environment">
+  <input id="labelScanFile" type="file" accept="image/*" capture="environment">
+  <input id="labelUploadFile" type="file" accept="image/png,image/jpeg,image/webp">
   <img id="labelScanPreview" class="scan-preview" alt="Nutrition label preview" hidden>
-  <div class="scan-actions"><button type="button" id="takeLabelPhoto">Take / choose photo</button><button type="button" id="analyzeLabelPhoto" class="ghost" disabled>Read label with AI</button></div>
+  <div class="scan-actions scan-source-actions"><button type="button" id="takeLabelPhoto">📷 Take photo</button><button type="button" id="uploadLabelImage" class="ghost">🖼️ Upload image</button></div>
+  <button type="button" id="analyzeLabelPhoto" class="ghost" disabled>Read label with AI</button>
   <p id="labelScanStatus" class="scan-status">Take a clear photo of the nutrition table. You will review the values before saving.</p>
 </div>
 <label>Name<input id="customName" required placeholder="e.g. Greek yogurt"></label>
@@ -406,14 +408,17 @@ function dominantBase(c,p,f){if(p>=c&&p>=f)return 'Protein base';if(f>=c&&f>=p)r
 $('#labelScanEndpoint').value=scanEndpoint();
 $('#labelScanEndpoint').onchange=e=>localStorage.setItem(LABEL_SCAN_ENDPOINT_KEY,e.target.value.trim());
 $('#scanNutritionBtn').onclick=()=>{const b=$('#labelScanBox');b.hidden=!b.hidden;if(!b.hidden&&!scanEndpoint())setScanStatus('Scanner setup needed: add your secure scanner endpoint in Settings.','error')};
-$('#takeLabelPhoto').onclick=()=>$('#labelScanFile').click();
-$('#labelScanFile').onchange=async e=>{
-  const file=e.target.files&&e.target.files[0];if(!file)return;
-  if(file.size>12*1024*1024){setScanStatus('Photo is too large. Please use an image under 12 MB.','error');return}
+async function loadLabelImage(file){
+  if(!file)return;
+  if(file.size>12*1024*1024){setScanStatus('Image is too large. Please use an image under 12 MB.','error');return}
   labelScanDataUrl=await new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(file)});
   $('#labelScanPreview').src=labelScanDataUrl;$('#labelScanPreview').hidden=false;$('#analyzeLabelPhoto').disabled=false;
-  setScanStatus('Photo ready. Tap “Read label with AI”.');
-};
+  setScanStatus('Image ready. Tap “Read label with AI”.');
+}
+$('#takeLabelPhoto').onclick=()=>$('#labelScanFile').click();
+$('#uploadLabelImage').onclick=()=>$('#labelUploadFile').click();
+$('#labelScanFile').onchange=e=>loadLabelImage(e.target.files&&e.target.files[0]);
+$('#labelUploadFile').onchange=e=>loadLabelImage(e.target.files&&e.target.files[0]);
 $('#analyzeLabelPhoto').onclick=async()=>{
   const endpoint=scanEndpoint();if(!endpoint){setScanStatus('Open Settings and add your AI label scanner endpoint first.','error');return}
   if(!labelScanDataUrl)return;
