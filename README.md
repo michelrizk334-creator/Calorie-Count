@@ -1,11 +1,12 @@
-# Calorie Count v22 AI scanner backend
+# Calorie Count Worker — v27
 
-Deploy this folder as a Cloudflare Worker (or adapt `worker.js` to another serverless host).
+The existing barcode route is preserved and v27 adds `POST /food-search` for ChatGPT food/meal lookup.
 
-1. Create a Worker.
-2. Add `OPENAI_API_KEY` as a **secret**. Never put it in `index.html` or GitHub Pages.
-3. Optional: set `OPENAI_MODEL` if you want to use another vision-capable model.
-4. Deploy the Worker and copy its `https://...workers.dev` URL.
-5. In Calorie Count, open **Settings** and paste that URL into **AI label scanner endpoint**.
+## Required Cloudflare secret
+Add an OpenAI API key to the Worker as the secret `OPENAI_API_KEY`.
+Optional variable: `OPENAI_MODEL` (defaults to `gpt-5.6-luna`).
 
-The frontend sends only the label photo you explicitly choose to scan. Meals and tracker data remain in browser local storage.
+Deploy this `worker.js` to the existing `calorie-count-ai` Worker so the public URL stays:
+`https://calorie-count-ai.michelrizk334.workers.dev`
+
+The API key stays in Cloudflare and is never placed in the browser app.

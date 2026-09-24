@@ -285,6 +285,22 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 .season-chevron{font-size:24px;line-height:1;transition:transform .2s ease;flex-shrink:0}
 .season-group[open] .season-chevron{transform:rotate(180deg)}
 </style>
+
+<style id="v27AiFoodLookup">
+.ai-food-lookup{border:1px solid #44506b;background:#0c1427;border-radius:14px;padding:12px;margin-bottom:12px;display:grid;gap:9px}
+.ai-food-lookup h3{margin:0;font-size:16px}
+.ai-food-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch}
+.ai-food-search-row textarea{resize:vertical;min-height:74px}
+.ai-food-search-row button{align-self:stretch}
+.ai-food-results{display:grid;gap:8px}
+.ai-food-result{border:1px solid #34415c;background:#101a30;border-radius:12px;padding:10px;display:grid;gap:7px}
+.ai-food-result-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.ai-food-result .meta{font-size:12px;color:#cbd5e1;line-height:1.45}
+.ai-food-result .assumption{font-size:11px;color:#94a3b8;line-height:1.4}
+.ai-food-result button{white-space:nowrap}
+#customDescription{resize:vertical;min-height:64px}
+@media(max-width:650px){.ai-food-search-row{grid-template-columns:1fr}.ai-food-result-head{flex-direction:column}.ai-food-result-head button{width:100%}}
+</style>
 </head><body>
 <div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
   <div class="install-prompt-card">
@@ -317,6 +333,17 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 <dialog id="qtyDialog"><form method="dialog"><div class="section-head"><h2 id="qtyTitle">Food</h2><button type="button" id="closeQtyDialog" class="ghost" aria-label="Close">✕</button></div><label>State<select id="state"><option>Raw</option><option>Cooked</option></select></label><label id="qtyLabel">Quantity<input id="qty" type="number" step="0.1" min="0"></label><p id="conversionNote" class="note"></p><button id="confirmFood" value="default">Add to meal</button></form></dialog>
 
 <dialog id="foodEditorDialog"><form method="dialog" id="foodEditorForm"><div class="section-head"><h2 id="foodEditorTitle">Add food</h2><button type="button" id="closeFoodEditor" class="ghost" aria-label="Close">✕</button></div>
+<section id="aiFoodLookup" class="ai-food-lookup">
+  <h3>Look up food on ChatGPT</h3>
+  <p class="note">Search for a food or describe a complete portion. Nothing is saved until you review the fields below and press Save food.</p>
+  <div class="ai-food-search-row">
+    <textarea id="aiFoodQuery" rows="3" placeholder="e.g. Greek yogurt 0% or 2 big cooked chicken breasts with 2 spoons of pesto sauce and 1 big cup of pasta"></textarea>
+    <button type="button" id="aiFoodSearchBtn">Search</button>
+  </div>
+  <p id="aiFoodStatus" class="scan-status"></p>
+  <div id="aiFoodResults" class="ai-food-results"></div>
+</section>
+
 <button type="button" id="scanBarcodeBtn" class="scan-label-btn">
   ▦ Scan barcode
 </button>
@@ -384,6 +411,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 </div>
  
 <label>Name<input id="customName" required placeholder="e.g. Greek yogurt"></label>
+<label>Description / Portion<textarea id="customDescription" rows="2" placeholder="Optional — e.g. 2 big cooked chicken breasts with 2 spoons of pesto sauce and 1 big cup of pasta"></textarea></label>
 <label>Food Base<select id="customType"><option value="Carbohydrate base">Carbohydrates</option><option value="Protein base">Protein</option><option value="Fat base">Fat</option></select></label>
 <div class="grid"><label>Reference amount<input id="customServing" type="number" min="0.01" step="0.01" required placeholder="e.g. 100"></label><label>Unit of measurement<select id="customUnit"><option value="grams">grams</option><option value="ml">milliliters</option><option value="Unit">units (number of items)</option></select></label></div>
 <div class="grid"><label>Carbohydrate per reference amount<input id="customCarbs" type="number" min="0" step="0.01" required></label><label>Protein per reference amount<input id="customProtein" type="number" min="0" step="0.01" required></label><label>Fat per reference amount<input id="customFat" type="number" min="0" step="0.01" required></label></div>
@@ -464,8 +492,8 @@ $('#ergTrainingBtn').onclick=()=>setWorkoutMode('erg');$('#otherWorkoutBtn').onc
 ['session','workoutType','calHour','hours','minutes','seconds'].forEach(id=>$('#'+id).oninput=e=>{let map={session:'session',workoutType:'type',calHour:'calHour',hours:'h',minutes:'m',seconds:'s'};day().workout[map[id]]=e.target.value;save()});
 $('#otherWorkoutCalories').oninput=e=>{day().workout.otherCalories=e.target.value;save()};
 $('#weight').onchange=e=>{day().weight=+e.target.value;save()};$('#bmr').onchange=e=>{db.settings.bmr=+e.target.value;save()};$('#phase').onchange=e=>{day().phase=e.target.value;save()};
-function renderSupportFoods(){const list=$('#customFoodList');if(!list)return;const q=($('#supportSearch').value||'').trim().toLowerCase();const rows=db.supportFoods.map((f,i)=>({f,i})).filter(({f})=>!q||f.name.toLowerCase().includes(q)||f.type.toLowerCase().includes(q));list.innerHTML=rows.length?rows.map(({f,i})=>`<div class="custom-food-row"><div><b>${f.name}</b><div class="meta">${f.type} · ${f.serving} ${f.unit} · C ${f.carbs} / P ${f.protein} / F ${f.fat} · ${f.kcal} kcal${f.ratio?` · cooked ${conversionMode(f)==='multiply'?'×':'÷'} ${f.ratio}`:''}</div></div><button type="button" class="edit" onclick="editSupportFood(${i})">Edit</button><button type="button" class="delete" onclick="deleteSupportFood(${i})">✕</button></div>`).join(''):'<div class="empty">No matching foods.</div>'}
-function openFoodEditor(i=null){editingFoodIndex=i;labelScanDataUrl='';if($('#labelScanBox')){$('#labelScanBox').hidden=true;$('#labelScanPreview').hidden=true;$('#analyzeLabelPhoto').disabled=true;setScanStatus('Take a clear photo of the nutrition table. You will review the values before saving.');}const f=i===null?null:db.supportFoods[i];$('#foodEditorTitle').textContent=f?'Edit food':'Add food';$('#customName').value=f?.name||'';$('#customType').value=f?.type||'Carbohydrates base';$('#customServing').value=f?.serving??100;$('#customUnit').value=f?.unit||'grams';$('#customCarbs').value=f?.carbs??'';$('#customProtein').value=f?.protein??'';$('#customFat').value=f?.fat??'';$('#customKcal').value=f?.kcal??'';$('#customRatio').value=f?.ratio??'';$('#customConversion').value=f?.conversion||conversionMode(f||{});$('#foodEditorDialog').showModal()}
+function renderSupportFoods(){const list=$('#customFoodList');if(!list)return;const q=($('#supportSearch').value||'').trim().toLowerCase();const rows=db.supportFoods.map((f,i)=>({f,i})).filter(({f})=>!q||f.name.toLowerCase().includes(q)||f.type.toLowerCase().includes(q)||String(f.description||'').toLowerCase().includes(q));list.innerHTML=rows.length?rows.map(({f,i})=>`<div class="custom-food-row"><div><b>${f.name}</b>${f.description?`<div class="meta" style="margin-top:3px">${escapeHtml(f.description)}</div>`:''}<div class="meta">${f.type} · ${f.serving} ${f.unit} · C ${f.carbs} / P ${f.protein} / F ${f.fat} · ${f.kcal} kcal${f.ratio?` · cooked ${conversionMode(f)==='multiply'?'×':'÷'} ${f.ratio}`:''}</div></div><button type="button" class="edit" onclick="editSupportFood(${i})">Edit</button><button type="button" class="delete" onclick="deleteSupportFood(${i})">✕</button></div>`).join(''):'<div class="empty">No matching foods.</div>'}
+function openFoodEditor(i=null){editingFoodIndex=i;stopBarcodeCamera();if($('#barcodeScanBox'))$('#barcodeScanBox').hidden=true;if($('#barcodeManual'))$('#barcodeManual').value='';if($('#aiFoodQuery'))$('#aiFoodQuery').value='';if($('#aiFoodResults'))$('#aiFoodResults').innerHTML='';setAiFoodStatus('');const f=i===null?null:db.supportFoods[i];$('#foodEditorTitle').textContent=f?'Edit food':'Add food';$('#customName').value=f?.name||'';$('#customDescription').value=f?.description||'';$('#customType').value=f?.type||'Carbohydrates base';$('#customServing').value=f?.serving??100;$('#customUnit').value=f?.unit||'grams';$('#customCarbs').value=f?.carbs??'';$('#customProtein').value=f?.protein??'';$('#customFat').value=f?.fat??'';$('#customKcal').value=f?.kcal??'';$('#customRatio').value=f?.ratio??'';$('#customConversion').value=f?.conversion||conversionMode(f||{});$('#foodEditorDialog').showModal()}
 $('#newFoodBtn').onclick=()=>openFoodEditor();$('#restoreSupportBtn').onclick=()=>{if(confirm('Restore the complete default Excel Support List? Your custom foods will be kept.')){const names=new Set(db.supportFoods.map(f=>String(f.name||'').trim().toLowerCase()));for(const f of DEFAULT_FOODS){const key=String(f.name||'').trim().toLowerCase();if(!names.has(key)){db.supportFoods.push(structuredClone(f));names.add(key)}}db.supportListIntentionallyCleared=false;localStorage.setItem(KEY,JSON.stringify(db));renderSupportFoods();render();alert('Default Support List restored.')}};$('#clearSupportBtn').onclick=()=>{if(confirm('Are you sure you want to clear all the existing support list?')){db.supportFoods=[];db.supportListIntentionallyCleared=true;localStorage.setItem(KEY,JSON.stringify(db));renderSupportFoods();render()}};window.editSupportFood=i=>openFoodEditor(i);window.deleteSupportFood=i=>{if(confirm(`Delete ${db.supportFoods[i].name} from the Support List?`)){db.supportFoods.splice(i,1);localStorage.setItem(KEY,JSON.stringify(db));renderSupportFoods()}};
 function renderSeasons(){
   const root=$('#seasonsList'); if(!root)return;
@@ -497,10 +525,96 @@ $('#closeSaveSeason').onclick=()=>$('#saveSeasonDialog').close();
 $('#saveSeasonForm').onsubmit=e=>{e.preventDefault();const isNew=$('#seasonSaveMode').value==='new';const phase=(isNew?$('#newSeasonName').value:$('#existingSeason').value).trim();if(!phase){alert(isNew?'Enter a name for the new Training Phase.':'There is no existing phase to select. Create a new one instead.');return}day().phase=phase;$('#phase').value=phase;db.savedDays[date]=structuredClone(day());localStorage.setItem(KEY,JSON.stringify(db));$('#saveSeasonDialog').close();renderSeasons();render();const b=$('#saveDayBtn'),old=b.textContent;b.textContent='Saved ✓';setTimeout(()=>b.textContent=old,1200)};
 function setTab(tab){const tracker=tab==='tracker', seasons=tab==='seasons', support=tab==='support';$('#trackerView').hidden=!tracker;$('#seasonsView').hidden=!seasons;$('#supportView').hidden=!support;$('#trackerTab').classList.toggle('active',tracker);$('#seasonsTab').classList.toggle('active',seasons);$('#supportTab').classList.toggle('active',support);if(seasons)renderSeasons();if(support)renderSupportFoods();window.dispatchEvent(new Event('resize'))}
 $('#trackerTab').onclick=()=>setTab('tracker');$('#seasonsTab').onclick=()=>setTab('seasons');$('#supportTab').onclick=()=>setTab('support');$('#supportSearch').oninput=renderSupportFoods;
-$('#foodEditorForm').onsubmit=e=>{e.preventDefault();const mode=$('#customConversion').value,ratio=+$('#customRatio').value||null;const f={name:$('#customName').value.trim(),type:$('#customType').value,serving:+$('#customServing').value||1,unit:$('#customUnit').value,carbs:+$('#customCarbs').value||0,protein:+$('#customProtein').value||0,fat:+$('#customFat').value||0,kcal:+$('#customKcal').value||0,ratio:mode==='none'?null:ratio,conversion:mode};if(mode!=='none'&&(!ratio||ratio<1)){alert('Enter a conversion ratio of 1 or greater.');return}if(!f.name)return;if(editingFoodIndex===null)db.supportFoods.push(f);else db.supportFoods[editingFoodIndex]=f;localStorage.setItem(KEY,JSON.stringify(db));$('#foodEditorDialog').close();renderSupportFoods();render()};
+$('#foodEditorForm').onsubmit=e=>{e.preventDefault();const mode=$('#customConversion').value,ratio=+$('#customRatio').value||null;const f={name:$('#customName').value.trim(),description:$('#customDescription').value.trim(),type:$('#customType').value,serving:+$('#customServing').value||1,unit:$('#customUnit').value,carbs:+$('#customCarbs').value||0,protein:+$('#customProtein').value||0,fat:+$('#customFat').value||0,kcal:+$('#customKcal').value||0,ratio:mode==='none'?null:ratio,conversion:mode};if(mode!=='none'&&(!ratio||ratio<1)){alert('Enter a conversion ratio of 1 or greater.');return}if(!f.name)return;if(editingFoodIndex===null)db.supportFoods.push(f);else db.supportFoods[editingFoodIndex]=f;localStorage.setItem(KEY,JSON.stringify(db));$('#foodEditorDialog').close();renderSupportFoods();render()};
 // Explicit close actions: closing an accidental Add/Edit never validates or saves the form.
 $('#closeFoodDialog').onclick=()=>$('#foodDialog').close();$('#closeQtyDialog').onclick=()=>{$('#qtyDialog').close();selectedFood=null;editingMealIndex=null;editingMealItemIndex=null;$('#confirmFood').textContent='Add to meal'};$('#closeFoodEditor').onclick=()=>{   stopBarcodeCamera();   $('#foodEditorDialog').close();   editingFoodIndex=null; };
 $('#settingsBtn').onclick=()=>$('#settingsDialog').showModal();$('#exportBtn').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='calorie-tracker-backup.json';a.click();URL.revokeObjectURL(a.href)};$('#importFile').onchange=e=>{let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.supportFoods ||= structuredClone(DEFAULT_FOODS);if(!db.supportListIntentionallyCleared){const names=new Set(db.supportFoods.map(f=>String(f.name||'').trim().toLowerCase()));for(const f of DEFAULT_FOODS){const key=String(f.name||'').trim().toLowerCase();if(!names.has(key)){db.supportFoods.push(structuredClone(f));names.add(key)}}}save();$('#settingsDialog').close()}catch{alert('Invalid backup file')}};r.readAsText(e.target.files[0])};$('#clearBtn').onclick=()=>{if(confirm('Delete all locally stored tracker data and reset the Support List to the Excel defaults?')){localStorage.removeItem(KEY);db={days:{},settings:{bmr:1765},savedDays:{},supportFoods:structuredClone(DEFAULT_FOODS),supportListIntentionallyCleared:false};save();$('#settingsDialog').close()}};
+// =========================================================
+// AI FOOD / READY-MEAL LOOKUP
+// =========================================================
+
+let aiFoodSearchResults=[];
+
+function escapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,ch=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[ch]);
+}
+
+function setAiFoodStatus(message,type=''){
+  const el=$('#aiFoodStatus');
+  if(!el)return;
+  el.textContent=message||'';
+  el.className='scan-status'+(type?' '+type:'');
+}
+
+function renderAiFoodResults(){
+  const root=$('#aiFoodResults');
+  if(!root)return;
+  root.innerHTML=aiFoodSearchResults.map((item,i)=>`
+    <div class="ai-food-result">
+      <div class="ai-food-result-head">
+        <div>
+          <b>${escapeHtml(item.name||'Food')}</b>
+          <div class="meta">${escapeHtml(item.basis_label||'')} · ${Math.round(Number(item.calories_kcal)||0)} kcal · C ${(Number(item.carbs_g)||0).toFixed(1)} g · P ${(Number(item.protein_g)||0).toFixed(1)} g · F ${(Number(item.fat_g)||0).toFixed(1)} g</div>
+        </div>
+        <button type="button" onclick="addAiFoodResult(${i})">Add item</button>
+      </div>
+      ${item.description?`<div class="assumption"><b>Portion:</b> ${escapeHtml(item.description)}</div>`:''}
+      ${item.assumptions?`<div class="assumption"><b>Estimate:</b> ${escapeHtml(item.assumptions)}</div>`:''}
+    </div>
+  `).join('');
+}
+
+window.addAiFoodResult=i=>{
+  const item=aiFoodSearchResults[i];
+  if(!item)return;
+  $('#customName').value=item.name||'';
+  $('#customDescription').value=item.description||$('#aiFoodQuery').value.trim();
+  $('#customServing').value=Number(item.reference_amount)||1;
+  $('#customUnit').value=item.unit==='milliliters'?'ml':item.unit==='units'?'Unit':'grams';
+  $('#customCarbs').value=Number(item.carbs_g)||0;
+  $('#customProtein').value=Number(item.protein_g)||0;
+  $('#customFat').value=Number(item.fat_g)||0;
+  $('#customKcal').value=Number(item.calories_kcal)||0;
+  $('#customType').value=dominantBase(Number(item.carbs_g)||0,Number(item.protein_g)||0,Number(item.fat_g)||0);
+  $('#customRatio').value='';
+  $('#customConversion').value='none';
+  setAiFoodStatus('Added to the form below. Review the values, then press Save food.','ok');
+};
+
+async function searchAiFood(){
+  const query=$('#aiFoodQuery').value.trim();
+  if(!query){setAiFoodStatus('Describe a food or meal first.','error');return;}
+  const btn=$('#aiFoodSearchBtn');
+  btn.disabled=true;
+  aiFoodSearchResults=[];
+  $('#aiFoodResults').innerHTML='';
+  setAiFoodStatus('Looking up nutrition…');
+  try{
+    const endpoint='https://calorie-count-ai.michelrizk334.workers.dev';
+    const response=await fetch(endpoint+'/food-search',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({query})
+    });
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.error||'Food lookup failed.');
+    aiFoodSearchResults=Array.isArray(data.results)?data.results:[];
+    if(!aiFoodSearchResults.length)throw new Error('No nutrition result was returned.');
+    renderAiFoodResults();
+    setAiFoodStatus('Choose Add item to fill the existing food form. Nutrition is an estimate; review it before saving.','ok');
+  }catch(error){
+    console.error('AI food lookup error:',error);
+    setAiFoodStatus(error.message||'Could not look up this food.','error');
+  }finally{btn.disabled=false;}
+}
+
+$('#aiFoodSearchBtn').onclick=searchAiFood;
+$('#aiFoodQuery').addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();searchAiFood();}
+});
+
 // =========================================================
 // BARCODE SCANNER
 // =========================================================
