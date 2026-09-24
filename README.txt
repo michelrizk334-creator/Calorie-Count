@@ -1,16 +1,23 @@
-Calorie Count v27 — ChatGPT Food Lookup
+Calorie Count v28 — Recipe Generator
 
-GitHub Pages:
-Upload/replace the root files in your Calorie-Count repository and commit.
+NEW
+- Fourth Recipes tab with Recipe Generator.
+- Generate from Support List only, or from any foods.
+- Enter any combination of Protein / Carbs / Fat / Calories; at least one is required.
+- Generated result shows ingredients, instructions, estimated macros/calories, and a warning that actual values may differ from goals.
+- Add a generated meal directly to Meal 1–6 without saving it.
+- Save favorite generated recipes under Saved meals and reuse them later.
+- Saved recipe ingredients remain normal editable meal rows when added.
 
-Cloudflare Worker:
-Deploy worker/worker.js to the existing calorie-count-ai Worker.
-Add OPENAI_API_KEY as a Worker secret. The browser never receives this key.
+PRESERVED
+- Meals, meal macros, drag reordering, direct meal Edit button.
+- Seasons accordion.
+- Support List, manual food entry, barcode scanner, AI food lookup.
+- PWA install/offline workflow.
 
-New feature:
-Support List > Add food now has Look up food on ChatGPT above Scan barcode.
-It accepts single foods or complete meal descriptions. Add item only prefills the existing form; the user still reviews it and presses Save food.
-Description / Portion is optional and existing foods remain compatible.
-
-Preserved:
-v26 Seasons accordion, v25 meal UX/reordering, barcode scanner, manual food entry, workouts, saved days, backup/restore and PWA installation.
+DEPLOYMENT
+1. Upload the ZIP root files to the GitHub Pages repository and replace existing files.
+2. Commit and wait for GitHub Pages to turn green.
+3. In Cloudflare calorie-count-ai, replace Worker code with worker/worker.js.
+4. Verify Workers AI binding name is exactly AI, then deploy.
+5. Test Recipes tab.
