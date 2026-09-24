@@ -1,4 +1,4 @@
-const CACHE='calorie-count-v25-meal-ux';
+const CACHE='calorie-count-v26-seasons-accordion';
 const BASE='/Calorie-Count/';
 const ASSETS=[BASE,BASE+'index.html',BASE+'manifest.webmanifest',BASE+'icon-180.png',BASE+'icon-192.png',BASE+'icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));});

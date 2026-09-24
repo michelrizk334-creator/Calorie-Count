@@ -275,6 +275,16 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 @media(max-width:650px){.meal-header-right{width:100%;margin-left:0;justify-content:flex-start;gap:6px}.meal-macros{flex:1;font-size:11px}.meal-total{font-size:12px}.meal-add-btn{padding:5px 8px}}
 </style>
 
+<style id="v26SeasonsAccordion">
+.season-group{margin-bottom:12px}
+.season-banner{cursor:pointer;list-style:none;border-radius:14px;user-select:none}
+.season-banner::-webkit-details-marker{display:none}
+.season-banner::marker{content:""}
+.season-banner:focus-visible{outline:3px solid #b7aaff;outline-offset:3px}
+.season-group[open]>.season-banner{border-radius:14px 14px 8px 8px}
+.season-chevron{font-size:24px;line-height:1;transition:transform .2s ease;flex-shrink:0}
+.season-group[open] .season-chevron{transform:rotate(180deg)}
+</style>
 </head><body>
 <div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
   <div class="install-prompt-card">
@@ -463,7 +473,8 @@ function renderSeasons(){
   if(!entries.length){root.innerHTML='<div class="empty season-empty">No saved sheets yet. Enter a Training Phase in Meals and press Save.</div>';return}
   const groups={};
   for(const [d,snap] of entries){const phase=(snap.phase||'Uncategorized').trim()||'Uncategorized';(groups[phase] ||= []).push([d,snap])}
-  root.innerHTML=Object.entries(groups).map(([phase,days])=>`<section class="season-group"><div class="season-banner"><div><b>${phase}</b><small>${days.length} saved sheet${days.length===1?'':'s'}</small></div></div><div class="season-days">${days.map(([d,snap])=>{let kcal=(snap.meals||[]).flat().reduce((a,x)=>a+calcItem(x).kcal,0);return `<button type="button" class="season-day" onclick="openSavedDay('${d}')"><span><b>${d}</b><small>${snap.weight||'—'} kg · ${Math.round(kcal)} kcal eaten</small></span><span>Open ›</span></button>`}).join('')}</div></section>`).join('')
+  const escapeSeasonName=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  root.innerHTML=Object.entries(groups).map(([phase,days])=>`<details class="season-group"><summary class="season-banner"><div><b>${escapeSeasonName(phase)}</b><small>${days.length} saved sheet${days.length===1?'':'s'}</small></div><span class="season-chevron" aria-hidden="true">⌄</span></summary><div class="season-days">${days.map(([d,snap])=>{let kcal=(snap.meals||[]).flat().reduce((a,x)=>a+calcItem(x).kcal,0);return `<button type="button" class="season-day" onclick="openSavedDay('${d}')"><span><b>${d}</b><small>${snap.weight||'—'} kg · ${Math.round(kcal)} kcal eaten</small></span><span>Open ›</span></button>`}).join('')}</div></details>`).join('')
 }
 window.openSavedDay=d=>{date=d;setTab('tracker');render()};
 function existingPhases(){
