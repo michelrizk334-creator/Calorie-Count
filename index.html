@@ -259,95 +259,22 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 @media(max-width:899px){.scan-actions button{font-size:13px;padding:9px 8px}}
 </style>
 
- <style id="v25MealControls">
-.meal-title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
 
-.meal-title > b{
-  flex:0 0 auto;
-}
-
-.meal-header-right{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:8px;
-  min-width:0;
-}
-
-.meal-macros{
-  font-size:12px;
-  color:#cbd5e1;
-  white-space:nowrap;
-}
-
-.meal-total{
-  white-space:nowrap;
-}
-
-.meal-add-btn{
-  min-height:34px;
-  padding:6px 10px;
-  font-size:12px;
-  background:#1a2338;
-  color:#d9e0ef;
-}
-
-.meal-drag{
-  min-height:34px;
-  min-width:34px;
-  padding:5px 8px;
-  background:transparent;
-  color:#aeb9cc;
-  cursor:grab;
-  font-size:19px;
-  line-height:1;
-  touch-action:none;
-}
-
-.meal-drag:active{
-  cursor:grabbing;
-}
-
-.meal.dragging{
-  opacity:.45;
-}
-
-.meal.drag-over{
-  border-top:2px solid #7c5cff;
-}
-
-@media(max-width:650px){
-  .meal-title{
-    flex-wrap:wrap;
-  }
-
-  .meal-header-right{
-    width:100%;
-    margin-left:0;
-    justify-content:flex-start;
-    gap:6px;
-  }
-
-  .meal-macros{
-    flex:1;
-    font-size:11px;
-  }
-
-  .meal-total{
-    font-size:12px;
-  }
-
-  .meal-add-btn{
-    padding:5px 8px;
-  }
-}
+<style id="v25MealUX">
+/* v25 — per-meal macros, quick add/edit, and drag-to-reorder */
+.meal-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.meal-title>b{flex:0 0 auto}
+.meal-header-right{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0;flex-wrap:wrap}
+.meal-macros{font-size:12px;color:#cbd5e1;white-space:nowrap}
+.meal-total{white-space:nowrap}
+.meal-add-btn{min-height:34px;padding:6px 10px;font-size:12px;background:#1a2338;color:#d9e0ef}
+.meal-drag{min-height:34px;min-width:34px;padding:5px 8px;background:transparent;color:#aeb9cc;cursor:grab;font-size:19px;line-height:1;touch-action:none;user-select:none;-webkit-user-select:none}
+.meal-drag:active{cursor:grabbing}
+.meal.dragging{opacity:.48}
+.meal.drag-over{outline:2px solid #7c5cff;outline-offset:2px;border-radius:12px}
+@media(max-width:650px){.meal-header-right{width:100%;margin-left:0;justify-content:flex-start;gap:6px}.meal-macros{flex:1;font-size:11px}.meal-total{font-size:12px}.meal-add-btn{padding:5px 8px}}
 </style>
- 
+
 </head><body>
 <div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
   <div class="install-prompt-card">
@@ -486,240 +413,30 @@ function conversionMode(f){if(f?.conversion)return f.conversion;if(!f?.ratio)ret
 function calcItem(x){let f=x.food, factor=x.qty/f.serving;if(x.state==='Cooked'&&f.ratio){factor=conversionMode(f)==='divide'?factor/f.ratio:factor*f.ratio}return{kcal:f.kcal*factor,c:f.carbs*factor,p:f.protein*factor,fat:f.fat*factor}}
 function totals(){let d=day(),t={kcal:0,c:0,p:0,fat:0};d.meals.flat().forEach(x=>{let q=calcItem(x);Object.keys(t).forEach(k=>t[k]+=q[k])});let w=d.workout||{},mode=w.mode||'erg',secs=(+w.h||0)*3600+(+w.m||0)*60+(+w.s||0),lb=(+d.weight||75)*2.205,machine=(+w.calHour||0)*secs/3600,trueHour=(+w.calHour||0)-300+1.714*lb,ergAdjusted=Math.max(0,trueHour*secs/3600),adjusted=mode==='other'?Math.max(0,+w.otherCalories||0):ergAdjusted,burned=(+db.settings.bmr||1765)+adjusted;return{...t,machine,adjusted,burned,deficit:burned-t.kcal}}
 function render(){let d=day(),t=totals();$('#date').value=date;$('#foodKcal').textContent=Math.round(t.kcal);$('#burnedKcal').textContent=Math.round(t.burned);$('#deficit').textContent=Math.round(t.deficit);$('#carbs').textContent=t.c.toFixed(1)+' g';$('#protein').textContent=t.p.toFixed(1)+' g';$('#fat').textContent=t.fat.toFixed(1)+' g';$('#weight').value=d.weight||'';$('#bmr').value=db.settings.bmr||1765;$('#phase').value=d.phase||'';let w=d.workout||{};$('#session').value=w.session||'';$('#workoutType').value=w.type||'RowErg';$('#calHour').value=w.calHour||'';$('#hours').value=w.h||0;$('#minutes').value=w.m||'';$('#seconds').value=w.s||'';$('#machineCals').textContent=Math.round(t.machine);$('#trueCals').textContent=Math.round((w.mode||'erg')==='other'?0:t.adjusted);$('#otherWorkoutCalories').value=w.otherCalories||'';$('#otherCalsDisplay').textContent=Math.round(+w.otherCalories||0);setWorkoutMode(w.mode||'erg',false);
-$('#meals').innerHTML=d.meals.map((meal,i)=>{
-
-  const mt=meal.reduce(
-    (a,x)=>{
-      const q=calcItem(x);
-      a.kcal+=q.kcal;
-      a.c+=q.c;
-      a.p+=q.p;
-      a.fat+=q.fat;
-      return a;
-    },
-    {kcal:0,c:0,p:0,fat:0}
-  );
-
-  return `
-    <div
-      class="meal"
-      data-meal-index="${i}"
-    >
-
-      <div class="meal-title">
-
-        <b>Meal ${i+1}</b>
-
-        <div class="meal-header-right">
-
-          <span class="meal-macros">
-            C ${mt.c.toFixed(1)}g ·
-            P ${mt.p.toFixed(1)}g ·
-            F ${mt.fat.toFixed(1)}g
-          </span>
-
-          <span class="meal-total">
-            ${Math.round(mt.kcal)} kcal
-          </span>
-
-          <button
-            type="button"
-            class="meal-add-btn"
-            onclick="addFoodToMeal(${i})"
-          >
-            Edit
-          </button>
-
-          <button
-            type="button"
-            class="meal-drag"
-            draggable="true"
-            data-meal-index="${i}"
-            aria-label="Move Meal ${i+1}"
-            title="Drag to move meal"
-          >
-            ☰
-          </button>
-
-        </div>
-
-      </div>
-
-      ${
-        meal.length
-        ?
-        meal.map((x,j)=>{
-
-          const q=calcItem(x);
-
-          return `
-            <div class="food-row">
-
-              <div>
-                <b>${x.food.name}</b>
-
-                <div class="sub">
-                  ${x.qty} ${x.food.unit}
-                  · ${x.state}
-                  · C ${q.c.toFixed(1)}
-                  / P ${q.p.toFixed(1)}
-                  / F ${q.fat.toFixed(1)}
-                </div>
-              </div>
-
-              <span class="kcal">
-                ${Math.round(q.kcal)} kcal
-              </span>
-
-              <button
-                class="meal-edit"
-                onclick="editMealFood(${i},${j})"
-                aria-label="Edit ${x.food.name}"
-                title="Edit"
-              >
-                ✎
-              </button>
-
-              <button
-                onclick="removeFood(${i},${j})"
-                aria-label="Delete ${x.food.name}"
-                title="Delete"
-              >
-                ✕
-              </button>
-
-            </div>
-          `;
-        }).join('')
-        :
-        '<div class="empty">No food yet</div>'
-      }
-
-    </div>
-  `;
-
-}).join('');
-
-setupMealReordering();
-
-window.addFoodToMeal=(mealIndex)=>{
-
-  editingMealIndex=null;
-  editingMealItemIndex=null;
-  selectedFood=null;
-
-  $('#mealSelect').value=String(mealIndex);
-
-  $('#foodDialog').showModal();
-
-  $('#foodSearch').value='';
-
-  showFoods('');
-
-  setTimeout(()=>{
-    $('#foodSearch').focus();
-  },50);
-};
-
-
-function moveMeal(fromIndex,toIndex){
-
-  if(
-    fromIndex===toIndex ||
-    fromIndex<0 ||
-    toIndex<0
-  ) return;
-
-  const meals=day().meals;
-
-  const moved=meals.splice(fromIndex,1)[0];
-
-  meals.splice(toIndex,0,moved);
-
-  save();
-}
-
-
+$('#meals').innerHTML=d.meals.map((meal,i)=>{let mt=meal.reduce((a,x)=>{let q=calcItem(x);a.kcal+=q.kcal;a.c+=q.c;a.p+=q.p;a.fat+=q.fat;return a},{kcal:0,c:0,p:0,fat:0});return `<div class="meal" data-meal-index="${i}"><div class="meal-title"><b>Meal ${i+1}</b><div class="meal-header-right"><span class="meal-macros">C ${mt.c.toFixed(1)}g · P ${mt.p.toFixed(1)}g · F ${mt.fat.toFixed(1)}g</span><span class="meal-total">${Math.round(mt.kcal)} kcal</span><button type="button" class="meal-add-btn" onclick="addFoodToMeal(${i})">Edit</button><button type="button" class="meal-drag" draggable="true" data-meal-index="${i}" aria-label="Move Meal ${i+1}" title="Drag to reorder">☰</button></div></div>${meal.length?meal.map((x,j)=>{let q=calcItem(x);return `<div class="food-row"><div><b>${x.food.name}</b><div class="sub">${x.qty} ${x.food.unit} · ${x.state} · C ${q.c.toFixed(1)} / P ${q.p.toFixed(1)} / F ${q.fat.toFixed(1)}</div></div><span class="kcal">${Math.round(q.kcal)} kcal</span><button class="meal-edit" onclick="editMealFood(${i},${j})" aria-label="Edit ${x.food.name}" title="Edit">✎</button><button onclick="removeFood(${i},${j})" aria-label="Delete ${x.food.name}" title="Delete">✕</button></div>`}).join(''):'<div class="empty">No food yet</div>'}</div>`}).join('');setupMealReordering();
+let hist=Object.entries(db.days).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,7);$('#history').innerHTML=hist.length?hist.map(([k,v])=>{let old=date;date=k;let q=totals();date=old;return `<div class="history-row"><b>${k}</b><span>${v.weight||'—'} kg</span><span>${Math.round(q.kcal)} in</span><span>${Math.round(q.deficit)} deficit</span></div>`}).join(''):''}
+window.addFoodToMeal=(mealIndex)=>{editingMealIndex=null;editingMealItemIndex=null;selectedFood=null;$('#mealSelect').value=String(mealIndex);$('#foodDialog').showModal();$('#foodSearch').value='';showFoods('');setTimeout(()=>$('#foodSearch').focus(),50)};
+function moveMeal(fromIndex,toIndex){if(fromIndex===toIndex||fromIndex<0||toIndex<0)return;const meals=day().meals;const moved=meals.splice(fromIndex,1)[0];meals.splice(toIndex,0,moved);save()}
 function setupMealReordering(){
-
-  const handles=
-    document.querySelectorAll('.meal-drag');
-
+  const root=$('#meals');if(!root)return;
+  const handles=[...root.querySelectorAll('.meal-drag')];
   handles.forEach(handle=>{
-
-    handle.addEventListener('dragstart',e=>{
-
-      const index=
-        Number(handle.dataset.mealIndex);
-
-      e.dataTransfer.setData(
-        'text/plain',
-        String(index)
-      );
-
-      e.dataTransfer.effectAllowed='move';
-
-      handle.closest('.meal')
-        ?.classList.add('dragging');
+    handle.addEventListener('dragstart',e=>{const i=Number(handle.dataset.mealIndex);e.dataTransfer.setData('text/plain',String(i));e.dataTransfer.effectAllowed='move';handle.closest('.meal')?.classList.add('dragging')});
+    handle.addEventListener('dragend',()=>root.querySelectorAll('.meal').forEach(m=>m.classList.remove('dragging','drag-over')));
+    handle.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse')return;
+      const from=Number(handle.dataset.mealIndex);let target=from;handle.setPointerCapture?.(e.pointerId);handle.closest('.meal')?.classList.add('dragging');
+      const move=ev=>{const el=document.elementFromPoint(ev.clientX,ev.clientY);const meal=el?.closest?.('.meal');root.querySelectorAll('.meal').forEach(m=>m.classList.remove('drag-over'));if(meal){target=Number(meal.dataset.mealIndex);meal.classList.add('drag-over')}};
+      const end=()=>{handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',end);handle.removeEventListener('pointercancel',end);root.querySelectorAll('.meal').forEach(m=>m.classList.remove('dragging','drag-over'));if(target!==from)moveMeal(from,target)};
+      handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);
     });
-
-    handle.addEventListener('dragend',()=>{
-
-      document
-        .querySelectorAll('.meal')
-        .forEach(meal=>{
-          meal.classList.remove(
-            'dragging',
-            'drag-over'
-          );
-        });
-    });
-
   });
-
-
-  document
-    .querySelectorAll('.meal')
-    .forEach(meal=>{
-
-      meal.addEventListener('dragover',e=>{
-
-        e.preventDefault();
-
-        meal.classList.add('drag-over');
-      });
-
-      meal.addEventListener('dragleave',()=>{
-
-        meal.classList.remove('drag-over');
-      });
-
-      meal.addEventListener('drop',e=>{
-
-        e.preventDefault();
-
-        meal.classList.remove('drag-over');
-
-        const fromIndex=
-          Number(
-            e.dataTransfer.getData(
-              'text/plain'
-            )
-          );
-
-        const toIndex=
-          Number(meal.dataset.mealIndex);
-
-        moveMeal(
-          fromIndex,
-          toIndex
-        );
-      });
-
-    });
-
+  root.querySelectorAll('.meal').forEach(meal=>{
+    meal.addEventListener('dragover',e=>{e.preventDefault();meal.classList.add('drag-over')});
+    meal.addEventListener('dragleave',()=>meal.classList.remove('drag-over'));
+    meal.addEventListener('drop',e=>{e.preventDefault();const from=Number(e.dataTransfer.getData('text/plain'));const to=Number(meal.dataset.mealIndex);root.querySelectorAll('.meal').forEach(m=>m.classList.remove('dragging','drag-over'));moveMeal(from,to)});
+  });
 }
-                  
 window.removeFood=(i,j)=>{day().meals[i].splice(j,1);save()};
 window.editMealFood=(i,j)=>{const x=day().meals[i][j]; if(!x)return; editingMealIndex=i; editingMealItemIndex=j; selectedFood=structuredClone(x.food); $('#mealSelect').value=String(i); openQtyEditor(x.qty,x.state,true)};
 function shift(n){let d=new Date(date+'T12:00:00');d.setDate(d.getDate()+n);date=d.toISOString().slice(0,10);render()}
@@ -1377,141 +1094,30 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 
 <script id="installPromptLogic">
 (()=>{
-  let deferredInstallPrompt = null;
-
-  const overlay = document.getElementById('installPromptOverlay');
-  const installBtn = document.getElementById('installAppNow');
-  const notNow = document.getElementById('installNotNow');
-  const iosSteps = document.getElementById('iosInstallSteps');
-  const note = document.getElementById('installPromptNote');
-  const text = document.getElementById('installPromptText');
-
-  const ua = navigator.userAgent || '';
-
-  const isIOS =
-    /iPad|iPhone|iPod/.test(ua) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-  const standalone =
-    window.matchMedia('(display-mode: standalone)').matches ||
-    window.navigator.standalone === true;
-
-  const dismissed =
-    sessionStorage.getItem('cc_install_prompt_dismissed') === '1';
-
-  function hide(){
-    overlay.hidden = true;
-  }
-
-  function showQuestion(){
-    if(standalone || dismissed) return;
-
-    overlay.hidden = false;
-
-    text.textContent =
-      'Install Calorie Count for a standalone, offline experience.';
-
-    installBtn.textContent = 'Install';
-    installBtn.disabled = false;
-
-    note.textContent = '';
-    iosSteps.hidden = true;
-  }
-
-  /*
-   * Capture the browser's native PWA installer.
-   * Used by compatible Chrome / Edge / Samsung / Chromium browsers.
-   */
-  window.addEventListener('beforeinstallprompt', event => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
+  let deferredInstallPrompt=null;
+  let showingIosSteps=false;
+  const overlay=document.getElementById('installPromptOverlay');
+  const installBtn=document.getElementById('installAppNow');
+  const notNow=document.getElementById('installNotNow');
+  const iosSteps=document.getElementById('iosInstallSteps');
+  const note=document.getElementById('installPromptNote');
+  const text=document.getElementById('installPromptText');
+  const ua=navigator.userAgent||'';
+  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  const dismissed=()=>sessionStorage.getItem('cc_install_prompt_dismissed')==='1';
+  function hide(){overlay.hidden=true}
+  function showQuestion(){if(standalone||dismissed())return;overlay.hidden=false;text.textContent='Install Calorie Count for a standalone, offline experience.';installBtn.textContent='Install';installBtn.disabled=false;note.textContent='';iosSteps.hidden=true;showingIosSteps=false}
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event});
+  window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;hide()});
+  notNow.addEventListener('click',()=>{sessionStorage.setItem('cc_install_prompt_dismissed','1');hide()});
+  installBtn.addEventListener('click',async()=>{
+    if(isIOS){if(!showingIosSteps){showingIosSteps=true;iosSteps.hidden=false;iosSteps.innerHTML='<div><strong>1.</strong> Tap the <strong>Share</strong> button (□↑).</div><div><strong>2.</strong> Tap <strong>Add to Home Screen</strong>.</div><div><strong>3.</strong> Tap <strong>Add</strong>.</div>';installBtn.textContent='Got it';note.textContent='Safari requires Add to Home Screen to be confirmed manually.';return}sessionStorage.setItem('cc_install_prompt_dismissed','1');hide();return}
+    if(deferredInstallPrompt){const promptEvent=deferredInstallPrompt;try{await promptEvent.prompt();const choice=await promptEvent.userChoice;if(choice&&choice.outcome==='accepted'){deferredInstallPrompt=null;hide()}}catch(error){console.error('Install prompt error:',error)}return}
+    note.textContent='Automatic installation is not available in this browser right now.';installBtn.disabled=true;installBtn.textContent='Unavailable';
   });
-
-  window.addEventListener('appinstalled', () => {
-    deferredInstallPrompt = null;
-    hide();
-  });
-
-  notNow.addEventListener('click', () => {
-    sessionStorage.setItem(
-      'cc_install_prompt_dismissed',
-      '1'
-    );
-
-    hide();
-  });
-
-  installBtn.addEventListener('click', async () => {
-
-    /*
-     * iPhone / iPad only:
-     * Safari does not provide a programmable PWA install prompt.
-     */
-    if(isIOS){
-
-      iosSteps.hidden = false;
-
-      iosSteps.innerHTML =
-        '<div><strong>1.</strong> Tap the <strong>Share</strong> button (□↑).</div>' +
-        '<div><strong>2.</strong> Tap <strong>Add to Home Screen</strong>.</div>' +
-        '<div><strong>3.</strong> Tap <strong>Add</strong>.</div>';
-
-      installBtn.textContent = 'Got it';
-
-      note.textContent =
-        'Safari requires Add to Home Screen to be confirmed manually.';
-
-      return;
-    }
-
-    /*
-     * Chrome / Edge / Samsung / compatible browsers:
-     * open native PWA installation prompt.
-     */
-    if(deferredInstallPrompt){
-
-      const promptEvent = deferredInstallPrompt;
-
-      try{
-        await promptEvent.prompt();
-
-        const choice = await promptEvent.userChoice;
-
-        if(choice && choice.outcome === 'accepted'){
-          deferredInstallPrompt = null;
-          hide();
-        }else{
-          installBtn.textContent = 'Install';
-          installBtn.disabled = false;
-        }
-
-      }catch(error){
-        console.error('Install prompt error:', error);
-
-        installBtn.textContent = 'Install';
-        installBtn.disabled = false;
-      }
-
-      return;
-    }
-
-    /*
-     * No native installer exposed.
-     * NO manual instructions except on iOS.
-     */
-    note.textContent =
-      'Automatic installation is not available in this browser right now.';
-
-    installBtn.textContent = 'Unavailable';
-    installBtn.disabled = true;
-  });
-
-  /*
-   * Always ask first when visiting from a browser.
-   */
-  setTimeout(showQuestion, 900);
-
+  setTimeout(showQuestion,900);
 })();
 </script>
- 
+
 </body></html>
