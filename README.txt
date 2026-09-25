@@ -11,3 +11,8 @@ Changes only:
 Everything else from v28 is preserved, including Recipes, Saved meals, Support List, barcode scanning, AI food lookup, Seasons, meal reordering and PWA installation.
 
 Upload the root contents to the GitHub repository and commit. No Cloudflare Worker change is required for v29.
+
+
+## v29.1 minor fix
+- Editing an existing food inside a meal now replaces it in place instead of moving it to the bottom of that meal.
+- All v29 behavior remains unchanged.

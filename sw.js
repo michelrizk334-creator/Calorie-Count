@@ -1,4 +1,4 @@
-const CACHE='calorie-count-v29-meal-clear-ai-default';
+const CACHE='calorie-count-v29-1-preserve-edit-order';
 const BASE='/Calorie-Count/';
 const ASSETS=[BASE,BASE+'index.html',BASE+'manifest.webmanifest',BASE+'icon-180.png',BASE+'icon-192.png',BASE+'icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));});
