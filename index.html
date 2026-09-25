@@ -371,24 +371,40 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 @media(max-width:390px){.analytics-summary-card strong{font-size:19px}}
 </style>
 
-<style id="v30_1TabFit">
-/* v30.1 — fit five top tabs cleanly without changing the tab layout */
+
+<style id="v30_3TabFit">
+/* v30.3 — readable five-tab navigation with centered wrapping */
 .app-tabs .tab{
-  font-size:13px!important;
-  padding-left:8px!important;
-  padding-right:8px!important;
-  white-space:nowrap!important;
+  flex:1 1 0!important;
+  min-width:0!important;
+  min-height:48px!important;
+  padding:7px 5px!important;
+  font-size:14px!important;
+  line-height:1.08!important;
+  white-space:normal!important;
+  text-align:center!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
 }
 @media(max-width:650px){
-  .app-tabs{gap:5px!important}
+  .app-tabs{gap:6px!important}
   .app-tabs .tab{
-    font-size:11px!important;
-    padding-left:4px!important;
-    padding-right:4px!important;
+    min-height:48px!important;
+    padding:6px 3px!important;
+    font-size:12.5px!important;
+    line-height:1.05!important;
   }
 }
-@media(max-width:430px){
-  .app-tabs .tab{font-size:10.5px!important}
+@media(max-width:390px){
+  .app-tabs{gap:4px!important}
+  .app-tabs .tab{
+    font-size:12px!important;
+    padding-left:2px!important;
+    padding-right:2px!important;
+  }
 }
 </style>
 
