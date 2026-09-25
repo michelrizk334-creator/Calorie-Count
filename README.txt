@@ -1,8 +1,8 @@
-Calorie Count v30 — Analytics
+Calorie Count v30.1 — Top Tab Fit
 
-Adds a fifth Analytics tab.
-Daily view = days of the selected week.
-Weekly view = weeks of the selected month.
-Monthly view = months of the selected year.
-Shows weight, calories consumed, calories burned, period balance, charts, and a final Total column.
-All v29.1 functionality is preserved. No Cloudflare Worker update is required.
+Minor UI-only update on top of v30 Analytics.
+- Reduced top navigation tab text/padding so all five tabs fit cleanly.
+- No tracker, analytics, recipes, AI, barcode, seasons, meals, or storage logic changed.
+- Service-worker cache bumped to v30.1.
+
+Upload the root contents to GitHub and commit. No Cloudflare change is required.
