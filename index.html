@@ -335,6 +335,41 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 }
 @media(max-width:390px){.recipe-targets{grid-template-columns:1fr}}
 </style>
+
+<style id="v30AnalyticsStyles">
+#analyticsView .analytics-controls{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.analytics-mode-buttons,.analytics-period-nav{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.analytics-mode-buttons button,.analytics-period-nav button{min-height:38px;padding:8px 11px;font-size:13px}
+.analytics-mode-buttons button.active{background:#7c5cff;color:#fff}
+#analyticsPeriodTitle{font-weight:800;color:#eef2ff;min-width:190px;text-align:center}
+.analytics-summary-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.analytics-summary-card{background:#0c1427;border:1px solid #26324a;border-radius:14px;padding:12px;min-width:0}
+.analytics-summary-card span,.analytics-summary-card small{display:block;color:#9aa7bd;font-size:11px}
+.analytics-summary-card strong{display:block;font-size:22px;margin:4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.analytics-chart-panel{overflow:hidden}
+.analytics-chart-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}
+.analytics-chart-head h3{margin:0;font-size:18px}
+.analytics-chart-head span{color:#aeb9cc;font-size:12px;text-align:right}
+.analytics-chart{width:100%;min-height:225px;background:#0c1427;border:1px solid #26324a;border-radius:14px;padding:8px;overflow:hidden}
+.analytics-chart svg{display:block;width:100%;height:auto;min-height:205px}
+.analytics-chart text{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.analytics-empty{min-height:205px;display:flex;align-items:center;justify-content:center;color:#6f7d95;text-align:center;padding:18px}
+.analytics-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid #26324a;border-radius:14px}
+.analytics-table{width:100%;border-collapse:collapse;min-width:720px;background:#0c1427}
+.analytics-table th,.analytics-table td{padding:10px 9px;border-bottom:1px solid #26324a;border-right:1px solid #26324a;text-align:right;white-space:nowrap;font-size:12px}
+.analytics-table th:first-child,.analytics-table td:first-child{text-align:left;position:sticky;left:0;background:#101a30;z-index:1;font-weight:800}
+.analytics-table th{color:#cbd5e1;background:#101a30}
+.analytics-table th:last-child,.analytics-table td:last-child{font-weight:800;background:#17213a;border-right:0}
+.analytics-table tr:last-child td{border-bottom:0}
+.analytics-period-note{margin-top:9px;font-size:11px;color:#8f9bb0;line-height:1.4}
+@media(max-width:700px){
+  .analytics-summary-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .analytics-controls{align-items:stretch!important}
+  .analytics-mode-buttons,.analytics-period-nav{width:100%;justify-content:center}
+  #analyticsPeriodTitle{order:-1;width:100%;min-width:0}
+}
+@media(max-width:390px){.analytics-summary-card strong{font-size:19px}}
+</style>
 </head><body>
 <div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
   <div class="install-prompt-card">
@@ -354,7 +389,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 </div>
 <div id="desktopScaleRoot">
 <header><div><h1>Calorie Count</h1><p>Food, macros, Concept2 & daily deficit</p></div><div class="header-actions"><button id="settingsBtn" class="ghost">Settings</button></div></header>
-<nav class="app-tabs"><button id="trackerTab" class="tab active">Meals</button><button id="seasonsTab" class="tab">Seasons</button><button id="supportTab" class="tab">Support List</button><button id="recipeTab" class="tab">Recipes</button></nav>
+<nav class="app-tabs"><button id="trackerTab" class="tab active">Meals</button><button id="seasonsTab" class="tab">Seasons</button><button id="supportTab" class="tab">Support List</button><button id="recipeTab" class="tab">Recipes</button><button id="analyticsTab" class="tab">Analytics</button></nav>
 <main><div id="trackerView"><section class="datebar"><button id="prevDay">‹</button><input id="date" type="date"><button id="nextDay">›</button><button id="todayBtn" class="ghost">Today</button></section>
 <section class="cards summary"><article><span>Food</span><strong id="foodKcal">0</strong><small>kcal</small></article><article><span>Burned</span><strong id="burnedKcal">0</strong><small>BMR + workout</small></article><article class="accent"><span>Deficit</span><strong id="deficit">0</strong><small>kcal</small></article></section>
 <section class="macro-card"><div><b>Carbs</b><span id="carbs">0 g</span></div><div><b>Protein</b><span id="protein">0 g</span></div><div><b>Fat</b><span id="fat">0 g</span></div></section>
@@ -390,7 +425,53 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
     <div class="section-head"><div><h2>Saved meals</h2><p>Recipes you chose to keep for later. Saving is optional.</p></div></div>
     <div id="savedRecipesList"></div>
   </section>
-</div></main>
+</div>
+<div id="analyticsView" hidden>
+  <section class="panel">
+    <div class="section-head"><div><h2>Analytics</h2><p>Weight, calories consumed and calories burned over the same selected period.</p></div></div>
+    <div class="analytics-controls">
+      <div class="analytics-mode-buttons" aria-label="Analytics period grouping">
+        <button type="button" id="analyticsDailyBtn" class="active">Daily</button>
+        <button type="button" id="analyticsWeeklyBtn" class="ghost">Weekly</button>
+        <button type="button" id="analyticsMonthlyBtn" class="ghost">Monthly</button>
+      </div>
+      <div class="analytics-period-nav">
+        <button type="button" id="analyticsPrev" class="ghost" aria-label="Previous period">‹</button>
+        <span id="analyticsPeriodTitle"></span>
+        <button type="button" id="analyticsNext" class="ghost" aria-label="Next period">›</button>
+        <button type="button" id="analyticsCurrent" class="ghost">Current</button>
+      </div>
+    </div>
+    <div class="analytics-summary-cards">
+      <div class="analytics-summary-card"><span>Average weight</span><strong id="analyticsWeightSummary">—</strong><small id="analyticsWeightDays">No weight entries</small></div>
+      <div class="analytics-summary-card"><span>Calories consumed</span><strong id="analyticsConsumedSummary">0</strong><small>kcal in selected period</small></div>
+      <div class="analytics-summary-card"><span>Calories burned</span><strong id="analyticsBurnedSummary">0</strong><small>BMR + workouts</small></div>
+      <div class="analytics-summary-card"><span>Period balance</span><strong id="analyticsBalanceSummary">0</strong><small id="analyticsBalanceLabel">burned − consumed</small></div>
+    </div>
+  </section>
+
+  <section class="panel analytics-chart-panel">
+    <div class="analytics-chart-head"><div><h3>Weight</h3><p class="note">Average recorded weight for each segment.</p></div><span id="analyticsWeightChartTotal"></span></div>
+    <div id="analyticsWeightChart" class="analytics-chart"></div>
+  </section>
+
+  <section class="panel analytics-chart-panel">
+    <div class="analytics-chart-head"><div><h3>Calories consumed</h3><p class="note">Everything logged in Meals.</p></div><span id="analyticsConsumedChartTotal"></span></div>
+    <div id="analyticsConsumedChart" class="analytics-chart"></div>
+  </section>
+
+  <section class="panel analytics-chart-panel">
+    <div class="analytics-chart-head"><div><h3>Calories burned</h3><p class="note">BMR + logged workout calories.</p></div><span id="analyticsBurnedChartTotal"></span></div>
+    <div id="analyticsBurnedChart" class="analytics-chart"></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div><h2>Period breakdown</h2><p>All metrics use the same selected period. The final column summarizes the whole period.</p></div></div>
+    <div id="analyticsTableWrap" class="analytics-table-wrap"></div>
+    <p class="analytics-period-note">Days with no tracker entry are shown as 0 calories and are not included in the weight average. Burned calories are calculated only for tracker days that exist in your history.</p>
+  </section>
+</div>
+</main>
 <dialog id="foodDialog"><form method="dialog"><div class="section-head"><h2>Add food</h2><button type="button" id="closeFoodDialog" class="ghost" aria-label="Close">✕</button></div><label>Meal<select id="mealSelect"></select></label><label>Search<input id="foodSearch" placeholder="Chicken, rice, yogurt…" autocomplete="off"></label><div id="foodResults" class="food-results"></div></form></dialog>
 <dialog id="qtyDialog"><form method="dialog"><div class="section-head"><h2 id="qtyTitle">Food</h2><button type="button" id="closeQtyDialog" class="ghost" aria-label="Close">✕</button></div><label>State<select id="state"><option>Raw</option><option>Cooked</option></select></label><label id="qtyLabel">Quantity<input id="qty" type="number" step="0.1" min="0"></label><p id="conversionNote" class="note"></p><button id="confirmFood" value="default">Add to meal</button></form></dialog>
 
@@ -592,8 +673,117 @@ $('#saveDayBtn').onclick=()=>{
 $('#seasonSaveMode').onchange=updateSeasonSaveMode;
 $('#closeSaveSeason').onclick=()=>$('#saveSeasonDialog').close();
 $('#saveSeasonForm').onsubmit=e=>{e.preventDefault();const isNew=$('#seasonSaveMode').value==='new';const phase=(isNew?$('#newSeasonName').value:$('#existingSeason').value).trim();if(!phase){alert(isNew?'Enter a name for the new Training Phase.':'There is no existing phase to select. Create a new one instead.');return}day().phase=phase;$('#phase').value=phase;db.savedDays[date]=structuredClone(day());localStorage.setItem(KEY,JSON.stringify(db));$('#saveSeasonDialog').close();renderSeasons();render();const b=$('#saveDayBtn'),old=b.textContent;b.textContent='Saved ✓';setTimeout(()=>b.textContent=old,1200)};
-function setTab(tab){const tracker=tab==='tracker', seasons=tab==='seasons', support=tab==='support', recipe=tab==='recipe';$('#trackerView').hidden=!tracker;$('#seasonsView').hidden=!seasons;$('#supportView').hidden=!support;$('#recipeView').hidden=!recipe;$('#trackerTab').classList.toggle('active',tracker);$('#seasonsTab').classList.toggle('active',seasons);$('#supportTab').classList.toggle('active',support);$('#recipeTab').classList.toggle('active',recipe);if(seasons)renderSeasons();if(support)renderSupportFoods();if(recipe)renderRecipeView();window.dispatchEvent(new Event('resize'))}
-$('#trackerTab').onclick=()=>setTab('tracker');$('#seasonsTab').onclick=()=>setTab('seasons');$('#supportTab').onclick=()=>setTab('support');$('#recipeTab').onclick=()=>setTab('recipe');$('#supportSearch').oninput=renderSupportFoods;
+
+// =========================================================
+// v30 ANALYTICS
+// Daily = days of the selected week
+// Weekly = weeks of the selected month
+// Monthly = months of the selected year
+// =========================================================
+let analyticsMode='daily';
+let analyticsAnchor=date;
+
+function analyticsDateFromIso(value){return new Date(String(value)+'T12:00:00')}
+function analyticsIso(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dayNum=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dayNum}`}
+function analyticsAddDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function analyticsStartOfWeek(d){const x=new Date(d);const offset=(x.getDay()+6)%7;x.setDate(x.getDate()-offset);return x}
+function analyticsEndOfMonth(d){return new Date(d.getFullYear(),d.getMonth()+1,0,12,0,0)}
+function analyticsFmtDate(d,opts){return d.toLocaleDateString(undefined,opts)}
+function analyticsRangeLabel(start,end){
+  if(start.getFullYear()!==end.getFullYear())return `${analyticsFmtDate(start,{day:'numeric',month:'short',year:'numeric'})} – ${analyticsFmtDate(end,{day:'numeric',month:'short',year:'numeric'})}`;
+  if(start.getMonth()!==end.getMonth())return `${analyticsFmtDate(start,{day:'numeric',month:'short'})} – ${analyticsFmtDate(end,{day:'numeric',month:'short',year:'numeric'})}`;
+  return `${start.getDate()}–${analyticsFmtDate(end,{day:'numeric',month:'short',year:'numeric'})}`;
+}
+function analyticsDayStats(d){
+  if(!d)return{consumed:0,burned:0,balance:0,weight:null,recorded:false};
+  let consumed=0;
+  (d.meals||[]).flat().forEach(x=>{try{consumed+=calcItem(x).kcal||0}catch{}});
+  const w=d.workout||{},mode=w.mode||'erg',secs=(+w.h||0)*3600+(+w.m||0)*60+(+w.s||0),lb=(+d.weight||75)*2.205,trueHour=(+w.calHour||0)-300+1.714*lb,ergAdjusted=Math.max(0,trueHour*secs/3600),adjusted=mode==='other'?Math.max(0,+w.otherCalories||0):ergAdjusted,burned=(+db.settings.bmr||1765)+adjusted;
+  const weight=Number.isFinite(+d.weight)&&+d.weight>0?+d.weight:null;
+  return{consumed,burned,balance:burned-consumed,weight,recorded:true};
+}
+function analyticsAggregate(start,end,label,shortLabel=label){
+  let consumed=0,burned=0,recordedDays=0;const weights=[];
+  for(let d=new Date(start);d<=end;d=analyticsAddDays(d,1)){
+    const entry=db.days[analyticsIso(d)];
+    if(!entry)continue;
+    const s=analyticsDayStats(entry);consumed+=s.consumed;burned+=s.burned;recordedDays++;
+    if(s.weight!==null)weights.push(s.weight);
+  }
+  const weight=weights.length?weights.reduce((a,b)=>a+b,0)/weights.length:null;
+  return{start:new Date(start),end:new Date(end),label,shortLabel,consumed,burned,balance:burned-consumed,weight,weightCount:weights.length,recordedDays};
+}
+function analyticsPeriod(){
+  const anchor=analyticsDateFromIso(analyticsAnchor);const segments=[];let start,end,title;
+  if(analyticsMode==='daily'){
+    start=analyticsStartOfWeek(anchor);end=analyticsAddDays(start,6);title=`Week · ${analyticsRangeLabel(start,end)}`;
+    for(let i=0;i<7;i++){const d=analyticsAddDays(start,i);segments.push(analyticsAggregate(d,d,analyticsFmtDate(d,{weekday:'short',day:'numeric'}),analyticsFmtDate(d,{weekday:'short'})))}
+  }else if(analyticsMode==='weekly'){
+    start=new Date(anchor.getFullYear(),anchor.getMonth(),1,12,0,0);end=analyticsEndOfMonth(anchor);title=`Month · ${analyticsFmtDate(start,{month:'long',year:'numeric'})}`;
+    let cursor=new Date(start),week=1;
+    while(cursor<=end){const daysToSunday=6-((cursor.getDay()+6)%7);const segEnd=new Date(Math.min(analyticsAddDays(cursor,daysToSunday).getTime(),end.getTime()));const label=`${cursor.getDate()}–${segEnd.getDate()} ${analyticsFmtDate(segEnd,{month:'short'})}`;segments.push(analyticsAggregate(cursor,segEnd,label,`W${week}`));cursor=analyticsAddDays(segEnd,1);week++}
+  }else{
+    start=new Date(anchor.getFullYear(),0,1,12,0,0);end=new Date(anchor.getFullYear(),11,31,12,0,0);title=`Year · ${anchor.getFullYear()}`;
+    for(let m=0;m<12;m++){const ms=new Date(anchor.getFullYear(),m,1,12,0,0),me=new Date(anchor.getFullYear(),m+1,0,12,0,0);segments.push(analyticsAggregate(ms,me,analyticsFmtDate(ms,{month:'short'}),analyticsFmtDate(ms,{month:'short'})))}
+  }
+  const total=analyticsAggregate(start,end,'Total','Total');
+  return{segments,total,start,end,title};
+}
+function analyticsLineChart(rootId,segments){
+  const root=$(rootId);if(!root)return;const values=segments.map(s=>s.weight);const valid=values.filter(v=>v!==null&&Number.isFinite(v));
+  if(!valid.length){root.innerHTML='<div class="analytics-empty">No weight entries for this period.</div>';return}
+  const W=760,H=220,L=46,R=18,T=18,B=38,plotW=W-L-R,plotH=H-T-B;let min=Math.min(...valid),max=Math.max(...valid);if(Math.abs(max-min)<0.2){min-=0.5;max+=0.5}else{const pad=(max-min)*0.12;min-=pad;max+=pad}
+  const x=i=>segments.length===1?L+plotW/2:L+i*plotW/(segments.length-1);const y=v=>T+(max-v)*plotH/(max-min);
+  let grid='';for(let i=0;i<4;i++){const yy=T+i*plotH/3,val=max-i*(max-min)/3;grid+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#26324a" stroke-width="1"/><text x="${L-7}" y="${yy+4}" text-anchor="end" fill="#8090aa" font-size="10">${val.toFixed(1)}</text>`}
+  const pts=segments.map((s,i)=>s.weight===null?null:[x(i),y(s.weight)]);let path='';let drawing=false;pts.forEach(p=>{if(!p){drawing=false;return}path+=(drawing?' L ':' M ')+p[0].toFixed(1)+' '+p[1].toFixed(1);drawing=true});
+  const dots=pts.map((p,i)=>p?`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#b7aaff"><title>${escapeHtml(segments[i].label)}: ${segments[i].weight.toFixed(1)} kg</title></circle>`:'').join('');
+  const labels=segments.map((s,i)=>`<text x="${x(i)}" y="${H-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${escapeHtml(s.shortLabel)}</text>`).join('');
+  root.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight trend">${grid}<path d="${path}" fill="none" stroke="#b7aaff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${dots}${labels}</svg>`;
+}
+function analyticsBarChart(rootId,segments,key){
+  const root=$(rootId);if(!root)return;const vals=segments.map(s=>Math.max(0,+s[key]||0));const max=Math.max(...vals,0);
+  if(max<=0){root.innerHTML='<div class="analytics-empty">No calorie data for this period.</div>';return}
+  const W=760,H=220,L=46,R=18,T=18,B=38,plotW=W-L-R,plotH=H-T-B,n=segments.length,slot=plotW/n,barW=Math.max(8,slot*.58);
+  let grid='';for(let i=0;i<4;i++){const yy=T+i*plotH/3,val=max-i*max/3;grid+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#26324a" stroke-width="1"/><text x="${L-7}" y="${yy+4}" text-anchor="end" fill="#8090aa" font-size="10">${Math.round(val)}</text>`}
+  const bars=segments.map((s,i)=>{const v=vals[i],h=v/max*plotH,bx=L+i*slot+(slot-barW)/2,by=T+plotH-h;return `<rect x="${bx}" y="${by}" width="${barW}" height="${h}" rx="4" fill="#7c5cff"><title>${escapeHtml(s.label)}: ${Math.round(v)} kcal</title></rect><text x="${L+i*slot+slot/2}" y="${H-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${escapeHtml(s.shortLabel)}</text>`}).join('');
+  root.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Calorie trend">${grid}${bars}</svg>`;
+}
+function analyticsTableHtml(segments,total){
+  const header=segments.map(s=>`<th>${escapeHtml(s.label)}</th>`).join('');
+  const weight=segments.map(s=>`<td>${s.weight===null?'—':s.weight.toFixed(1)+' kg'}</td>`).join('');
+  const consumed=segments.map(s=>`<td>${Math.round(s.consumed)}</td>`).join('');
+  const burned=segments.map(s=>`<td>${Math.round(s.burned)}</td>`).join('');
+  const balance=segments.map(s=>`<td>${Math.round(s.balance)}</td>`).join('');
+  return `<table class="analytics-table"><thead><tr><th>Metric</th>${header}<th>Total</th></tr></thead><tbody><tr><td>Weight</td>${weight}<td>${total.weight===null?'—':total.weight.toFixed(1)+' kg avg'}</td></tr><tr><td>Calories consumed</td>${consumed}<td>${Math.round(total.consumed)}</td></tr><tr><td>Calories burned</td>${burned}<td>${Math.round(total.burned)}</td></tr><tr><td>Balance (burned − consumed)</td>${balance}<td>${Math.round(total.balance)}</td></tr></tbody></table>`;
+}
+function renderAnalytics(){
+  const view=$('#analyticsView');if(!view)return;const p=analyticsPeriod();
+  $('#analyticsPeriodTitle').textContent=p.title;
+  ['daily','weekly','monthly'].forEach(mode=>{const id=mode==='daily'?'#analyticsDailyBtn':mode==='weekly'?'#analyticsWeeklyBtn':'#analyticsMonthlyBtn';$(id).className=analyticsMode===mode?'active':'ghost'});
+  $('#analyticsWeightSummary').textContent=p.total.weight===null?'—':p.total.weight.toFixed(1)+' kg';
+  $('#analyticsWeightDays').textContent=p.total.weightCount?`${p.total.weightCount} weight entr${p.total.weightCount===1?'y':'ies'}`:'No weight entries';
+  $('#analyticsConsumedSummary').textContent=Math.round(p.total.consumed).toLocaleString();
+  $('#analyticsBurnedSummary').textContent=Math.round(p.total.burned).toLocaleString();
+  const bal=Math.round(p.total.balance);$('#analyticsBalanceSummary').textContent=Math.abs(bal).toLocaleString()+' kcal';$('#analyticsBalanceLabel').textContent=bal>=0?'deficit over selected period':'surplus over selected period';
+  $('#analyticsWeightChartTotal').textContent=p.total.weight===null?'No recorded weight':`Period avg ${p.total.weight.toFixed(1)} kg`;
+  $('#analyticsConsumedChartTotal').textContent=`Period total ${Math.round(p.total.consumed).toLocaleString()} kcal`;
+  $('#analyticsBurnedChartTotal').textContent=`Period total ${Math.round(p.total.burned).toLocaleString()} kcal`;
+  analyticsLineChart('#analyticsWeightChart',p.segments);analyticsBarChart('#analyticsConsumedChart',p.segments,'consumed');analyticsBarChart('#analyticsBurnedChart',p.segments,'burned');
+  $('#analyticsTableWrap').innerHTML=analyticsTableHtml(p.segments,p.total);
+}
+function shiftAnalyticsPeriod(direction){
+  const d=analyticsDateFromIso(analyticsAnchor);if(analyticsMode==='daily')d.setDate(d.getDate()+7*direction);else if(analyticsMode==='weekly')d.setMonth(d.getMonth()+direction);else d.setFullYear(d.getFullYear()+direction);analyticsAnchor=analyticsIso(d);renderAnalytics();
+}
+function setAnalyticsMode(mode){analyticsMode=mode;renderAnalytics()}
+$('#analyticsDailyBtn').onclick=()=>setAnalyticsMode('daily');
+$('#analyticsWeeklyBtn').onclick=()=>setAnalyticsMode('weekly');
+$('#analyticsMonthlyBtn').onclick=()=>setAnalyticsMode('monthly');
+$('#analyticsPrev').onclick=()=>shiftAnalyticsPeriod(-1);
+$('#analyticsNext').onclick=()=>shiftAnalyticsPeriod(1);
+$('#analyticsCurrent').onclick=()=>{analyticsAnchor=new Date().toISOString().slice(0,10);renderAnalytics()};
+
+function setTab(tab){const tracker=tab==='tracker', seasons=tab==='seasons', support=tab==='support', recipe=tab==='recipe', analytics=tab==='analytics';$('#trackerView').hidden=!tracker;$('#seasonsView').hidden=!seasons;$('#supportView').hidden=!support;$('#recipeView').hidden=!recipe;$('#analyticsView').hidden=!analytics;$('#trackerTab').classList.toggle('active',tracker);$('#seasonsTab').classList.toggle('active',seasons);$('#supportTab').classList.toggle('active',support);$('#recipeTab').classList.toggle('active',recipe);$('#analyticsTab').classList.toggle('active',analytics);if(seasons)renderSeasons();if(support)renderSupportFoods();if(recipe)renderRecipeView();if(analytics)renderAnalytics();window.dispatchEvent(new Event('resize'))}
+$('#trackerTab').onclick=()=>setTab('tracker');$('#seasonsTab').onclick=()=>setTab('seasons');$('#supportTab').onclick=()=>setTab('support');$('#recipeTab').onclick=()=>setTab('recipe');$('#analyticsTab').onclick=()=>{analyticsAnchor=date;setTab('analytics')};$('#supportSearch').oninput=renderSupportFoods;
 $('#foodEditorForm').onsubmit=e=>{e.preventDefault();const mode=$('#customConversion').value,ratio=+$('#customRatio').value||null;const f={name:$('#customName').value.trim(),description:$('#customDescription').value.trim(),type:$('#customType').value,serving:+$('#customServing').value||1,unit:$('#customUnit').value,carbs:+$('#customCarbs').value||0,protein:+$('#customProtein').value||0,fat:+$('#customFat').value||0,kcal:+$('#customKcal').value||0,ratio:mode==='none'?null:ratio,conversion:mode};if(mode!=='none'&&(!ratio||ratio<1)){alert('Enter a conversion ratio of 1 or greater.');return}if(!f.name)return;if(editingFoodIndex===null)db.supportFoods.push(f);else db.supportFoods[editingFoodIndex]=f;localStorage.setItem(KEY,JSON.stringify(db));$('#foodEditorDialog').close();renderSupportFoods();render()};
 // Explicit close actions: closing an accidental Add/Edit never validates or saves the form.
 $('#closeFoodDialog').onclick=()=>$('#foodDialog').close();$('#closeQtyDialog').onclick=()=>{$('#qtyDialog').close();selectedFood=null;editingMealIndex=null;editingMealItemIndex=null;$('#confirmFood').textContent='Add to meal'};$('#closeFoodEditor').onclick=()=>{   stopBarcodeCamera();   $('#foodEditorDialog').close();   editingFoodIndex=null; };
