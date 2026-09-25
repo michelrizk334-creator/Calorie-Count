@@ -786,7 +786,7 @@ function renderAnalytics(){
   $('#analyticsWeightDays').textContent=p.total.weightCount?`${p.total.weightCount} weight entr${p.total.weightCount===1?'y':'ies'}`:'No weight entries';
   $('#analyticsConsumedSummary').textContent=Math.round(p.total.consumed).toLocaleString();
   $('#analyticsBurnedSummary').textContent=Math.round(p.total.burned).toLocaleString();
-  const bal=Math.round(p.total.balance);$('#analyticsBalanceSummary').textContent=Math.abs(bal).toLocaleString()+' kcal';$('#analyticsBalanceLabel').textContent=bal>=0?'deficit over selected period':'surplus over selected period';
+  const bal=Math.round(p.total.balance);$('#analyticsBalanceSummary').textContent=(bal>0?'+':'')+bal.toLocaleString()+' kcal';$('#analyticsBalanceLabel').textContent=bal>0?'deficit over selected period':bal<0?'surplus over selected period':'balanced over selected period';
   $('#analyticsWeightChartTotal').textContent=p.total.weight===null?'No recorded weight':`Period avg ${p.total.weight.toFixed(1)} kg`;
   $('#analyticsConsumedChartTotal').textContent=`Period total ${Math.round(p.total.consumed).toLocaleString()} kcal`;
   $('#analyticsBurnedChartTotal').textContent=`Period total ${Math.round(p.total.burned).toLocaleString()} kcal`;
