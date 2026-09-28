@@ -1,4 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Calories"><meta name="mobile-web-app-capable" content="yes"><meta name="format-detection" content="telephone=no"><meta name="application-name" content="Calorie Count"><meta name="apple-mobile-web-app-title" content="Calorie Count"><title>Calorie Count</title><style>:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#eef2ff;background:#0b1020;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#18213a 0,#0b1020 40%);min-height:100vh}header,main{max-width:900px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;padding:28px 18px 14px}h1,h2,p{margin:0}header p,.section-head p,.note,small{color:#9aa7bd}button,input,select{font:inherit}button{border:0;border-radius:12px;background:#7c5cff;color:white;padding:11px 15px;font-weight:700;cursor:pointer}.ghost{background:#1a2338;color:#d9e0ef}.danger{background:#8f2d3c}.datebar{display:flex;gap:8px;padding:8px 18px 18px}.datebar input{flex:1}.datebar button:first-child,.datebar button:nth-child(3){font-size:24px;padding:4px 16px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 18px}.cards article,.panel,.macro-card{background:#111a2d;border:1px solid #26324a;border-radius:18px;box-shadow:0 10px 30px #0003}.cards article{padding:16px}.cards span,.cards small{display:block}.cards strong{font-size:30px}.cards .accent{background:linear-gradient(135deg,#5b42dc,#7c5cff)}.cards .accent small{color:#e4ddff}.macro-card{margin:12px 18px;padding:15px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.macro-card div{display:flex;justify-content:space-between}.panel{margin:12px 18px;padding:18px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.meal{border-top:1px solid #26324a;padding:14px 0}.meal:first-child{border-top:0}.meal-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.meal-total{color:#aeb9cc}.food-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 0}.food-row .sub{font-size:12px;color:#9aa7bd}.food-row button{background:transparent;color:#ff8f9f;padding:6px}.empty{color:#6f7d95;padding:8px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}label{display:flex;flex-direction:column;gap:6px;color:#b7c2d6;font-size:13px}input,select{width:100%;background:#0b1325;border:1px solid #34415c;color:white;border-radius:11px;padding:11px;outline:none}input:focus,select:focus{border-color:#8d75ff}.workout-result{margin-top:14px;padding:14px;border-radius:12px;background:#0c1427;display:flex;gap:20px;flex-wrap:wrap}.workout-result small{width:100%}.history{margin-top:14px}.history-row{display:grid;grid-template-columns:1fr repeat(3,auto);gap:14px;padding:9px 0;border-top:1px solid #26324a;font-size:13px}dialog{width:min(620px,calc(100% - 24px));border:1px solid #34415c;border-radius:18px;background:#111a2d;color:white;padding:18px}dialog::backdrop{background:#000a;backdrop-filter:blur(4px)}dialog form{display:grid;gap:14px}.food-results{max-height:45vh;overflow:auto}.food-option{width:100%;display:flex;justify-content:space-between;text-align:left;background:#0c1427;margin:6px 0}.food-option small{display:block}.fileBtn{background:#1a2338;padding:12px;border-radius:12px;text-align:center;font-weight:700}.fileBtn input{display:none}@media(max-width:650px){header{padding-top:18px}.cards{grid-template-columns:1fr 1fr}.cards .accent{grid-column:1/-1}.grid{grid-template-columns:1fr 1fr}.macro-card{grid-template-columns:1fr}.food-row{grid-template-columns:1fr auto}.food-row .kcal{grid-column:2}.datebar .ghost{display:none}} 
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#101827" name="theme-color"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><meta content="Calories" name="apple-mobile-web-app-title"/><meta content="yes" name="mobile-web-app-capable"/><meta content="telephone=no" name="format-detection"/><meta content="Calorie Count" name="application-name"/><meta content="Calorie Count" name="apple-mobile-web-app-title"/><title>Calorie Count</title><style>:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#eef2ff;background:#0b1020;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#18213a 0,#0b1020 40%);min-height:100vh}header,main{max-width:900px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;padding:28px 18px 14px}h1,h2,p{margin:0}header p,.section-head p,.note,small{color:#9aa7bd}button,input,select{font:inherit}button{border:0;border-radius:12px;background:#7c5cff;color:white;padding:11px 15px;font-weight:700;cursor:pointer}.ghost{background:#1a2338;color:#d9e0ef}.danger{background:#8f2d3c}.datebar{display:flex;gap:8px;padding:8px 18px 18px}.datebar input{flex:1}.datebar button:first-child,.datebar button:nth-child(3){font-size:24px;padding:4px 16px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 18px}.cards article,.panel,.macro-card{background:#111a2d;border:1px solid #26324a;border-radius:18px;box-shadow:0 10px 30px #0003}.cards article{padding:16px}.cards span,.cards small{display:block}.cards strong{font-size:30px}.cards .accent{background:linear-gradient(135deg,#5b42dc,#7c5cff)}.cards .accent small{color:#e4ddff}.macro-card{margin:12px 18px;padding:15px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.macro-card div{display:flex;justify-content:space-between}.panel{margin:12px 18px;padding:18px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.meal{border-top:1px solid #26324a;padding:14px 0}.meal:first-child{border-top:0}.meal-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.meal-total{color:#aeb9cc}.food-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 0}.food-row .sub{font-size:12px;color:#9aa7bd}.food-row button{background:transparent;color:#ff8f9f;padding:6px}.empty{color:#6f7d95;padding:8px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}label{display:flex;flex-direction:column;gap:6px;color:#b7c2d6;font-size:13px}input,select{width:100%;background:#0b1325;border:1px solid #34415c;color:white;border-radius:11px;padding:11px;outline:none}input:focus,select:focus{border-color:#8d75ff}.workout-result{margin-top:14px;padding:14px;border-radius:12px;background:#0c1427;display:flex;gap:20px;flex-wrap:wrap}.workout-result small{width:100%}.history{margin-top:14px}.history-row{display:grid;grid-template-columns:1fr repeat(3,auto);gap:14px;padding:9px 0;border-top:1px solid #26324a;font-size:13px}dialog{width:min(620px,calc(100% - 24px));border:1px solid #34415c;border-radius:18px;background:#111a2d;color:white;padding:18px}dialog::backdrop{background:#000a;backdrop-filter:blur(4px)}dialog form{display:grid;gap:14px}.food-results{max-height:45vh;overflow:auto}.food-option{width:100%;display:flex;justify-content:space-between;text-align:left;background:#0c1427;margin:6px 0}.food-option small{display:block}.fileBtn{background:#1a2338;padding:12px;border-radius:12px;text-align:center;font-weight:700}.fileBtn input{display:none}@media(max-width:650px){header{padding-top:18px}.cards{grid-template-columns:1fr 1fr}.cards .accent{grid-column:1/-1}.grid{grid-template-columns:1fr 1fr}.macro-card{grid-template-columns:1fr}.food-row{grid-template-columns:1fr auto}.food-row .kcal{grid-column:2}.datebar .ghost{display:none}} 
 .header-actions{display:flex;gap:8px}.custom-food-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 0;border-top:1px solid #26324a}.custom-food-row:first-child{border-top:0}.custom-food-row .meta{font-size:12px;color:#9aa7bd}.custom-food-row .edit{background:#1a2338}.custom-food-row .delete{background:transparent;color:#ff8f9f;padding:8px}@media(max-width:650px){.header-actions{gap:5px}.header-actions button{padding:9px 10px}}
 .app-tabs{max-width:864px;margin:0 auto 4px;padding:0 18px;display:flex;gap:8px}.app-tabs .tab{flex:1;background:#111a2d;border:1px solid #26324a;color:#9aa7bd}.app-tabs .tab.active{background:#7c5cff;color:#fff;border-color:#7c5cff}.support-panel{min-height:480px}.support-search{margin-bottom:14px}.support-list{max-height:none}.support-list .custom-food-row{padding:14px 0}
 
@@ -70,14 +71,13 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   dialog{width:min(620px,calc(100% - 24px))!important;max-width:620px!important;max-height:90vh!important;margin:auto!important;inset:0!important;border-radius:18px!important;padding:18px!important}dialog form{gap:14px!important}.food-results{max-height:45vh!important}
 }
 </style>
-<link rel="manifest" href="/Calorie-Count/manifest.webmanifest">
-<meta name="theme-color" content="#10182b">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Calorie Count">
-<link rel="apple-touch-icon" href="icon-180.png">
-
+<link href="/Calorie-Count/manifest.webmanifest" rel="manifest"/>
+<meta content="#10182b" name="theme-color"/>
+<meta content="yes" name="mobile-web-app-capable"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Calorie Count" name="apple-mobile-web-app-title"/>
+<link href="icon-180.png" rel="apple-touch-icon"/>
 <style id="installPromptStyles">
 #installPromptOverlay{position:fixed;inset:0;background:rgba(15,23,42,.58);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;font-family:inherit}
 #installPromptOverlay[hidden]{display:none}
@@ -85,7 +85,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 .install-prompt-card h2{margin:0 0 8px;font-size:24px}.install-prompt-card p{margin:0 0 18px;line-height:1.45;color:#475569}.install-prompt-actions{display:flex;gap:10px;justify-content:flex-end}.install-prompt-actions button{min-height:44px;border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer}.install-primary{background:#2563eb;color:#fff;border:1px solid #2563eb}.install-secondary{background:#fff;color:#334155;border:1px solid #cbd5e1}
 .install-ios-steps{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px;margin:0 0 18px}.install-ios-steps div{margin:8px 0}.install-note{font-size:13px!important;color:#64748b!important;margin-top:10px!important}
 </style>
-
 <style id="v19PhoneUI">
 /* v19 — denser Support List on phones + stronger meal headings */
 .meal-title h3{font-size:1.35rem;font-weight:800;color:#facc15;letter-spacing:.01em}
@@ -110,8 +109,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   .meal-title h3{font-size:1.55rem!important}
 }
 </style>
-
-
 <style id="v20SupportFullWidth">
 /* v20 — Support List gets a true phone-width layout instead of the 900px scaled canvas. */
 @media (max-width:900px){
@@ -142,7 +139,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   #desktopScaleRoot.support-phone-native #customFoodList .custom-food-row .delete{font-size:11px!important;min-height:34px!important;padding:6px 8px!important}
 }
 </style>
-
 <style id="v21AdaptiveScaling">
 /* v21 — preserve the same UI while making it more readable across screen sizes. */
 @media (max-width:900px){
@@ -152,8 +148,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   #desktopScaleRoot:not(.support-phone-native) .food-row .sub{font-size:13px!important}
 }
 </style>
-
-
 <style id="v21_2TrueResponsiveFix">
 /* v21.2 — true viewport-width layout for Meals/Seasons.
    This overrides the legacy v10 900px forced canvas that caused right-edge clipping. */
@@ -248,8 +242,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   }
 }
 </style>
-
-
 <style id="v22LabelScannerStyles">
 .scan-label-btn{width:100%;background:linear-gradient(135deg,#2563eb,#7c5cff);margin-bottom:4px}
 .scan-box{border:1px solid #34415c;background:#0c1427;border-radius:14px;padding:12px;display:grid;gap:10px}
@@ -258,8 +250,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 .scan-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media(max-width:899px){.scan-actions button{font-size:13px;padding:9px 8px}}
 </style>
-
-
 <style id="v25MealUX">
 /* v25 — per-meal macros, quick add/edit, and drag-to-reorder */
 .meal-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -275,7 +265,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 .meal.drag-over{outline:2px solid #7c5cff;outline-offset:2px;border-radius:12px}
 @media(max-width:650px){.meal-header-right{width:100%;margin-left:0;justify-content:flex-start;gap:6px}.meal-macros{flex:1;font-size:11px}.meal-total{font-size:12px}.meal-add-btn{padding:5px 8px}}
 </style>
-
 <style id="v26SeasonsAccordion">
 .season-group{margin-bottom:12px}
 .season-banner{cursor:pointer;list-style:none;border-radius:14px;user-select:none}
@@ -286,7 +275,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 .season-chevron{font-size:24px;line-height:1;transition:transform .2s ease;flex-shrink:0}
 .season-group[open] .season-chevron{transform:rotate(180deg)}
 </style>
-
 <style id="v27AiFoodLookup">
 .ai-food-lookup{border:1px solid #44506b;background:#0c1427;border-radius:14px;padding:12px;margin-bottom:12px;display:grid;gap:9px}
 .ai-food-lookup h3{margin:0;font-size:16px}
@@ -302,7 +290,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 #customDescription{resize:vertical;min-height:64px}
 @media(max-width:650px){.ai-food-search-row{grid-template-columns:1fr}.ai-food-result-head{flex-direction:column}.ai-food-result-head button{width:100%}}
 </style>
-
 <style id="v28RecipeGenerator">
 #recipeView .recipe-source-row{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:12px}
 .recipe-targets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
@@ -335,7 +322,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 }
 @media(max-width:390px){.recipe-targets{grid-template-columns:1fr}}
 </style>
-
 <style id="v30AnalyticsStyles">
 #analyticsView .analytics-controls{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
 .analytics-mode-buttons,.analytics-period-nav{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
@@ -370,8 +356,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
 }
 @media(max-width:390px){.analytics-summary-card strong{font-size:19px}}
 </style>
-
-
 <style id="v30_3TabFit">
 /* v30.3 — readable five-tab navigation with centered wrapping */
 .app-tabs .tab{
@@ -407,1316 +391,163 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-overflow-scro
   }
 }
 </style>
-
 </head><body>
-<div id="installPromptOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="installPromptTitle">
-  <div class="install-prompt-card">
-    <h2 id="installPromptTitle">Download the app version?</h2>
-    <p id="installPromptText">Install Calorie Count for a standalone, offline experience.</p>
-    <div id="iosInstallSteps" class="install-ios-steps" hidden>
-      <div><strong>1.</strong> Open this page in Safari.</div>
-      <div><strong>2.</strong> Tap the <strong>Share</strong> button (□↑).</div>
-      <div><strong>3.</strong> Tap <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</div>
-    </div>
-    <div class="install-prompt-actions">
-      <button type="button" id="installNotNow" class="install-secondary">Not now</button>
-      <button type="button" id="installAppNow" class="install-primary">Install</button>
-    </div>
-    <p class="install-note" id="installPromptNote"></p>
-  </div>
+<div aria-labelledby="installPromptTitle" aria-modal="true" hidden="" id="installPromptOverlay" role="dialog">
+<div class="install-prompt-card">
+<h2 id="installPromptTitle">Download the app version?</h2>
+<p id="installPromptText">Install Calorie Count for a standalone, offline experience.</p>
+<div class="install-ios-steps" hidden="" id="iosInstallSteps">
+<div><strong>1.</strong> Open this page in Safari.</div>
+<div><strong>2.</strong> Tap the <strong>Share</strong> button (□↑).</div>
+<div><strong>3.</strong> Tap <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</div>
+</div>
+<div class="install-prompt-actions">
+<button class="install-secondary" id="installNotNow" type="button">Not now</button>
+<button class="install-primary" id="installAppNow" type="button">Install</button>
+</div>
+<p class="install-note" id="installPromptNote"></p>
+</div>
 </div>
 <div id="desktopScaleRoot">
-<header><div><h1>Calorie Count</h1><p>Food, macros, Concept2 & daily deficit</p></div><div class="header-actions"><button id="settingsBtn" class="ghost">Settings</button></div></header>
-<nav class="app-tabs"><button id="trackerTab" class="tab active">Meals</button><button id="seasonsTab" class="tab">Seasons</button><button id="supportTab" class="tab">Support List</button><button id="recipeTab" class="tab">Recipes</button><button id="analyticsTab" class="tab">Analytics</button></nav>
-<main><div id="trackerView"><section class="datebar"><button id="prevDay">‹</button><input id="date" type="date"><button id="nextDay">›</button><button id="todayBtn" class="ghost">Today</button></section>
+<header><div><h1>Calorie Count</h1><p>Food, macros, Concept2 &amp; daily deficit</p></div><div class="header-actions"><button class="ghost" id="settingsBtn">Settings</button></div></header>
+<nav class="app-tabs"><button class="tab active" id="trackerTab">Meals</button><button class="tab" id="seasonsTab">Seasons</button><button class="tab" id="supportTab">Support List</button><button class="tab" id="recipeTab">Recipes</button><button class="tab" id="analyticsTab">Analytics</button></nav>
+<main><div id="trackerView"><section class="datebar"><button id="prevDay">‹</button><input id="date" type="date"/><button id="nextDay">›</button><button class="ghost" id="todayBtn">Today</button></section>
 <section class="cards summary"><article><span>Food</span><strong id="foodKcal">0</strong><small>kcal</small></article><article><span>Burned</span><strong id="burnedKcal">0</strong><small>BMR + workout</small></article><article class="accent"><span>Deficit</span><strong id="deficit">0</strong><small>kcal</small></article></section>
 <section class="macro-card"><div><b>Carbs</b><span id="carbs">0 g</span></div><div><b>Protein</b><span id="protein">0 g</span></div><div><b>Fat</b><span id="fat">0 g</span></div></section>
 <section class="panel"><div class="section-head"><div><h2>Meals</h2><p>Six meals, matching your workbook.</p></div><button id="addFoodBtn">+ Add food</button></div><div id="meals"></div></section>
-<section class="panel"><div class="section-head"><div><h2>Workout</h2><p>Choose Erg Training for the existing Concept2 calculation, or Other for a manual calorie entry.</p></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"><button type="button" id="ergTrainingBtn">Erg Training</button><button type="button" id="otherWorkoutBtn" class="ghost">Other</button></div><div id="ergWorkoutFields"><div class="grid"><label>Session<input id="session" placeholder="e.g. 3×4k"></label><label>Type<select id="workoutType"><option>RowErg</option><option>BikeErg</option><option>SkiErg</option></select></label><label>Cal/hour on PM<input id="calHour" type="number" min="0" inputmode="decimal"></label><label>Hours<input id="hours" type="number" min="0" value="0"></label><label>Minutes<input id="minutes" type="number" min="0" max="59"></label><label>Seconds<input id="seconds" type="number" min="0" max="59"></label></div><div class="workout-result"><span>Machine calories <b id="machineCals">0</b></span><span>Adjusted calories <b id="trueCals">0</b></span><small>Adjusted Cal/h = PM Cal/h − 300 + 1.714 × bodyweight (lb)</small></div></div><div id="otherWorkoutFields" hidden><div class="grid" style="grid-template-columns:1fr"><label>Calories burned in workout<input id="otherWorkoutCalories" type="number" min="0" inputmode="decimal" placeholder="e.g. 450"></label></div><div class="workout-result"><span>Workout calories <b id="otherCalsDisplay">0</b></span><small>Enter the calories burned for this workout. This value is added directly to your BMR.</small></div></div></section>
-<section class="panel"><div class="section-head"><div><h2>Progress</h2><p>Save this day to its training season.</p></div><button type="button" id="saveDayBtn">Save</button></div><div class="grid"><label>Bodyweight (kg)<input id="weight" type="number" step="0.1"></label><label>BMR (kcal/day)<input id="bmr" type="number" min="0"></label><label>Training phase<input id="phase" placeholder="e.g. 2k prep"></label></div><div id="history" class="history"></div></section></div>
-<div id="seasonsView" hidden><section class="panel support-panel"><div class="section-head"><div><h2>Seasons</h2><p>Your saved meal sheets, grouped by Training Phase.</p></div></div><div id="seasonsList"></div></section></div>
-<div id="supportView" hidden><section class="panel support-panel"><div class="section-head"><div><h2>Support List</h2><p>Foods added here are immediately available in Calorie Tracker.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button type="button" id="newFoodBtn">+ Add food</button><button type="button" id="restoreSupportBtn" class="ghost">Restore Default Support List</button><button type="button" id="clearSupportBtn" class="danger">Clear all data</button></div></div><label class="support-search">Search foods<input id="supportSearch" placeholder="Search the support list…"></label><div id="customFoodList" class="food-results support-list"></div></section></div>
-<div id="recipeView" hidden>
-  <section class="panel">
-    <div class="section-head"><div><h2>Recipe Generator</h2><p>Create a meal around the nutrition target(s) you care about.</p></div></div>
-    <div class="recipe-source-row">
-      <label>Generate meal idea
+<section class="panel"><div class="section-head"><div><h2>Workout</h2><p>Choose Erg Training for the existing Concept2 calculation, or Other for a manual calorie entry.</p></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"><button id="ergTrainingBtn" type="button">Erg Training</button><button class="ghost" id="otherWorkoutBtn" type="button">Other</button></div><div id="ergWorkoutFields"><div class="grid"><label>Session<input id="session" placeholder="e.g. 3×4k"/></label><label>Type<select id="workoutType"><option>RowErg</option><option>BikeErg</option><option>SkiErg</option></select></label><label>Cal/hour on PM<input id="calHour" inputmode="decimal" min="0" type="number"/></label><label>Hours<input id="hours" min="0" type="number" value="0"/></label><label>Minutes<input id="minutes" max="59" min="0" type="number"/></label><label>Seconds<input id="seconds" max="59" min="0" type="number"/></label></div><div class="workout-result"><span>Machine calories <b id="machineCals">0</b></span><span>Adjusted calories <b id="trueCals">0</b></span><small>Adjusted Cal/h = PM Cal/h − 300 + 1.714 × bodyweight (lb)</small></div></div><div hidden="" id="otherWorkoutFields"><div class="grid" style="grid-template-columns:1fr"><label>Calories burned in workout<input id="otherWorkoutCalories" inputmode="decimal" min="0" placeholder="e.g. 450" type="number"/></label></div><div class="workout-result"><span>Workout calories <b id="otherCalsDisplay">0</b></span><small>Enter the calories burned for this workout. This value is added directly to your BMR.</small></div></div></section>
+<section class="panel"><div class="section-head"><div><h2>Progress</h2><p>Save this day to its training season.</p></div><button id="saveDayBtn" type="button">Save</button></div><div class="grid"><label>Bodyweight (kg)<input id="weight" step="0.1" type="number"/></label><label>BMR (kcal/day)<input id="bmr" min="0" type="number"/></label><label>Training phase<input id="phase" placeholder="e.g. 2k prep"/></label></div><div class="history" id="history"></div></section></div>
+<div hidden="" id="seasonsView"><section class="panel support-panel"><div class="section-head"><div><h2>Seasons</h2><p>Your saved meal sheets, grouped by Training Phase.</p></div></div><div id="seasonsList"></div></section></div>
+<div hidden="" id="supportView"><section class="panel support-panel"><div class="section-head"><div><h2>Support List</h2><p>Foods added here are immediately available in Calorie Tracker.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button id="newFoodBtn" type="button">+ Add food</button><button class="ghost" id="restoreSupportBtn" type="button">Restore Default Support List</button><button class="danger" id="clearSupportBtn" type="button">Clear all data</button></div></div><label class="support-search">Search foods<input id="supportSearch" placeholder="Search the support list…"/></label><div class="food-results support-list" id="customFoodList"></div></section></div>
+<div hidden="" id="recipeView">
+<section class="panel">
+<div class="section-head"><div><h2>Recipe Generator</h2><p>Create a meal around the nutrition target(s) you care about.</p></div></div>
+<div class="recipe-source-row">
+<label>Generate meal idea
         <select id="recipeSourceMode">
-          <option value="support">Use foods from my Support List only</option>
-          <option value="free">Use any foods</option>
-        </select>
-      </label>
-    </div>
-    <p class="note">Enter at least one target. Leave any target blank if you do not care about it.</p>
-    <div class="recipe-targets">
-      <label>Total Protein (g)<input id="recipeProtein" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 50"></label>
-      <label>Total Carbohydrates (g)<input id="recipeCarbs" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 70"></label>
-      <label>Total Fats (g)<input id="recipeFat" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 20"></label>
-      <label>Total Calories (kcal)<input id="recipeCalories" type="number" min="0" step="1" inputmode="decimal" placeholder="e.g. 650"></label>
-    </div>
-    <div class="recipe-warning"><b>Note:</b> Actual calories and macros may differ from goal calories and macros because ingredient nutrition and practical serving sizes are estimates.</div>
-    <div class="recipe-generator-actions" style="margin-top:12px"><button type="button" id="generateRecipeBtn">Generate meal</button></div>
-    <p id="recipeStatus" class="scan-status"></p>
-    <div id="recipeResult"></div>
-  </section>
-  <section class="panel">
-    <div class="section-head"><div><h2>Saved meals</h2><p>Recipes you chose to keep for later. Saving is optional.</p></div></div>
-    <div id="savedRecipesList"></div>
-  </section>
+<option value="support">Use foods from my Support List only</option>
+<option value="free">Use any foods</option>
+</select>
+</label>
 </div>
-<div id="analyticsView" hidden>
-  <section class="panel">
-    <div class="section-head"><div><h2>Analytics</h2><p>Weight, calories consumed and calories burned over the same selected period.</p></div></div>
-    <div class="analytics-controls">
-      <div class="analytics-mode-buttons" aria-label="Analytics period grouping">
-        <button type="button" id="analyticsDailyBtn" class="active">Daily</button>
-        <button type="button" id="analyticsWeeklyBtn" class="ghost">Weekly</button>
-        <button type="button" id="analyticsMonthlyBtn" class="ghost">Monthly</button>
-      </div>
-      <div class="analytics-period-nav">
-        <button type="button" id="analyticsPrev" class="ghost" aria-label="Previous period">‹</button>
-        <span id="analyticsPeriodTitle"></span>
-        <button type="button" id="analyticsNext" class="ghost" aria-label="Next period">›</button>
-        <button type="button" id="analyticsCurrent" class="ghost">Current</button>
-      </div>
-    </div>
-    <div class="analytics-summary-cards">
-      <div class="analytics-summary-card"><span>Average weight</span><strong id="analyticsWeightSummary">—</strong><small id="analyticsWeightDays">No weight entries</small></div>
-      <div class="analytics-summary-card"><span>Calories consumed</span><strong id="analyticsConsumedSummary">0</strong><small>kcal in selected period</small></div>
-      <div class="analytics-summary-card"><span>Calories burned</span><strong id="analyticsBurnedSummary">0</strong><small>BMR + workouts</small></div>
-      <div class="analytics-summary-card"><span>Period balance</span><strong id="analyticsBalanceSummary">0</strong><small id="analyticsBalanceLabel">burned − consumed</small></div>
-    </div>
-  </section>
-
-  <section class="panel analytics-chart-panel">
-    <div class="analytics-chart-head"><div><h3>Weight</h3><p class="note">Average recorded weight for each segment.</p></div><span id="analyticsWeightChartTotal"></span></div>
-    <div id="analyticsWeightChart" class="analytics-chart"></div>
-  </section>
-
-  <section class="panel analytics-chart-panel">
-    <div class="analytics-chart-head"><div><h3>Calories consumed</h3><p class="note">Everything logged in Meals.</p></div><span id="analyticsConsumedChartTotal"></span></div>
-    <div id="analyticsConsumedChart" class="analytics-chart"></div>
-  </section>
-
-  <section class="panel analytics-chart-panel">
-    <div class="analytics-chart-head"><div><h3>Calories burned</h3><p class="note">BMR + logged workout calories.</p></div><span id="analyticsBurnedChartTotal"></span></div>
-    <div id="analyticsBurnedChart" class="analytics-chart"></div>
-  </section>
-
-  <section class="panel">
-    <div class="section-head"><div><h2>Period breakdown</h2><p>All metrics use the same selected period. The final column summarizes the whole period.</p></div></div>
-    <div id="analyticsTableWrap" class="analytics-table-wrap"></div>
-    <p class="analytics-period-note">Days with no tracker entry are shown as 0 calories and are not included in the weight average. Burned calories are calculated only for tracker days that exist in your history.</p>
-  </section>
+<p class="note">Enter at least one target. Leave any target blank if you do not care about it.</p>
+<div class="recipe-targets">
+<label>Total Protein (g)<input id="recipeProtein" inputmode="decimal" min="0" placeholder="e.g. 50" step="0.1" type="number"/></label>
+<label>Total Carbohydrates (g)<input id="recipeCarbs" inputmode="decimal" min="0" placeholder="e.g. 70" step="0.1" type="number"/></label>
+<label>Total Fats (g)<input id="recipeFat" inputmode="decimal" min="0" placeholder="e.g. 20" step="0.1" type="number"/></label>
+<label>Total Calories (kcal)<input id="recipeCalories" inputmode="decimal" min="0" placeholder="e.g. 650" step="1" type="number"/></label>
+</div>
+<div class="recipe-warning"><b>Note:</b> Actual calories and macros may differ from goal calories and macros because ingredient nutrition and practical serving sizes are estimates.</div>
+<div class="recipe-generator-actions" style="margin-top:12px"><button id="generateRecipeBtn" type="button">Generate meal</button></div>
+<p class="scan-status" id="recipeStatus"></p>
+<div id="recipeResult"></div>
+</section>
+<section class="panel">
+<div class="section-head"><div><h2>Saved meals</h2><p>Recipes you chose to keep for later. Saving is optional.</p></div></div>
+<div id="savedRecipesList"></div>
+</section>
+</div>
+<div hidden="" id="analyticsView">
+<section class="panel">
+<div class="section-head"><div><h2>Analytics</h2><p>Weight, calories consumed and calories burned over the same selected period.</p></div></div>
+<div class="analytics-controls">
+<div aria-label="Analytics period grouping" class="analytics-mode-buttons">
+<button class="active" id="analyticsDailyBtn" type="button">Daily</button>
+<button class="ghost" id="analyticsWeeklyBtn" type="button">Weekly</button>
+<button class="ghost" id="analyticsMonthlyBtn" type="button">Monthly</button>
+</div>
+<div class="analytics-period-nav">
+<button aria-label="Previous period" class="ghost" id="analyticsPrev" type="button">‹</button>
+<span id="analyticsPeriodTitle"></span>
+<button aria-label="Next period" class="ghost" id="analyticsNext" type="button">›</button>
+<button class="ghost" id="analyticsCurrent" type="button">Current</button>
+</div>
+</div>
+<div class="analytics-summary-cards">
+<div class="analytics-summary-card"><span>Average weight</span><strong id="analyticsWeightSummary">—</strong><small id="analyticsWeightDays">No weight entries</small></div>
+<div class="analytics-summary-card"><span>Calories consumed</span><strong id="analyticsConsumedSummary">0</strong><small>kcal in selected period</small></div>
+<div class="analytics-summary-card"><span>Calories burned</span><strong id="analyticsBurnedSummary">0</strong><small>BMR + workouts</small></div>
+<div class="analytics-summary-card"><span>Period balance</span><strong id="analyticsBalanceSummary">0</strong><small id="analyticsBalanceLabel">burned − consumed</small></div>
+</div>
+</section>
+<section class="panel analytics-chart-panel">
+<div class="analytics-chart-head"><div><h3>Weight</h3><p class="note">Average recorded weight for each segment.</p></div><span id="analyticsWeightChartTotal"></span></div>
+<div class="analytics-chart" id="analyticsWeightChart"></div>
+</section>
+<section class="panel analytics-chart-panel">
+<div class="analytics-chart-head"><div><h3>Calories consumed</h3><p class="note">Everything logged in Meals.</p></div><span id="analyticsConsumedChartTotal"></span></div>
+<div class="analytics-chart" id="analyticsConsumedChart"></div>
+</section>
+<section class="panel analytics-chart-panel">
+<div class="analytics-chart-head"><div><h3>Calories burned</h3><p class="note">BMR + logged workout calories.</p></div><span id="analyticsBurnedChartTotal"></span></div>
+<div class="analytics-chart" id="analyticsBurnedChart"></div>
+</section>
+<section class="panel">
+<div class="section-head"><div><h2>Period breakdown</h2><p>All metrics use the same selected period. The final column summarizes the whole period.</p></div></div>
+<div class="analytics-table-wrap" id="analyticsTableWrap"></div>
+<p class="analytics-period-note">Days with no tracker entry are shown as 0 calories and are not included in the weight average. Burned calories are calculated only for tracker days that exist in your history.</p>
+</section>
 </div>
 </main>
-<dialog id="foodDialog"><form method="dialog"><div class="section-head"><h2>Add food</h2><button type="button" id="closeFoodDialog" class="ghost" aria-label="Close">✕</button></div><label>Meal<select id="mealSelect"></select></label><label>Search<input id="foodSearch" placeholder="Chicken, rice, yogurt…" autocomplete="off"></label><div id="foodResults" class="food-results"></div></form></dialog>
-<dialog id="qtyDialog"><form method="dialog"><div class="section-head"><h2 id="qtyTitle">Food</h2><button type="button" id="closeQtyDialog" class="ghost" aria-label="Close">✕</button></div><label>State<select id="state"><option>Raw</option><option>Cooked</option></select></label><label id="qtyLabel">Quantity<input id="qty" type="number" step="0.1" min="0"></label><p id="conversionNote" class="note"></p><button id="confirmFood" value="default">Add to meal</button></form></dialog>
-
-<dialog id="foodEditorDialog"><form method="dialog" id="foodEditorForm"><div class="section-head"><h2 id="foodEditorTitle">Add food</h2><button type="button" id="closeFoodEditor" class="ghost" aria-label="Close">✕</button></div>
-<section id="aiFoodLookup" class="ai-food-lookup">
-  <h3>Look up food on ChatGPT</h3>
-  <p class="note">Search for a food or describe a complete portion. Nothing is saved until you review the fields below and press Save food.</p>
-  <div class="ai-food-search-row">
-    <textarea id="aiFoodQuery" rows="3" placeholder="e.g. Greek yogurt 0% or 2 big cooked chicken breasts with 2 spoons of pesto sauce and 1 big cup of pasta"></textarea>
-    <button type="button" id="aiFoodSearchBtn">Search</button>
-  </div>
-  <p id="aiFoodStatus" class="scan-status"></p>
-  <div id="aiFoodResults" class="ai-food-results"></div>
+<dialog id="foodDialog"><form method="dialog"><div class="section-head"><h2>Add food</h2><button aria-label="Close" class="ghost" id="closeFoodDialog" type="button">✕</button></div><label>Meal<select id="mealSelect"></select></label><label>Search<input autocomplete="off" id="foodSearch" placeholder="Chicken, rice, yogurt…"/></label><div class="food-results" id="foodResults"></div></form></dialog>
+<dialog id="qtyDialog"><form method="dialog"><div class="section-head"><h2 id="qtyTitle">Food</h2><button aria-label="Close" class="ghost" id="closeQtyDialog" type="button">✕</button></div><label>State<select id="state"><option>Raw</option><option>Cooked</option></select></label><label id="qtyLabel">Quantity<input id="qty" min="0" step="0.1" type="number"/></label><p class="note" id="conversionNote"></p><button id="confirmFood" value="default">Add to meal</button></form></dialog>
+<dialog id="foodEditorDialog"><form id="foodEditorForm" method="dialog"><div class="section-head"><h2 id="foodEditorTitle">Add food</h2><button aria-label="Close" class="ghost" id="closeFoodEditor" type="button">✕</button></div>
+<section class="ai-food-lookup" id="aiFoodLookup">
+<h3>Look up food on ChatGPT</h3>
+<p class="note">Search for a food or describe a complete portion. Nothing is saved until you review the fields below and press Save food.</p>
+<div class="ai-food-search-row">
+<textarea id="aiFoodQuery" placeholder="e.g. Greek yogurt 0% or 2 big cooked chicken breasts with 2 spoons of pesto sauce and 1 big cup of pasta" rows="3"></textarea>
+<button id="aiFoodSearchBtn" type="button">Search</button>
+</div>
+<p class="scan-status" id="aiFoodStatus"></p>
+<div class="ai-food-results" id="aiFoodResults"></div>
 </section>
-
-<button type="button" id="scanBarcodeBtn" class="scan-label-btn">
+<button class="scan-label-btn" id="scanBarcodeBtn" type="button">
   ▦ Scan barcode
 </button>
-
-<div id="barcodeScanBox" class="scan-box" hidden>
-
-  <video
-    id="barcodeVideo"
-    playsinline
-    muted
-    style="
+<div class="scan-box" hidden="" id="barcodeScanBox">
+<video id="barcodeVideo" muted="" playsinline="" style="
       width:100%;
       max-height:280px;
       border-radius:12px;
       background:#050914;
       object-fit:cover;
-    "
-  ></video>
-
-  <div class="scan-actions">
-
-    <button
-      type="button"
-      id="startBarcodeCamera"
-    >
+    "></video>
+<div class="scan-actions">
+<button id="startBarcodeCamera" type="button">
       📷 Start camera
     </button>
-
-    <button
-      type="button"
-      id="stopBarcodeCamera"
-      class="ghost"
-    >
+<button class="ghost" id="stopBarcodeCamera" type="button">
       Stop
     </button>
-
-  </div>
-
-  <label>
+</div>
+<label>
     Or enter barcode manually
 
-    <input
-      id="barcodeManual"
-      inputmode="numeric"
-      autocomplete="off"
-      placeholder="e.g. 3017624010701"
-    >
-  </label>
-
-  <button
-    type="button"
-    id="lookupBarcodeBtn"
-    class="ghost"
-  >
+    <input autocomplete="off" id="barcodeManual" inputmode="numeric" placeholder="e.g. 3017624010701"/>
+</label>
+<button class="ghost" id="lookupBarcodeBtn" type="button">
     Look up barcode
   </button>
-
-  <p
-    id="barcodeScanStatus"
-    class="scan-status"
-  >
+<p class="scan-status" id="barcodeScanStatus">
     Point the camera at the barcode on the package.
   </p>
-
 </div>
- 
-<label>Name<input id="customName" required placeholder="e.g. Greek yogurt"></label>
-<label>Description / Portion<textarea id="customDescription" rows="2" placeholder="Optional — e.g. 2 big cooked chicken breasts with 2 spoons of pesto sauce and 1 big cup of pasta"></textarea></label>
+<label>Name<input id="customName" placeholder="e.g. Greek yogurt" required=""/></label>
+<label>Description / Portion<textarea id="customDescription" placeholder="Optional — e.g. 2 big cooked chicken breasts with 2 spoons of pesto sauce and 1 big cup of pasta" rows="2"></textarea></label>
 <label>Food Base<select id="customType"><option value="Carbohydrate base">Carbohydrates</option><option value="Protein base">Protein</option><option value="Fat base">Fat</option></select></label>
-<div class="grid"><label>Reference amount<input id="customServing" type="number" min="0.01" step="0.01" required placeholder="e.g. 100"></label><label>Unit of measurement<select id="customUnit"><option value="grams">grams</option><option value="ml">milliliters</option><option value="Unit">units (number of items)</option></select></label></div>
-<div class="grid"><label>Carbohydrate per reference amount<input id="customCarbs" type="number" min="0" step="0.01" required></label><label>Protein per reference amount<input id="customProtein" type="number" min="0" step="0.01" required></label><label>Fat per reference amount<input id="customFat" type="number" min="0" step="0.01" required></label></div>
-<label>Calories per reference amount<input id="customKcal" type="number" min="0" step="0.01" required></label>
-<div class="grid"><label>Raw ↔ cooked conversion ratio<input id="customRatio" type="number" min="1" step="0.01" placeholder="e.g. 1.30"></label><label>Cooking effect<select id="customConversion"><option value="none">No conversion</option><option value="multiply">Loses weight when cooked (meat → multiply)</option><option value="divide">Gains weight when cooked (pasta/rice → divide)</option></select></label></div>
+<div class="grid"><label>Reference amount<input id="customServing" min="0.01" placeholder="e.g. 100" required="" step="0.01" type="number"/></label><label>Unit of measurement<select id="customUnit"><option value="grams">grams</option><option value="ml">milliliters</option><option value="Unit">units (number of items)</option></select></label></div>
+<div class="grid"><label>Carbohydrate per reference amount<input id="customCarbs" min="0" required="" step="0.01" type="number"/></label><label>Protein per reference amount<input id="customProtein" min="0" required="" step="0.01" type="number"/></label><label>Fat per reference amount<input id="customFat" min="0" required="" step="0.01" type="number"/></label></div>
+<label>Calories per reference amount<input id="customKcal" min="0" required="" step="0.01" type="number"/></label>
+<div class="grid"><label>Raw ↔ cooked conversion ratio<input id="customRatio" min="1" placeholder="e.g. 1.30" step="0.01" type="number"/></label><label>Cooking effect<select id="customConversion"><option value="none">No conversion</option><option value="multiply">Loses weight when cooked (meat → multiply)</option><option value="divide">Gains weight when cooked (pasta/rice → divide)</option></select></label></div>
 <p class="note"><b>Nutrition values are always entered for RAW food.</b> If you log Raw, the app uses them directly. If you log Cooked, the app converts the cooked quantity back to its raw equivalent automatically. Example: 100 g cooked meat × 1.30 = 130 g raw equivalent; 184 g cooked pasta ÷ 1.84 = 100 g raw equivalent. Leave conversion as “No conversion” for foods where raw/cooked does not apply.</p><button id="saveCustomFood" type="submit">Save food</button></form></dialog>
-
-<dialog id="saveSeasonDialog"><form method="dialog" id="saveSeasonForm"><div class="section-head"><div><h2>Save to Season</h2><p>Choose where this meal sheet should be saved.</p></div><button type="button" id="closeSaveSeason" class="ghost" aria-label="Close">✕</button></div><label>Save option<select id="seasonSaveMode"><option value="existing">Select existing phase</option><option value="new">Create new phase</option></select></label><label id="existingSeasonLabel">Existing phase<select id="existingSeason"></select></label><label id="newSeasonLabel" hidden>New phase name<input id="newSeasonName" placeholder="e.g. 2k prep"></label><p class="note">The selected phase will also become the Training Phase for this day.</p><button type="submit" id="confirmSeasonSave">Save sheet</button></form></dialog>
-<dialog id="recipeAddDialog"><form method="dialog" id="recipeAddForm"><div class="section-head"><div><h2>Add this meal</h2><p id="recipeAddName">Generated recipe</p></div><button type="button" id="closeRecipeAdd" class="ghost" aria-label="Close">✕</button></div><label>Add ingredients to<select id="recipeMealTarget"></select></label><p class="note">The recipe ingredients will be added as normal editable food rows. Existing foods already in that meal are kept.</p><button type="submit">Add to meal</button></form></dialog>
-<dialog id="settingsDialog"><form method="dialog"><div class="section-head"><h2>Settings & data</h2><button value="cancel" class="ghost">✕</button></div><p class="note">Your data stays in this browser using local storage.</p>
-<label>AI backend<input id="aiBackendEndpoint" type="url" value="https://calorie-count-ai.michelrizk334.workers.dev" autocomplete="off"></label>
+<dialog id="saveSeasonDialog"><form id="saveSeasonForm" method="dialog"><div class="section-head"><div><h2>Save to Season</h2><p>Choose where this meal sheet should be saved.</p></div><button aria-label="Close" class="ghost" id="closeSaveSeason" type="button">✕</button></div><label>Save option<select id="seasonSaveMode"><option value="existing">Select existing phase</option><option value="new">Create new phase</option></select></label><label id="existingSeasonLabel">Existing phase<select id="existingSeason"></select></label><label hidden="" id="newSeasonLabel">New phase name<input id="newSeasonName" placeholder="e.g. 2k prep"/></label><p class="note">The selected phase will also become the Training Phase for this day.</p><button id="confirmSeasonSave" type="submit">Save sheet</button></form></dialog>
+<dialog id="recipeAddDialog"><form id="recipeAddForm" method="dialog"><div class="section-head"><div><h2>Add this meal</h2><p id="recipeAddName">Generated recipe</p></div><button aria-label="Close" class="ghost" id="closeRecipeAdd" type="button">✕</button></div><label>Add ingredients to<select id="recipeMealTarget"></select></label><p class="note">The recipe ingredients will be added as normal editable food rows. Existing foods already in that meal are kept.</p><button type="submit">Add to meal</button></form></dialog>
+<dialog id="settingsDialog"><form method="dialog"><div class="section-head"><h2>Settings &amp; data</h2><button class="ghost" value="cancel">✕</button></div><p class="note">Your data stays in this browser using local storage.</p>
+<label>AI backend<input autocomplete="off" id="aiBackendEndpoint" type="url" value="https://calorie-count-ai.michelrizk334.workers.dev"/></label>
 <p class="note">Preconfigured for barcode lookup, AI food search and recipe generation. No setup is required for new users.</p>
-<button type="button" id="exportBtn">Export backup</button><label class="fileBtn">Import backup<input id="importFile" type="file" accept="application/json"></label><button type="button" id="clearBtn" class="danger">Clear all data</button></form></dialog>
-<script>window.DEFAULT_FOODS=[{"name":"Taj Rice","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":79.38,"protein":8.59,"fat":0.6,"kcal":357.28,"ratio":3.02,"conversion":"divide"},{"name":"Oatibix","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":59.0,"protein":11.0,"fat":8.0,"kcal":370.0,"ratio":null,"conversion":"none"},{"name":"Barilla Pasta - Fusilli n 98","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":72.0,"protein":11.4,"fat":2.0,"kcal":359.0,"ratio":1.84,"conversion":"divide"},{"name":"Barilla Pasta - Spaghetti n 5","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":72.0,"protein":11.7,"fat":2.0,"kcal":352.8,"ratio":null,"conversion":"none"},{"name":"Rice Cake","type":"Carbohydrates base","serving":1.0,"unit":"Unit","carbs":3.9,"protein":1.2,"fat":0.3,"kcal":24.5,"ratio":null,"conversion":"none"},{"name":"Al Forno Oat Bread Markouk","type":"Carbohydrates base","serving":1.0,"unit":"Unit","carbs":15.4,"protein":2.6,"fat":0.8,"kcal":79.5,"ratio":null,"conversion":"none"},{"name":"Breadinc Oat Covered Bagel","type":"Carbohydrates base","serving":1.0,"unit":"Unit","carbs":55.6,"protein":9.1,"fat":1.3,"kcal":270.5,"ratio":null,"conversion":"none"},{"name":"Arrighi Gnochi","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":37.0,"protein":4.4,"fat":0.0,"kcal":167.0,"ratio":1.039215686,"conversion":"divide"},{"name":"Lucien Jam Mure Sauvage","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":24.0,"protein":0.6,"fat":0.5,"kcal":108.0,"ratio":null,"conversion":"none"},{"name":"Low Fat Candia Milk","type":"Fat base","serving":100.0,"unit":"ml","carbs":6.0,"protein":3.3,"fat":0.5,"kcal":41.7,"ratio":null,"conversion":"none"},{"name":"Full Fat Candia Milk","type":"Fat base","serving":100.0,"unit":"ml","carbs":5.8,"protein":3.1,"fat":3.1,"kcal":63.5,"ratio":null,"conversion":"none"},{"name":"Khoury Full Fat Yougurt","type":"Fat base","serving":100.0,"unit":"grams","carbs":4.0,"protein":3.2,"fat":3.5,"kcal":60.3,"ratio":null,"conversion":"none"},{"name":"Khoury Fresh Mozzarella","type":"Fat base","serving":100.0,"unit":"grams","carbs":2.0,"protein":19.0,"fat":18.0,"kcal":246.0,"ratio":null,"conversion":"none"},{"name":"Khoury Bulgarian","type":"Fat base","serving":100.0,"unit":"grams","carbs":2.0,"protein":22.0,"fat":22.0,"kcal":294.0,"ratio":null,"conversion":"none"},{"name":"Taanayel Labneh","type":"Fat base","serving":100.0,"unit":"grams","carbs":5.2,"protein":9.0,"fat":10.0,"kcal":147.0,"ratio":null,"conversion":"none"},{"name":"Kolios Feta","type":"Fat base","serving":100.0,"unit":"grams","carbs":1.0,"protein":16.0,"fat":23.0,"kcal":275.0,"ratio":null,"conversion":"none"},{"name":"Chicken Breast","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":31.0,"fat":3.6,"kcal":165.0,"ratio":1.428571429,"conversion":"multiply"},{"name":"Iso 100 Dymatize Vanilla Protein Weigh","type":"Protein base","serving":30.0,"unit":"grams","carbs":2.0,"protein":25.0,"fat":1.0,"kcal":117.0,"ratio":null,"conversion":"none"},{"name":"Deli White Meat Tuna Can (In sunflower oil)","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":26.0,"fat":4.0,"kcal":140.0,"ratio":null,"conversion":"none"},{"name":"Full Egg","type":"Protein base","serving":100.0,"unit":"grams","carbs":1.0,"protein":13.0,"fat":10.0,"kcal":146.0,"ratio":null,"conversion":"none"},{"name":"Veal Meat","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":29.85,"fat":11.3,"kcal":229.0,"ratio":null,"conversion":"none"},{"name":"Beef Meat","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":26.1,"fat":11.8,"kcal":217.0,"ratio":1.7,"conversion":"multiply"},{"name":"Papa's smoked salmon","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":18.0,"fat":4.5,"kcal":120.0,"ratio":null,"conversion":"none"},{"name":"Chicken Wing","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":28.8,"fat":9.5,"kcal":208.0,"ratio":null,"conversion":"none"},{"name":"Peanut Butter","type":"Fat base","serving":100.0,"unit":"grams","carbs":20.0,"protein":25.0,"fat":50.0,"kcal":630.0,"ratio":null,"conversion":"none"},{"name":"Raw Cashews","type":"Fat base","serving":100.0,"unit":"grams","carbs":30.19,"protein":18.22,"fat":43.85,"kcal":590.0,"ratio":null,"conversion":"none"},{"name":"Raw Almonds","type":"Fat base","serving":100.0,"unit":"grams","carbs":19.74,"protein":21.26,"fat":50.64,"kcal":620.0,"ratio":null,"conversion":"none"},{"name":"Raisins","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":79.18,"protein":3.07,"fat":0.46,"kcal":333.14,"ratio":null,"conversion":"none"},{"name":"Frozen Plein Soleil Fruits - Raspberries","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":12.0,"protein":1.4,"fat":0.7,"kcal":60.0,"ratio":null,"conversion":"none"},{"name":"Dates","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":75.0,"protein":2.0,"fat":0.2,"kcal":310.0,"ratio":null,"conversion":"none"},{"name":"Bananas","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":22.84,"protein":1.1,"fat":0.33,"kcal":99.0,"ratio":null,"conversion":"none"},{"name":"Peach","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":9.54,"protein":0.91,"fat":0.25,"kcal":44.05,"ratio":null,"conversion":"none"},{"name":"Protein Bar 24.7 - Chocolate Apricot","type":"Protein base","serving":1.0,"unit":"Unit","carbs":23.0,"protein":20.0,"fat":9.0,"kcal":253.0,"ratio":null,"conversion":"none"},{"name":"Protein Bar - Double Chocolate Crisp","type":"Protein base","serving":1.0,"unit":"Unit","carbs":14.0,"protein":22.0,"fat":8.0,"kcal":216.0,"ratio":null,"conversion":"none"},{"name":"Protein Bar - Chocolate Ginger","type":"Protein base","serving":1.0,"unit":"Unit","carbs":22.0,"protein":20.0,"fat":10.0,"kcal":258.0,"ratio":null,"conversion":"none"},{"name":"Protein Bar - Chocolate Raspberry","type":"Protein base","serving":1.0,"unit":"Unit","carbs":23.0,"protein":20.0,"fat":9.0,"kcal":253.0,"ratio":null,"conversion":"none"},{"name":"Prorein Bar - Chocolate Strawberry","type":"Protein base","serving":1.0,"unit":"Unit","carbs":23.0,"protein":20.0,"fat":9.0,"kcal":253.0,"ratio":null,"conversion":"none"},{"name":"Protein Bar - 20g Chocolate Apricot","type":"Protein base","serving":1.0,"unit":"Unit","carbs":23.0,"protein":20.0,"fat":9.0,"kcal":253.0,"ratio":null,"conversion":"none"},{"name":"Decathlon 30g Protein bar","type":"Protein base","serving":1.0,"unit":"Unit","carbs":12.0,"protein":30.0,"fat":6.7,"kcal":228.3,"ratio":null,"conversion":"none"},{"name":"Potatoes","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":20.1,"protein":1.9,"fat":0.1,"kcal":89.0,"ratio":null,"conversion":"none"},{"name":"Chickpeas","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":63.0,"protein":20.0,"fat":6.0,"kcal":386.0,"ratio":2.7,"conversion":"divide"},{"name":"Apple","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":11.6,"protein":0.6,"fat":0.5,"kcal":53.3,"ratio":null,"conversion":"none"},{"name":"Olive oil","type":"Fat base","serving":100.0,"unit":"grams","carbs":0.0,"protein":0.0,"fat":100.0,"kcal":900.0,"ratio":null,"conversion":"none"},{"name":"Cucumbers","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":2.16,"protein":0.59,"fat":0.16,"kcal":12.44,"ratio":null,"conversion":"none"},{"name":"Tomatoes","type":"Carbohydrates base","serving":123.0,"unit":"grams","carbs":3.89,"protein":0.88,"fat":0.2,"kcal":20.88,"ratio":null,"conversion":"none"},{"name":"Lettuce","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":2.97,"protein":0.9,"fat":0.14,"kcal":16.74,"ratio":null,"conversion":"none"},{"name":"Honey","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":82.4,"protein":0.3,"fat":0.0,"kcal":330.8,"ratio":null,"conversion":"none"},{"name":"Weetabix Crunch Chocolate","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":64.0,"protein":20.0,"fat":2.8,"kcal":375.0,"ratio":null,"conversion":"none"},{"name":"Weetabix Crunch Original","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":66.0,"protein":20.0,"fat":2.5,"kcal":379.0,"ratio":null,"conversion":"none"},{"name":"Weetabix Protein","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":62.0,"protein":19.0,"fat":1.9,"kcal":379.0,"ratio":null,"conversion":"none"},{"name":"Casino Flakes - Corn Flakes","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":84.0,"protein":8.0,"fat":1.2,"kcal":385.0,"ratio":null,"conversion":"none"},{"name":"Tahini","type":"Fat base","serving":100.0,"unit":"grams","carbs":13.0,"protein":27.0,"fat":53.0,"kcal":663.0,"ratio":null,"conversion":"none"},{"name":"Plein Soleil - White Tuna  in oil","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":27.0,"fat":8.0,"kcal":186.0,"ratio":null,"conversion":"none"},{"name":"Ducros - Moutarde Forte de Dijon","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":3.2,"protein":7.2,"fat":11.5,"kcal":149.0,"ratio":null,"conversion":"none"},{"name":"Lamb meat","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":25.0,"fat":19.0,"kcal":281.0,"ratio":null,"conversion":"none"},{"name":"Cherry fruit","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":16.0,"protein":1.1,"fat":0.2,"kcal":70.2,"ratio":null,"conversion":"none"},{"name":"Zucchini","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":3.1,"protein":1.5,"fat":0.4,"kcal":22.0,"ratio":null,"conversion":"none"},{"name":"Avocado","type":"Fat base","serving":100.0,"unit":"grams","carbs":9.0,"protein":2.0,"fat":15.0,"kcal":179.0,"ratio":null,"conversion":"none"},{"name":"Watermelon","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":7.55,"protein":0.61,"fat":0.15,"kcal":34.0,"ratio":null,"conversion":"none"},{"name":"Bulgur","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":76.0,"protein":12.0,"fat":1.0,"kcal":361.0,"ratio":null,"conversion":"none"},{"name":"Ready Greens - Mixed berries","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":13.8,"protein":1.2,"fat":0.1,"kcal":74.0,"ratio":null,"conversion":"none"},{"name":"Khoury Double Cream","type":"Fat base","serving":100.0,"unit":"grams","carbs":5.0,"protein":15.0,"fat":15.0,"kcal":215.0,"ratio":null,"conversion":"none"},{"name":"Premier Choix Oat Flakes","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":57.0,"protein":14.0,"fat":6.0,"kcal":367.0,"ratio":null,"conversion":"none"},{"name":"Baroud Kariche Kariche - Salted","type":"Fat base","serving":100.0,"unit":"grams","carbs":4.5,"protein":8.5,"fat":6.0,"kcal":110.0,"ratio":null,"conversion":"none"},{"name":"Al Wadi Al Akhdar - Green Soybeans","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":1.6,"protein":13.0,"fat":7.6,"kcal":135.0,"ratio":null,"conversion":"none"},{"name":"Raw Salmon","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":21.62,"fat":5.93,"kcal":146.0,"ratio":null,"conversion":"none"},{"name":"Barilla Pasta Farfalle Generose n 265","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":71.0,"protein":13.0,"fat":2.0,"kcal":359.0,"ratio":null,"conversion":"none"},{"name":"Barilla Pasta Pipe Rigate n 91","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":71.2,"protein":12.5,"fat":2.0,"kcal":359.0,"ratio":null,"conversion":"none"},{"name":"Plein Soleil White Tuna in water","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":24.0,"fat":3.0,"kcal":128.0,"ratio":null,"conversion":"none"},{"name":"Ready Greens - Frozen Strawberries","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":7.0,"protein":1.0,"fat":0.0,"kcal":32.0,"ratio":null,"conversion":"none"},{"name":"Dark Plums","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":11.42,"protein":0.7,"fat":0.28,"kcal":51.0,"ratio":null,"conversion":"none"},{"name":"Essential Waitrose & Partners Porridge Oats","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":59.5,"protein":12.2,"fat":7.3,"kcal":372.0,"ratio":null,"conversion":"none"},{"name":"Smoked Salmon","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":18.28,"fat":4.32,"kcal":117.0,"ratio":null,"conversion":"none"},{"name":"Raw Tuna","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":23.38,"fat":0.95,"kcal":108.0,"ratio":null,"conversion":"none"},{"name":"Smoked Tuna","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":25.73,"fat":10.12,"kcal":201.0,"ratio":null,"conversion":"none"},{"name":"Mozarella Light - Fattoria Del Sole","type":"Fat base","serving":100.0,"unit":"grams","carbs":4.0,"protein":25.0,"fat":10.0,"kcal":206.0,"ratio":null,"conversion":"none"},{"name":"Thyme","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":45.0,"protein":15.0,"fat":25.0,"kcal":465.0,"ratio":null,"conversion":"none"},{"name":"Apricot","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":8.0,"protein":1.0,"fat":0.27,"kcal":38.43,"ratio":null,"conversion":"none"},{"name":"Barilla Olive Mediterranee","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":6.2,"protein":1.9,"fat":4.5,"kcal":77.0,"ratio":null,"conversion":"none"},{"name":"Sweet Potatoes","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":20.12,"protein":1.57,"fat":0.05,"kcal":87.21,"ratio":null,"conversion":"none"},{"name":"Old El Paso - Regular Tortillas","type":"Carbohydrates base","serving":1.0,"unit":"Unit","carbs":21.7,"protein":3.7,"fat":2.1,"kcal":122.0,"ratio":null,"conversion":"none"},{"name":"Baroud Kariche - Pink","type":"Fat base","serving":100.0,"unit":"grams","carbs":5.5,"protein":8.5,"fat":6.0,"kcal":110.0,"ratio":null,"conversion":"none"},{"name":"Mixed raw nuts","type":"Fat base","serving":100.0,"unit":"grams","carbs":24.0,"protein":18.0,"fat":48.0,"kcal":600.0,"ratio":null,"conversion":"none"},{"name":"Muesli bar - Crunchy banana","type":"Carbohydrates base","serving":1.0,"unit":"Unit","carbs":26.8,"protein":2.0,"fat":5.6,"kcal":168.0,"ratio":null,"conversion":"none"},{"name":"Candia - Accaoui","type":"Fat base","serving":100.0,"unit":"grams","carbs":4.0,"protein":18.0,"fat":19.0,"kcal":259.0,"ratio":null,"conversion":"none"},{"name":"Candia - Halloum","type":"Fat base","serving":100.0,"unit":"grams","carbs":4.0,"protein":22.0,"fat":24.0,"kcal":320.0,"ratio":null,"conversion":"none"},{"name":"Candia - Double Crème","type":"Fat base","serving":100.0,"unit":"grams","carbs":3.0,"protein":13.0,"fat":18.0,"kcal":226.0,"ratio":null,"conversion":"none"},{"name":"Muesli bar - Crunchy Cranberry & Raspberry","type":"Carbohydrates base","serving":1.0,"unit":"Unit","carbs":28.7,"protein":1.5,"fat":5.2,"kcal":169.0,"ratio":null,"conversion":"none"},{"name":"Président FETA","type":"Fat base","serving":100.0,"unit":"grams","carbs":0.4,"protein":16.4,"fat":22.5,"kcal":270.0,"ratio":null,"conversion":"none"},{"name":"Chanklish + Olive Oil","type":"Fat base","serving":100.0,"unit":"grams","carbs":2.0,"protein":10.0,"fat":13.0,"kcal":200.0,"ratio":null,"conversion":"none"},{"name":"Massabki - Ackawi","type":"Fat base","serving":100.0,"unit":"grams","carbs":4.0,"protein":19.0,"fat":21.0,"kcal":281.0,"ratio":null,"conversion":"none"},{"name":"Massabki - Halloum","type":"Fat base","serving":100.0,"unit":"grams","carbs":5.0,"protein":20.0,"fat":22.0,"kcal":298.0,"ratio":null,"conversion":"none"},{"name":"Massabki - Double Creme","type":"Fat base","serving":100.0,"unit":"grams","carbs":3.5,"protein":15.0,"fat":17.0,"kcal":227.0,"ratio":null,"conversion":"none"},{"name":"Thym + Olive Oil","type":"Fat base","serving":100.0,"unit":"grams","carbs":20.0,"protein":10.0,"fat":60.0,"kcal":700.0,"ratio":null,"conversion":"none"},{"name":"Raw Hazelnut","type":"Fat base","serving":100.0,"unit":"grams","carbs":16.7,"protein":14.95,"fat":60.75,"kcal":674.0,"ratio":null,"conversion":"none"},{"name":"Siblou - White tuna in water","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":24.0,"fat":4.0,"kcal":128.0,"ratio":null,"conversion":"none"},{"name":"Figs","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":19.18,"protein":0.75,"fat":0.3,"kcal":83.0,"ratio":null,"conversion":"none"},{"name":"Grapes","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":18.1,"protein":0.72,"fat":0.16,"kcal":77.0,"ratio":null,"conversion":"none"},{"name":"Arrighi Pasta - Trafila 58 - Farfalle","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":70.0,"protein":12.0,"fat":1.5,"kcal":347.0,"ratio":null,"conversion":"none"},{"name":"Arrighi Pasta - Trafila 31 - Penne Rigate","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":70.0,"protein":12.0,"fat":1.5,"kcal":347.0,"ratio":null,"conversion":"none"},{"name":"Bjorg Pain Complet Seigle","type":"Carbohydrates base","serving":1.0,"unit":"Unit","carbs":27.75,"protein":3.45,"fat":0.975,"kcal":148.5,"ratio":null,"conversion":"none"},{"name":"Nabulsi - Burgassia","type":"Fat base","serving":100.0,"unit":"grams","carbs":0.0,"protein":7.0,"fat":9.0,"kcal":110.0,"ratio":null,"conversion":"none"},{"name":"Kechek powder","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":61.0,"protein":24.5,"fat":6.5,"kcal":405.0,"ratio":null,"conversion":"none"},{"name":"Kechek blend","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":15.0,"protein":6.0,"fat":1.6,"kcal":100.0,"ratio":null,"conversion":"none"},{"name":"Nabat Organic Oats","type":"Carbohydrates base","serving":34.0,"unit":"grams","carbs":19.0,"protein":4.0,"fat":2.9,"kcal":125.0,"ratio":null,"conversion":"none"},{"name":"Al Wadi Al Akhdar - Very fine peas and carrots","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":8.1,"protein":3.4,"fat":0.6,"kcal":62.0,"ratio":null,"conversion":"none"},{"name":"Barilla Pasta - Chifferi n⁰ 41","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":71.2,"protein":12.5,"fat":2.0,"kcal":364.0,"ratio":null,"conversion":"none"},{"name":"\"Sobbeir\" (Opuntia)","type":"Carbohydrates base","serving":100.0,"unit":"grams","carbs":9.6,"protein":0.7,"fat":0.5,"kcal":45.0,"ratio":null,"conversion":"none"},{"name":"Grilled chicken (فروج مشوي)","type":"Protein base","serving":100.0,"unit":"grams","carbs":0.0,"protein":27.0,"fat":15.0,"kcal":250.0,"ratio":1.0,"conversion":"multiply"},{"name":"Dairy Fresh Naboulsi Cheese Chtaura","type":"Fat base","serving":100.0,"unit":"grams","carbs":0.0,"protein":24.0,"fat":15.0,"kcal":250.0,"ratio":null,"conversion":"none"},{"name":"Grilled chicken wing","type":"Protein base","serving":1.0,"unit":"Unit","carbs":0.0,"protein":10.0,"fat":8.0,"kcal":120.0,"ratio":null,"conversion":"none"}];
-</script><script>const $=s=>document.querySelector(s), KEY='calorieTrackerV1';
-let db=JSON.parse(localStorage.getItem(KEY)||'{"days":{},"settings":{"bmr":1765}}');
-db.days ||= {}; db.settings ||= {bmr:1765}; db.savedDays ||= {}; db.savedRecipes ||= [];
-const DEFAULT_AI_ENDPOINT='https://calorie-count-ai.michelrizk334.workers.dev';
-if(!db.settings.aiEndpoint)db.settings.aiEndpoint=DEFAULT_AI_ENDPOINT;
-function aiEndpoint(){return String(db.settings?.aiEndpoint||DEFAULT_AI_ENDPOINT).trim().replace(/\/+$/,'')||DEFAULT_AI_ENDPOINT}
-// v4 migration: the whole Excel Support List becomes editable, while keeping any foods added in older app versions.
-if(!Array.isArray(db.supportFoods)){
-  const oldCustom=Array.isArray(db.customFoods)?db.customFoods:[];
-  db.supportFoods=structuredClone(DEFAULT_FOODS);
-  for(const f of oldCustom){if(!db.supportFoods.some(x=>x.name.toLowerCase()===f.name.toLowerCase())) db.supportFoods.unshift(f)}
-  delete db.customFoods;
-}
-// v15: repair older/incomplete phone databases by merging every missing Excel default food.
-// An intentional Clear all is respected until the user chooses Restore Default Support List.
-if(!db.supportListIntentionallyCleared){
-  const names=new Set(db.supportFoods.map(f=>String(f.name||'').trim().toLowerCase()));
-  for(const f of DEFAULT_FOODS){
-    const key=String(f.name||'').trim().toLowerCase();
-    if(!names.has(key)){db.supportFoods.push(structuredClone(f));names.add(key)}
-  }
-}
-localStorage.setItem(KEY,JSON.stringify(db));
-let date=new Date().toISOString().slice(0,10), selectedFood=null, editingFoodIndex=null, editingMealIndex=null, editingMealItemIndex=null;
-const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render()};
-function latestWeight(d){return Object.entries(db.days).filter(([k,v])=>k<=d&&v.weight).sort((a,b)=>b[0].localeCompare(a[0]))[0]?.[1].weight||75}
-function day(){if(!db.days[date])db.days[date]={meals:Array.from({length:6},()=>[]),workout:{},weight:latestWeight(date),phase:''}; return db.days[date]}
-function conversionMode(f){if(f?.conversion)return f.conversion;if(!f?.ratio)return 'none';return f.type.toLowerCase().includes('carbohydrate')?'divide':'multiply'}
-function calcItem(x){let f=x.food, factor=x.qty/f.serving;if(x.state==='Cooked'&&f.ratio){factor=conversionMode(f)==='divide'?factor/f.ratio:factor*f.ratio}return{kcal:f.kcal*factor,c:f.carbs*factor,p:f.protein*factor,fat:f.fat*factor}}
-function totals(){let d=day(),t={kcal:0,c:0,p:0,fat:0};d.meals.flat().forEach(x=>{let q=calcItem(x);Object.keys(t).forEach(k=>t[k]+=q[k])});let w=d.workout||{},mode=w.mode||'erg',secs=(+w.h||0)*3600+(+w.m||0)*60+(+w.s||0),lb=(+d.weight||75)*2.205,machine=(+w.calHour||0)*secs/3600,trueHour=(+w.calHour||0)-300+1.714*lb,ergAdjusted=Math.max(0,trueHour*secs/3600),adjusted=mode==='other'?Math.max(0,+w.otherCalories||0):ergAdjusted,burned=(+db.settings.bmr||1765)+adjusted;return{...t,machine,adjusted,burned,deficit:burned-t.kcal}}
-function render(){let d=day(),t=totals();$('#date').value=date;$('#foodKcal').textContent=Math.round(t.kcal);$('#burnedKcal').textContent=Math.round(t.burned);$('#deficit').textContent=Math.round(t.deficit);$('#carbs').textContent=t.c.toFixed(1)+' g';$('#protein').textContent=t.p.toFixed(1)+' g';$('#fat').textContent=t.fat.toFixed(1)+' g';$('#weight').value=d.weight||'';$('#bmr').value=db.settings.bmr||1765;$('#phase').value=d.phase||'';let w=d.workout||{};$('#session').value=w.session||'';$('#workoutType').value=w.type||'RowErg';$('#calHour').value=w.calHour||'';$('#hours').value=w.h||0;$('#minutes').value=w.m||'';$('#seconds').value=w.s||'';$('#machineCals').textContent=Math.round(t.machine);$('#trueCals').textContent=Math.round((w.mode||'erg')==='other'?0:t.adjusted);$('#otherWorkoutCalories').value=w.otherCalories||'';$('#otherCalsDisplay').textContent=Math.round(+w.otherCalories||0);setWorkoutMode(w.mode||'erg',false);
-$('#meals').innerHTML=d.meals.map((meal,i)=>{let mt=meal.reduce((a,x)=>{let q=calcItem(x);a.kcal+=q.kcal;a.c+=q.c;a.p+=q.p;a.fat+=q.fat;return a},{kcal:0,c:0,p:0,fat:0});return `<div class="meal" data-meal-index="${i}"><div class="meal-title"><b>Meal ${i+1}</b><div class="meal-header-right"><span class="meal-macros">C ${mt.c.toFixed(1)}g · P ${mt.p.toFixed(1)}g · F ${mt.fat.toFixed(1)}g</span><span class="meal-total">${Math.round(mt.kcal)} kcal</span><button type="button" class="meal-add-btn" onclick="addFoodToMeal(${i})">Edit</button><button type="button" class="meal-clear-btn" onclick="clearMeal(${i})" aria-label="Clear Meal ${i+1}" title="Clear meal">🗑</button><button type="button" class="meal-drag" draggable="true" data-meal-index="${i}" aria-label="Move Meal ${i+1}" title="Drag to reorder">☰</button></div></div>${meal.length?meal.map((x,j)=>{let q=calcItem(x);return `<div class="food-row"><div><b>${x.food.name}</b><div class="sub">${x.qty} ${x.food.unit} · ${x.state} · C ${q.c.toFixed(1)} / P ${q.p.toFixed(1)} / F ${q.fat.toFixed(1)}</div></div><span class="kcal">${Math.round(q.kcal)} kcal</span><button class="meal-edit" onclick="editMealFood(${i},${j})" aria-label="Edit ${x.food.name}" title="Edit">✎</button><button onclick="removeFood(${i},${j})" aria-label="Delete ${x.food.name}" title="Delete">✕</button></div>`}).join(''):'<div class="empty">No food yet</div>'}</div>`}).join('');setupMealReordering();
-let hist=Object.entries(db.days).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,7);$('#history').innerHTML=hist.length?hist.map(([k,v])=>{let old=date;date=k;let q=totals();date=old;return `<div class="history-row"><b>${k}</b><span>${v.weight||'—'} kg</span><span>${Math.round(q.kcal)} in</span><span>${Math.round(q.deficit)} deficit</span></div>`}).join(''):''}
-window.addFoodToMeal=(mealIndex)=>{editingMealIndex=null;editingMealItemIndex=null;selectedFood=null;$('#mealSelect').value=String(mealIndex);$('#foodDialog').showModal();$('#foodSearch').value='';showFoods('');setTimeout(()=>$('#foodSearch').focus(),50)};
-window.clearMeal=(mealIndex)=>{const meal=day().meals[mealIndex];if(!Array.isArray(meal)||!meal.length)return;if(confirm(`Delete all foods from Meal ${mealIndex+1}?`)){day().meals[mealIndex]=[];save()}};
-function moveMeal(fromIndex,toIndex){if(fromIndex===toIndex||fromIndex<0||toIndex<0)return;const meals=day().meals;const moved=meals.splice(fromIndex,1)[0];meals.splice(toIndex,0,moved);save()}
-function setupMealReordering(){
-  const root=$('#meals');if(!root)return;
-  const handles=[...root.querySelectorAll('.meal-drag')];
-  handles.forEach(handle=>{
-    handle.addEventListener('dragstart',e=>{const i=Number(handle.dataset.mealIndex);e.dataTransfer.setData('text/plain',String(i));e.dataTransfer.effectAllowed='move';handle.closest('.meal')?.classList.add('dragging')});
-    handle.addEventListener('dragend',()=>root.querySelectorAll('.meal').forEach(m=>m.classList.remove('dragging','drag-over')));
-    handle.addEventListener('pointerdown',e=>{
-      if(e.pointerType==='mouse')return;
-      const from=Number(handle.dataset.mealIndex);let target=from;handle.setPointerCapture?.(e.pointerId);handle.closest('.meal')?.classList.add('dragging');
-      const move=ev=>{const el=document.elementFromPoint(ev.clientX,ev.clientY);const meal=el?.closest?.('.meal');root.querySelectorAll('.meal').forEach(m=>m.classList.remove('drag-over'));if(meal){target=Number(meal.dataset.mealIndex);meal.classList.add('drag-over')}};
-      const end=()=>{handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',end);handle.removeEventListener('pointercancel',end);root.querySelectorAll('.meal').forEach(m=>m.classList.remove('dragging','drag-over'));if(target!==from)moveMeal(from,target)};
-      handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);
-    });
-  });
-  root.querySelectorAll('.meal').forEach(meal=>{
-    meal.addEventListener('dragover',e=>{e.preventDefault();meal.classList.add('drag-over')});
-    meal.addEventListener('dragleave',()=>meal.classList.remove('drag-over'));
-    meal.addEventListener('drop',e=>{e.preventDefault();const from=Number(e.dataTransfer.getData('text/plain'));const to=Number(meal.dataset.mealIndex);root.querySelectorAll('.meal').forEach(m=>m.classList.remove('dragging','drag-over'));moveMeal(from,to)});
-  });
-}
-window.removeFood=(i,j)=>{day().meals[i].splice(j,1);save()};
-window.editMealFood=(i,j)=>{const x=day().meals[i][j]; if(!x)return; editingMealIndex=i; editingMealItemIndex=j; selectedFood=structuredClone(x.food); $('#mealSelect').value=String(i); openQtyEditor(x.qty,x.state,true)};
-function shift(n){let d=new Date(date+'T12:00:00');d.setDate(d.getDate()+n);date=d.toISOString().slice(0,10);render()}
-$('#prevDay').onclick=()=>shift(-1);$('#nextDay').onclick=()=>shift(1);$('#todayBtn').onclick=()=>{date=new Date().toISOString().slice(0,10);render()};$('#date').onchange=e=>{date=e.target.value;render()};
-$('#mealSelect').innerHTML=Array.from({length:6},(_,i)=>`<option value="${i}">Meal ${i+1}</option>`).join('');
-function allFoods(){return db.supportFoods}
-$('#addFoodBtn').onclick=()=>{editingMealIndex=null;editingMealItemIndex=null;selectedFood=null;$('#foodDialog').showModal();$('#foodSearch').value='';showFoods('')};
-function showFoods(q){q=q.toLowerCase();$('#foodResults').innerHTML=allFoods().filter(f=>f.name.toLowerCase().includes(q)).slice(0,60).map(f=>`<button type="button" class="food-option" data-name="${encodeURIComponent(f.name)}"><span><b>${f.name}</b><small>${f.type} · per ${f.serving} ${f.unit}</small></span><span>${Math.round(f.kcal)} kcal</span></button>`).join('');document.querySelectorAll('.food-option').forEach(b=>b.onclick=()=>pickFood(decodeURIComponent(b.dataset.name)))}
-$('#foodSearch').oninput=e=>showFoods(e.target.value);
-function openQtyEditor(qty,state,isEdit=false){$('#qtyTitle').textContent=(isEdit?'Edit ':'')+selectedFood.name;$('#qty').value=qty;$('#qtyLabel').firstChild.textContent=`Quantity (${selectedFood.unit})`;$('#state').value=state||'Raw';$('#state').disabled=!selectedFood.ratio;let mode=conversionMode(selectedFood);$('#conversionNote').textContent=selectedFood.ratio?`Raw nutrition values. Cooked quantity is ${mode==='divide'?'divided by':'multiplied by'} ${selectedFood.ratio} to get the raw-equivalent quantity.`:'No raw/cooked conversion for this food; quantity is used directly.';$('#confirmFood').textContent=isEdit?'Save changes':'Add to meal';$('#qtyDialog').showModal()}
-function pickFood(name){selectedFood=allFoods().find(f=>f.name===name);$('#foodDialog').close();openQtyEditor(selectedFood.serving,'Raw',false)}
-$('#confirmFood').onclick=e=>{e.preventDefault();if(!selectedFood)return;const targetMeal=+$('#mealSelect').value;const item={food:structuredClone(selectedFood),qty:+$('#qty').value||0,state:$('#state').value};if(editingMealIndex!==null&&editingMealItemIndex!==null){if(targetMeal===editingMealIndex){day().meals[editingMealIndex][editingMealItemIndex]=item}else{day().meals[editingMealIndex].splice(editingMealItemIndex,1);day().meals[targetMeal].push(item)}}else{day().meals[targetMeal].push(item)}editingMealIndex=null;editingMealItemIndex=null;selectedFood=null;$('#qtyDialog').close();save()};
-function setWorkoutMode(mode,doSave=true){let w=day().workout;w.mode=mode;$('#ergWorkoutFields').hidden=mode!=='erg';$('#otherWorkoutFields').hidden=mode!=='other';$('#ergTrainingBtn').className=mode==='erg'?'':'ghost';$('#otherWorkoutBtn').className=mode==='other'?'':'ghost';if(doSave)save()}
-$('#ergTrainingBtn').onclick=()=>setWorkoutMode('erg');$('#otherWorkoutBtn').onclick=()=>setWorkoutMode('other');
-['session','workoutType','calHour','hours','minutes','seconds'].forEach(id=>$('#'+id).oninput=e=>{let map={session:'session',workoutType:'type',calHour:'calHour',hours:'h',minutes:'m',seconds:'s'};day().workout[map[id]]=e.target.value;save()});
-$('#otherWorkoutCalories').oninput=e=>{day().workout.otherCalories=e.target.value;save()};
-$('#weight').onchange=e=>{day().weight=+e.target.value;save()};$('#bmr').onchange=e=>{db.settings.bmr=+e.target.value;save()};$('#phase').onchange=e=>{day().phase=e.target.value;save()};
-function renderSupportFoods(){const list=$('#customFoodList');if(!list)return;const q=($('#supportSearch').value||'').trim().toLowerCase();const rows=db.supportFoods.map((f,i)=>({f,i})).filter(({f})=>!q||f.name.toLowerCase().includes(q)||f.type.toLowerCase().includes(q)||String(f.description||'').toLowerCase().includes(q));list.innerHTML=rows.length?rows.map(({f,i})=>`<div class="custom-food-row"><div><b>${f.name}</b>${f.description?`<div class="meta" style="margin-top:3px">${escapeHtml(f.description)}</div>`:''}<div class="meta">${f.type} · ${f.serving} ${f.unit} · C ${f.carbs} / P ${f.protein} / F ${f.fat} · ${f.kcal} kcal${f.ratio?` · cooked ${conversionMode(f)==='multiply'?'×':'÷'} ${f.ratio}`:''}</div></div><button type="button" class="edit" onclick="editSupportFood(${i})">Edit</button><button type="button" class="delete" onclick="deleteSupportFood(${i})">✕</button></div>`).join(''):'<div class="empty">No matching foods.</div>'}
-function openFoodEditor(i=null){editingFoodIndex=i;stopBarcodeCamera();if($('#barcodeScanBox'))$('#barcodeScanBox').hidden=true;if($('#barcodeManual'))$('#barcodeManual').value='';if($('#aiFoodQuery'))$('#aiFoodQuery').value='';if($('#aiFoodResults'))$('#aiFoodResults').innerHTML='';setAiFoodStatus('');const f=i===null?null:db.supportFoods[i];$('#foodEditorTitle').textContent=f?'Edit food':'Add food';$('#customName').value=f?.name||'';$('#customDescription').value=f?.description||'';$('#customType').value=f?.type||'Carbohydrates base';$('#customServing').value=f?.serving??100;$('#customUnit').value=f?.unit||'grams';$('#customCarbs').value=f?.carbs??'';$('#customProtein').value=f?.protein??'';$('#customFat').value=f?.fat??'';$('#customKcal').value=f?.kcal??'';$('#customRatio').value=f?.ratio??'';$('#customConversion').value=f?.conversion||conversionMode(f||{});$('#foodEditorDialog').showModal()}
-$('#newFoodBtn').onclick=()=>openFoodEditor();$('#restoreSupportBtn').onclick=()=>{if(confirm('Restore the complete default Excel Support List? Your custom foods will be kept.')){const names=new Set(db.supportFoods.map(f=>String(f.name||'').trim().toLowerCase()));for(const f of DEFAULT_FOODS){const key=String(f.name||'').trim().toLowerCase();if(!names.has(key)){db.supportFoods.push(structuredClone(f));names.add(key)}}db.supportListIntentionallyCleared=false;localStorage.setItem(KEY,JSON.stringify(db));renderSupportFoods();render();alert('Default Support List restored.')}};$('#clearSupportBtn').onclick=()=>{if(confirm('Are you sure you want to clear all the existing support list?')){db.supportFoods=[];db.supportListIntentionallyCleared=true;localStorage.setItem(KEY,JSON.stringify(db));renderSupportFoods();render()}};window.editSupportFood=i=>openFoodEditor(i);window.deleteSupportFood=i=>{if(confirm(`Delete ${db.supportFoods[i].name} from the Support List?`)){db.supportFoods.splice(i,1);localStorage.setItem(KEY,JSON.stringify(db));renderSupportFoods()}};
-function renderSeasons(){
-  const root=$('#seasonsList'); if(!root)return;
-  const entries=Object.entries(db.savedDays||{}).sort((a,b)=>b[0].localeCompare(a[0]));
-  if(!entries.length){root.innerHTML='<div class="empty season-empty">No saved sheets yet. Enter a Training Phase in Meals and press Save.</div>';return}
-  const groups={};
-  for(const [d,snap] of entries){const phase=(snap.phase||'Uncategorized').trim()||'Uncategorized';(groups[phase] ||= []).push([d,snap])}
-  const escapeSeasonName=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  root.innerHTML=Object.entries(groups).map(([phase,days])=>`<details class="season-group"><summary class="season-banner"><div><b>${escapeSeasonName(phase)}</b><small>${days.length} saved sheet${days.length===1?'':'s'}</small></div><span class="season-chevron" aria-hidden="true">⌄</span></summary><div class="season-days">${days.map(([d,snap])=>{let kcal=(snap.meals||[]).flat().reduce((a,x)=>a+calcItem(x).kcal,0);return `<button type="button" class="season-day" onclick="openSavedDay('${d}')"><span><b>${d}</b><small>${snap.weight||'—'} kg · ${Math.round(kcal)} kcal eaten</small></span><span>Open ›</span></button>`}).join('')}</div></details>`).join('')
-}
-window.openSavedDay=d=>{date=d;setTab('tracker');render()};
-function existingPhases(){
-  const phases=new Set();
-  Object.values(db.savedDays||{}).forEach(s=>{const p=(s.phase||'').trim();if(p)phases.add(p)});
-  Object.values(db.days||{}).forEach(s=>{const p=(s.phase||'').trim();if(p)phases.add(p)});
-  return [...phases].sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:'base'}));
-}
-function updateSeasonSaveMode(){const isNew=$('#seasonSaveMode').value==='new';$('#existingSeasonLabel').hidden=isNew;$('#newSeasonLabel').hidden=!isNew;if(isNew)setTimeout(()=>$('#newSeasonName').focus(),0)}
-$('#saveDayBtn').onclick=()=>{
-  const phases=existingPhases(), current=(day().phase||'').trim();
-  $('#existingSeason').innerHTML=phases.map(p=>`<option value="${p.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}">${p.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</option>`).join('');
-  if(current&&phases.includes(current))$('#existingSeason').value=current;
-  $('#newSeasonName').value=current&&!phases.includes(current)?current:'';
-  $('#seasonSaveMode').value=phases.length?'existing':'new';
-  updateSeasonSaveMode();$('#saveSeasonDialog').showModal();
-};
-$('#seasonSaveMode').onchange=updateSeasonSaveMode;
-$('#closeSaveSeason').onclick=()=>$('#saveSeasonDialog').close();
-$('#saveSeasonForm').onsubmit=e=>{e.preventDefault();const isNew=$('#seasonSaveMode').value==='new';const phase=(isNew?$('#newSeasonName').value:$('#existingSeason').value).trim();if(!phase){alert(isNew?'Enter a name for the new Training Phase.':'There is no existing phase to select. Create a new one instead.');return}day().phase=phase;$('#phase').value=phase;db.savedDays[date]=structuredClone(day());localStorage.setItem(KEY,JSON.stringify(db));$('#saveSeasonDialog').close();renderSeasons();render();const b=$('#saveDayBtn'),old=b.textContent;b.textContent='Saved ✓';setTimeout(()=>b.textContent=old,1200)};
+<button id="exportBtn" type="button">Export backup</button><label class="fileBtn">Import backup<input accept="application/json" id="importFile" type="file"/></label><button class="danger" id="clearBtn" type="button">Clear all data</button></form></dialog>
+</div>
 
-// =========================================================
-// v30 ANALYTICS
-// Daily = days of the selected week
-// Weekly = weeks of the selected month
-// Monthly = months of the selected year
-// =========================================================
-let analyticsMode='daily';
-let analyticsAnchor=date;
 
-function analyticsDateFromIso(value){return new Date(String(value)+'T12:00:00')}
-function analyticsIso(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dayNum=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dayNum}`}
-function analyticsAddDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
-function analyticsStartOfWeek(d){const x=new Date(d);const offset=(x.getDay()+6)%7;x.setDate(x.getDate()-offset);return x}
-function analyticsEndOfMonth(d){return new Date(d.getFullYear(),d.getMonth()+1,0,12,0,0)}
-function analyticsFmtDate(d,opts){return d.toLocaleDateString(undefined,opts)}
-function analyticsRangeLabel(start,end){
-  if(start.getFullYear()!==end.getFullYear())return `${analyticsFmtDate(start,{day:'numeric',month:'short',year:'numeric'})} – ${analyticsFmtDate(end,{day:'numeric',month:'short',year:'numeric'})}`;
-  if(start.getMonth()!==end.getMonth())return `${analyticsFmtDate(start,{day:'numeric',month:'short'})} – ${analyticsFmtDate(end,{day:'numeric',month:'short',year:'numeric'})}`;
-  return `${start.getDate()}–${analyticsFmtDate(end,{day:'numeric',month:'short',year:'numeric'})}`;
-}
-function analyticsDayStats(d){
-  if(!d)return{consumed:0,burned:0,balance:0,weight:null,recorded:false};
-  let consumed=0;
-  (d.meals||[]).flat().forEach(x=>{try{consumed+=calcItem(x).kcal||0}catch{}});
-  const w=d.workout||{},mode=w.mode||'erg',secs=(+w.h||0)*3600+(+w.m||0)*60+(+w.s||0),lb=(+d.weight||75)*2.205,trueHour=(+w.calHour||0)-300+1.714*lb,ergAdjusted=Math.max(0,trueHour*secs/3600),adjusted=mode==='other'?Math.max(0,+w.otherCalories||0):ergAdjusted,burned=(+db.settings.bmr||1765)+adjusted;
-  const weight=Number.isFinite(+d.weight)&&+d.weight>0?+d.weight:null;
-  return{consumed,burned,balance:burned-consumed,weight,recorded:true};
-}
-function analyticsAggregate(start,end,label,shortLabel=label){
-  let consumed=0,burned=0,recordedDays=0;const weights=[];
-  for(let d=new Date(start);d<=end;d=analyticsAddDays(d,1)){
-    const entry=db.days[analyticsIso(d)];
-    if(!entry)continue;
-    const s=analyticsDayStats(entry);consumed+=s.consumed;burned+=s.burned;recordedDays++;
-    if(s.weight!==null)weights.push(s.weight);
-  }
-  const weight=weights.length?weights.reduce((a,b)=>a+b,0)/weights.length:null;
-  return{start:new Date(start),end:new Date(end),label,shortLabel,consumed,burned,balance:burned-consumed,weight,weightCount:weights.length,recordedDays};
-}
-function analyticsPeriod(){
-  const anchor=analyticsDateFromIso(analyticsAnchor);const segments=[];let start,end,title;
-  if(analyticsMode==='daily'){
-    start=analyticsStartOfWeek(anchor);end=analyticsAddDays(start,6);title=`Week · ${analyticsRangeLabel(start,end)}`;
-    for(let i=0;i<7;i++){const d=analyticsAddDays(start,i);segments.push(analyticsAggregate(d,d,analyticsFmtDate(d,{weekday:'short',day:'numeric'}),analyticsFmtDate(d,{weekday:'short'})))}
-  }else if(analyticsMode==='weekly'){
-    start=new Date(anchor.getFullYear(),anchor.getMonth(),1,12,0,0);end=analyticsEndOfMonth(anchor);title=`Month · ${analyticsFmtDate(start,{month:'long',year:'numeric'})}`;
-    let cursor=new Date(start),week=1;
-    while(cursor<=end){const daysToSunday=6-((cursor.getDay()+6)%7);const segEnd=new Date(Math.min(analyticsAddDays(cursor,daysToSunday).getTime(),end.getTime()));const label=`${cursor.getDate()}–${segEnd.getDate()} ${analyticsFmtDate(segEnd,{month:'short'})}`;segments.push(analyticsAggregate(cursor,segEnd,label,`W${week}`));cursor=analyticsAddDays(segEnd,1);week++}
-  }else{
-    start=new Date(anchor.getFullYear(),0,1,12,0,0);end=new Date(anchor.getFullYear(),11,31,12,0,0);title=`Year · ${anchor.getFullYear()}`;
-    for(let m=0;m<12;m++){const ms=new Date(anchor.getFullYear(),m,1,12,0,0),me=new Date(anchor.getFullYear(),m+1,0,12,0,0);segments.push(analyticsAggregate(ms,me,analyticsFmtDate(ms,{month:'short'}),analyticsFmtDate(ms,{month:'short'})))}
-  }
-  const total=analyticsAggregate(start,end,'Total','Total');
-  return{segments,total,start,end,title};
-}
-function analyticsLineChart(rootId,segments){
-  const root=$(rootId);if(!root)return;const values=segments.map(s=>s.weight);const valid=values.filter(v=>v!==null&&Number.isFinite(v));
-  if(!valid.length){root.innerHTML='<div class="analytics-empty">No weight entries for this period.</div>';return}
-  const W=760,H=220,L=46,R=18,T=18,B=38,plotW=W-L-R,plotH=H-T-B;let min=Math.min(...valid),max=Math.max(...valid);if(Math.abs(max-min)<0.2){min-=0.5;max+=0.5}else{const pad=(max-min)*0.12;min-=pad;max+=pad}
-  const x=i=>segments.length===1?L+plotW/2:L+i*plotW/(segments.length-1);const y=v=>T+(max-v)*plotH/(max-min);
-  let grid='';for(let i=0;i<4;i++){const yy=T+i*plotH/3,val=max-i*(max-min)/3;grid+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#26324a" stroke-width="1"/><text x="${L-7}" y="${yy+4}" text-anchor="end" fill="#8090aa" font-size="10">${val.toFixed(1)}</text>`}
-  const pts=segments.map((s,i)=>s.weight===null?null:[x(i),y(s.weight)]);let path='';let drawing=false;pts.forEach(p=>{if(!p){drawing=false;return}path+=(drawing?' L ':' M ')+p[0].toFixed(1)+' '+p[1].toFixed(1);drawing=true});
-  const dots=pts.map((p,i)=>p?`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#b7aaff"><title>${escapeHtml(segments[i].label)}: ${segments[i].weight.toFixed(1)} kg</title></circle>`:'').join('');
-  const labels=segments.map((s,i)=>`<text x="${x(i)}" y="${H-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${escapeHtml(s.shortLabel)}</text>`).join('');
-  root.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight trend">${grid}<path d="${path}" fill="none" stroke="#b7aaff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${dots}${labels}</svg>`;
-}
-function analyticsBarChart(rootId,segments,key){
-  const root=$(rootId);if(!root)return;const vals=segments.map(s=>Math.max(0,+s[key]||0));const max=Math.max(...vals,0);
-  if(max<=0){root.innerHTML='<div class="analytics-empty">No calorie data for this period.</div>';return}
-  const W=760,H=220,L=46,R=18,T=18,B=38,plotW=W-L-R,plotH=H-T-B,n=segments.length,slot=plotW/n,barW=Math.max(8,slot*.58);
-  let grid='';for(let i=0;i<4;i++){const yy=T+i*plotH/3,val=max-i*max/3;grid+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#26324a" stroke-width="1"/><text x="${L-7}" y="${yy+4}" text-anchor="end" fill="#8090aa" font-size="10">${Math.round(val)}</text>`}
-  const bars=segments.map((s,i)=>{const v=vals[i],h=v/max*plotH,bx=L+i*slot+(slot-barW)/2,by=T+plotH-h;return `<rect x="${bx}" y="${by}" width="${barW}" height="${h}" rx="4" fill="#7c5cff"><title>${escapeHtml(s.label)}: ${Math.round(v)} kcal</title></rect><text x="${L+i*slot+slot/2}" y="${H-12}" text-anchor="middle" fill="#94a3b8" font-size="10">${escapeHtml(s.shortLabel)}</text>`}).join('');
-  root.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Calorie trend">${grid}${bars}</svg>`;
-}
-function analyticsTableHtml(segments,total){
-  const header=segments.map(s=>`<th>${escapeHtml(s.label)}</th>`).join('');
-  const weight=segments.map(s=>`<td>${s.weight===null?'—':s.weight.toFixed(1)+' kg'}</td>`).join('');
-  const consumed=segments.map(s=>`<td>${Math.round(s.consumed)}</td>`).join('');
-  const burned=segments.map(s=>`<td>${Math.round(s.burned)}</td>`).join('');
-  const balance=segments.map(s=>`<td>${Math.round(s.balance)}</td>`).join('');
-  return `<table class="analytics-table"><thead><tr><th>Metric</th>${header}<th>Total</th></tr></thead><tbody><tr><td>Weight</td>${weight}<td>${total.weight===null?'—':total.weight.toFixed(1)+' kg avg'}</td></tr><tr><td>Calories consumed</td>${consumed}<td>${Math.round(total.consumed)}</td></tr><tr><td>Calories burned</td>${burned}<td>${Math.round(total.burned)}</td></tr><tr><td>Balance (burned − consumed)</td>${balance}<td>${Math.round(total.balance)}</td></tr></tbody></table>`;
-}
-function renderAnalytics(){
-  const view=$('#analyticsView');if(!view)return;const p=analyticsPeriod();
-  $('#analyticsPeriodTitle').textContent=p.title;
-  ['daily','weekly','monthly'].forEach(mode=>{const id=mode==='daily'?'#analyticsDailyBtn':mode==='weekly'?'#analyticsWeeklyBtn':'#analyticsMonthlyBtn';$(id).className=analyticsMode===mode?'active':'ghost'});
-  $('#analyticsWeightSummary').textContent=p.total.weight===null?'—':p.total.weight.toFixed(1)+' kg';
-  $('#analyticsWeightDays').textContent=p.total.weightCount?`${p.total.weightCount} weight entr${p.total.weightCount===1?'y':'ies'}`:'No weight entries';
-  $('#analyticsConsumedSummary').textContent=Math.round(p.total.consumed).toLocaleString();
-  $('#analyticsBurnedSummary').textContent=Math.round(p.total.burned).toLocaleString();
-  const bal=Math.round(p.total.balance);$('#analyticsBalanceSummary').textContent=(bal>0?'+':'')+bal.toLocaleString()+' kcal';$('#analyticsBalanceLabel').textContent=bal>0?'deficit over selected period':bal<0?'surplus over selected period':'balanced over selected period';
-  $('#analyticsWeightChartTotal').textContent=p.total.weight===null?'No recorded weight':`Period avg ${p.total.weight.toFixed(1)} kg`;
-  $('#analyticsConsumedChartTotal').textContent=`Period total ${Math.round(p.total.consumed).toLocaleString()} kcal`;
-  $('#analyticsBurnedChartTotal').textContent=`Period total ${Math.round(p.total.burned).toLocaleString()} kcal`;
-  analyticsLineChart('#analyticsWeightChart',p.segments);analyticsBarChart('#analyticsConsumedChart',p.segments,'consumed');analyticsBarChart('#analyticsBurnedChart',p.segments,'burned');
-  $('#analyticsTableWrap').innerHTML=analyticsTableHtml(p.segments,p.total);
-}
-function shiftAnalyticsPeriod(direction){
-  const d=analyticsDateFromIso(analyticsAnchor);if(analyticsMode==='daily')d.setDate(d.getDate()+7*direction);else if(analyticsMode==='weekly')d.setMonth(d.getMonth()+direction);else d.setFullYear(d.getFullYear()+direction);analyticsAnchor=analyticsIso(d);renderAnalytics();
-}
-function setAnalyticsMode(mode){analyticsMode=mode;renderAnalytics()}
-$('#analyticsDailyBtn').onclick=()=>setAnalyticsMode('daily');
-$('#analyticsWeeklyBtn').onclick=()=>setAnalyticsMode('weekly');
-$('#analyticsMonthlyBtn').onclick=()=>setAnalyticsMode('monthly');
-$('#analyticsPrev').onclick=()=>shiftAnalyticsPeriod(-1);
-$('#analyticsNext').onclick=()=>shiftAnalyticsPeriod(1);
-$('#analyticsCurrent').onclick=()=>{analyticsAnchor=new Date().toISOString().slice(0,10);renderAnalytics()};
-
-function setTab(tab){const tracker=tab==='tracker', seasons=tab==='seasons', support=tab==='support', recipe=tab==='recipe', analytics=tab==='analytics';$('#trackerView').hidden=!tracker;$('#seasonsView').hidden=!seasons;$('#supportView').hidden=!support;$('#recipeView').hidden=!recipe;$('#analyticsView').hidden=!analytics;$('#trackerTab').classList.toggle('active',tracker);$('#seasonsTab').classList.toggle('active',seasons);$('#supportTab').classList.toggle('active',support);$('#recipeTab').classList.toggle('active',recipe);$('#analyticsTab').classList.toggle('active',analytics);if(seasons)renderSeasons();if(support)renderSupportFoods();if(recipe)renderRecipeView();if(analytics)renderAnalytics();window.dispatchEvent(new Event('resize'))}
-$('#trackerTab').onclick=()=>setTab('tracker');$('#seasonsTab').onclick=()=>setTab('seasons');$('#supportTab').onclick=()=>setTab('support');$('#recipeTab').onclick=()=>setTab('recipe');$('#analyticsTab').onclick=()=>{analyticsAnchor=date;setTab('analytics')};$('#supportSearch').oninput=renderSupportFoods;
-$('#foodEditorForm').onsubmit=e=>{e.preventDefault();const mode=$('#customConversion').value,ratio=+$('#customRatio').value||null;const f={name:$('#customName').value.trim(),description:$('#customDescription').value.trim(),type:$('#customType').value,serving:+$('#customServing').value||1,unit:$('#customUnit').value,carbs:+$('#customCarbs').value||0,protein:+$('#customProtein').value||0,fat:+$('#customFat').value||0,kcal:+$('#customKcal').value||0,ratio:mode==='none'?null:ratio,conversion:mode};if(mode!=='none'&&(!ratio||ratio<1)){alert('Enter a conversion ratio of 1 or greater.');return}if(!f.name)return;if(editingFoodIndex===null)db.supportFoods.push(f);else db.supportFoods[editingFoodIndex]=f;localStorage.setItem(KEY,JSON.stringify(db));$('#foodEditorDialog').close();renderSupportFoods();render()};
-// Explicit close actions: closing an accidental Add/Edit never validates or saves the form.
-$('#closeFoodDialog').onclick=()=>$('#foodDialog').close();$('#closeQtyDialog').onclick=()=>{$('#qtyDialog').close();selectedFood=null;editingMealIndex=null;editingMealItemIndex=null;$('#confirmFood').textContent='Add to meal'};$('#closeFoodEditor').onclick=()=>{   stopBarcodeCamera();   $('#foodEditorDialog').close();   editingFoodIndex=null; };
-$('#settingsBtn').onclick=()=>{$('#aiBackendEndpoint').value=aiEndpoint();$('#settingsDialog').showModal()};$('#aiBackendEndpoint').onchange=e=>{db.settings.aiEndpoint=(e.target.value.trim().replace(/\/+$/,'')||DEFAULT_AI_ENDPOINT);e.target.value=db.settings.aiEndpoint;localStorage.setItem(KEY,JSON.stringify(db))};$('#exportBtn').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='calorie-tracker-backup.json';a.click();URL.revokeObjectURL(a.href)};$('#importFile').onchange=e=>{let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.settings ||= {bmr:1765};if(!db.settings.aiEndpoint)db.settings.aiEndpoint=DEFAULT_AI_ENDPOINT;db.savedRecipes ||= [];db.supportFoods ||= structuredClone(DEFAULT_FOODS);if(!db.supportListIntentionallyCleared){const names=new Set(db.supportFoods.map(f=>String(f.name||'').trim().toLowerCase()));for(const f of DEFAULT_FOODS){const key=String(f.name||'').trim().toLowerCase();if(!names.has(key)){db.supportFoods.push(structuredClone(f));names.add(key)}}}save();$('#settingsDialog').close()}catch{alert('Invalid backup file')}};r.readAsText(e.target.files[0])};$('#clearBtn').onclick=()=>{if(confirm('Delete all locally stored tracker data and reset the Support List to the Excel defaults?')){localStorage.removeItem(KEY);db={days:{},settings:{bmr:1765,aiEndpoint:DEFAULT_AI_ENDPOINT},savedDays:{},savedRecipes:[],supportFoods:structuredClone(DEFAULT_FOODS),supportListIntentionallyCleared:false};save();$('#settingsDialog').close()}};
-// =========================================================
-// AI FOOD / READY-MEAL LOOKUP
-// =========================================================
-
-let aiFoodSearchResults=[];
-
-function escapeHtml(value){
-  return String(value??'').replace(/[&<>"']/g,ch=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  })[ch]);
-}
-
-function setAiFoodStatus(message,type=''){
-  const el=$('#aiFoodStatus');
-  if(!el)return;
-  el.textContent=message||'';
-  el.className='scan-status'+(type?' '+type:'');
-}
-
-function renderAiFoodResults(){
-  const root=$('#aiFoodResults');
-  if(!root)return;
-  root.innerHTML=aiFoodSearchResults.map((item,i)=>`
-    <div class="ai-food-result">
-      <div class="ai-food-result-head">
-        <div>
-          <b>${escapeHtml(item.name||'Food')}</b>
-          <div class="meta">${escapeHtml(item.basis_label||'')} · ${Math.round(Number(item.calories_kcal)||0)} kcal · C ${(Number(item.carbs_g)||0).toFixed(1)} g · P ${(Number(item.protein_g)||0).toFixed(1)} g · F ${(Number(item.fat_g)||0).toFixed(1)} g</div>
-        </div>
-        <button type="button" onclick="addAiFoodResult(${i})">Add item</button>
-      </div>
-      ${item.description?`<div class="assumption"><b>Portion:</b> ${escapeHtml(item.description)}</div>`:''}
-      ${item.assumptions?`<div class="assumption"><b>Estimate:</b> ${escapeHtml(item.assumptions)}</div>`:''}
-    </div>
-  `).join('');
-}
-
-window.addAiFoodResult=i=>{
-  const item=aiFoodSearchResults[i];
-  if(!item)return;
-  $('#customName').value=item.name||'';
-  $('#customDescription').value=item.description||$('#aiFoodQuery').value.trim();
-  $('#customServing').value=Number(item.reference_amount)||1;
-  $('#customUnit').value=item.unit==='milliliters'?'ml':item.unit==='units'?'Unit':'grams';
-  $('#customCarbs').value=Number(item.carbs_g)||0;
-  $('#customProtein').value=Number(item.protein_g)||0;
-  $('#customFat').value=Number(item.fat_g)||0;
-  $('#customKcal').value=Number(item.calories_kcal)||0;
-  $('#customType').value=dominantBase(Number(item.carbs_g)||0,Number(item.protein_g)||0,Number(item.fat_g)||0);
-  $('#customRatio').value='';
-  $('#customConversion').value='none';
-  setAiFoodStatus('Added to the form below. Review the values, then press Save food.','ok');
-};
-
-async function searchAiFood(){
-  const query=$('#aiFoodQuery').value.trim();
-  if(!query){setAiFoodStatus('Describe a food or meal first.','error');return;}
-  const btn=$('#aiFoodSearchBtn');
-  btn.disabled=true;
-  aiFoodSearchResults=[];
-  $('#aiFoodResults').innerHTML='';
-  setAiFoodStatus('Looking up nutrition…');
-  try{
-    const endpoint=aiEndpoint();
-    const response=await fetch(endpoint+'/food-search',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({query})
-    });
-    const data=await response.json();
-    if(!response.ok)throw new Error(data.error||'Food lookup failed.');
-    aiFoodSearchResults=Array.isArray(data.results)?data.results:[];
-    if(!aiFoodSearchResults.length)throw new Error('No nutrition result was returned.');
-    renderAiFoodResults();
-    setAiFoodStatus('Choose Add item to fill the existing food form. Nutrition is an estimate; review it before saving.','ok');
-  }catch(error){
-    console.error('AI food lookup error:',error);
-    setAiFoodStatus(error.message||'Could not look up this food.','error');
-  }finally{btn.disabled=false;}
-}
-
-$('#aiFoodSearchBtn').onclick=searchAiFood;
-$('#aiFoodQuery').addEventListener('keydown',e=>{
-  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();searchAiFood();}
-});
-
-
-// =========================================================
-// v28 RECIPE GENERATOR + SAVED MEALS
-// =========================================================
-
-let generatedRecipe=null;
-let recipePendingAdd=null;
-let recipeGenerating=false;
-
-function recipeNumber(id){
-  const raw=$(id)?.value?.trim();
-  if(!raw)return null;
-  const n=Number(raw);
-  return Number.isFinite(n)&&n>0?n:null;
-}
-
-function recipeTargets(){
-  return {
-    protein_g:recipeNumber('#recipeProtein'),
-    carbs_g:recipeNumber('#recipeCarbs'),
-    fat_g:recipeNumber('#recipeFat'),
-    calories_kcal:recipeNumber('#recipeCalories')
-  };
-}
-
-function hasRecipeTarget(t){return Object.values(t).some(v=>v!==null)}
-
-function setRecipeStatus(message,type=''){
-  const el=$('#recipeStatus');if(!el)return;
-  el.textContent=message||'';
-  el.className='scan-status'+(type?' '+type:'');
-}
-
-function compactSupportFoods(){
-  return (db.supportFoods||[]).slice(0,250).map(f=>({
-    name:String(f.name||'').slice(0,120),
-    description:String(f.description||'').slice(0,180),
-    type:f.type||'',
-    serving:Number(f.serving)||1,
-    unit:f.unit||'grams',
-    carbs:Number(f.carbs)||0,
-    protein:Number(f.protein)||0,
-    fat:Number(f.fat)||0,
-    kcal:Number(f.kcal)||0,
-    ratio:Number(f.ratio)||null,
-    conversion:f.conversion||'none'
-  }));
-}
-
-function recipeTotals(recipe){
-  const t={kcal:0,c:0,p:0,fat:0};
-  (recipe?.ingredients||[]).forEach(x=>{
-    const q=calcItem(x);
-    t.kcal+=q.kcal;t.c+=q.c;t.p+=q.p;t.fat+=q.fat;
-  });
-  return t;
-}
-
-function requestedRecipeText(targets){
-  const parts=[];
-  if(targets?.protein_g)parts.push(`P ${Number(targets.protein_g).toFixed(1)} g`);
-  if(targets?.carbs_g)parts.push(`C ${Number(targets.carbs_g).toFixed(1)} g`);
-  if(targets?.fat_g)parts.push(`F ${Number(targets.fat_g).toFixed(1)} g`);
-  if(targets?.calories_kcal)parts.push(`${Math.round(Number(targets.calories_kcal))} kcal`);
-  return parts.join(' · ');
-}
-
-function recipeIngredientText(x){
-  const qty=Number(x.qty)||0;
-  const unit=x.food?.unit||'';
-  const desc=x.food?.description?` — ${escapeHtml(x.food.description)}`:'';
-  return `<div class="recipe-ingredient"><span><b>${escapeHtml(x.food?.name||'Ingredient')}</b>${desc}</span><span>${qty} ${escapeHtml(unit)} · ${escapeHtml(x.state||'Raw')}</span></div>`;
-}
-
-function recipeInstructionsHtml(recipe){
-  const steps=Array.isArray(recipe?.instructions)?recipe.instructions:[];
-  return steps.length?`<div><b>Preparation</b><ol class="recipe-instructions">${steps.map(step=>`<li>${escapeHtml(step)}</li>`).join('')}</ol></div>`:'';
-}
-
-function renderGeneratedRecipe(){
-  const root=$('#recipeResult');if(!root)return;
-  if(!generatedRecipe){root.innerHTML='';return;}
-  const t=recipeTotals(generatedRecipe);
-  const requested=requestedRecipeText(generatedRecipe.targets||recipeTargets());
-  root.innerHTML=`<div class="recipe-result-card">
-    <div class="recipe-result-head"><div><h3>${escapeHtml(generatedRecipe.name||'Generated meal')}</h3><div class="recipe-requested">${requested?`Requested: ${escapeHtml(requested)}`:'Generated meal'}</div></div><div class="recipe-macros"><b>Estimated</b><br>P ${t.p.toFixed(1)} g · C ${t.c.toFixed(1)} g · F ${t.fat.toFixed(1)} g · ${Math.round(t.kcal)} kcal</div></div>
-    <div class="recipe-ingredients"><b>Ingredients</b>${(generatedRecipe.ingredients||[]).map(recipeIngredientText).join('')}</div>
-    ${recipeInstructionsHtml(generatedRecipe)}
-    ${generatedRecipe.assumptions?`<div class="note"><b>Estimate:</b> ${escapeHtml(generatedRecipe.assumptions)}</div>`:''}
-    <div class="recipe-warning"><b>Note:</b> Actual calories and macros may differ from goal calories and macros because ingredient nutrition and practical serving sizes are estimates.</div>
-    <div class="recipe-result-actions"><button type="button" id="regenerateRecipeBtn" class="ghost">Generate again</button><button type="button" id="addGeneratedRecipeBtn">Add this meal</button><button type="button" id="saveGeneratedRecipeBtn" class="ghost">Save meal</button></div>
-  </div>`;
-  $('#regenerateRecipeBtn').onclick=generateRecipe;
-  $('#addGeneratedRecipeBtn').onclick=()=>openRecipeAddDialog(generatedRecipe);
-  $('#saveGeneratedRecipeBtn').onclick=saveGeneratedRecipe;
-}
-
-function renderSavedRecipes(){
-  const root=$('#savedRecipesList');if(!root)return;
-  const list=Array.isArray(db.savedRecipes)?db.savedRecipes:[];
-  if(!list.length){root.innerHTML='<div class="recipe-empty">No saved meals yet.</div>';return;}
-  root.innerHTML=list.map((recipe,i)=>{
-    const t=recipeTotals(recipe);
-    return `<details class="saved-recipe-card"><summary><div><b>${escapeHtml(recipe.name||'Saved meal')}</b><div class="recipe-requested">P ${t.p.toFixed(1)} g · C ${t.c.toFixed(1)} g · F ${t.fat.toFixed(1)} g · ${Math.round(t.kcal)} kcal</div></div><span>⌄</span></summary><div class="saved-recipe-body"><div class="recipe-ingredients">${(recipe.ingredients||[]).map(recipeIngredientText).join('')}</div>${recipeInstructionsHtml(recipe)}${recipe.assumptions?`<div class="note"><b>Estimate:</b> ${escapeHtml(recipe.assumptions)}</div>`:''}<div class="saved-recipe-actions"><button type="button" onclick="addSavedRecipe(${i})">Add this meal</button><button type="button" class="danger" onclick="deleteSavedRecipe(${i})">Delete</button></div></div></details>`;
-  }).join('');
-}
-
-function renderRecipeView(){
-  renderGeneratedRecipe();
-  renderSavedRecipes();
-}
-
-async function generateRecipe(){
-  if(recipeGenerating)return;
-  recipeGenerating=true;
-  const targets=recipeTargets();
-  if(!hasRecipeTarget(targets)){recipeGenerating=false;setRecipeStatus('Enter at least one target: protein, carbohydrates, fats, or calories.','error');return;}
-  const sourceMode=$('#recipeSourceMode').value;
-  const supportFoods=sourceMode==='support'?compactSupportFoods():[];
-  if(sourceMode==='support'&&!supportFoods.length){recipeGenerating=false;setRecipeStatus('Your Support List is empty. Add foods first or choose Use any foods.','error');return;}
-  const btn=$('#generateRecipeBtn');
-  const regen=$('#regenerateRecipeBtn');
-  btn.disabled=true;if(regen)regen.disabled=true;generatedRecipe=null;renderGeneratedRecipe();setRecipeStatus('Generating a meal idea…');
-  try{
-    const response=await fetch(aiEndpoint()+'/recipe-generate',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({mode:sourceMode,targets,supportFoods})
-    });
-    const data=await response.json();
-    if(!response.ok)throw new Error(data.error||'Recipe generation failed.');
-    if(!data.recipe||!Array.isArray(data.recipe.ingredients)||!data.recipe.ingredients.length)throw new Error('No usable recipe was returned.');
-    generatedRecipe=data.recipe;
-    generatedRecipe.targets=targets;
-    renderGeneratedRecipe();
-    setRecipeStatus('Meal generated. Review it, add it directly to a meal, save it for later, or generate again.','ok');
-  }catch(error){console.error('Recipe generation error:',error);setRecipeStatus(error.message||'Could not generate a recipe.','error')}
-  finally{btn.disabled=false;recipeGenerating=false}
-}
-
-function saveGeneratedRecipe(){
-  if(!generatedRecipe)return;
-  const saved=structuredClone(generatedRecipe);
-  saved.id=(crypto?.randomUUID?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(16).slice(2));
-  saved.savedAt=new Date().toISOString();
-  db.savedRecipes ||= [];
-  db.savedRecipes.unshift(saved);
-  localStorage.setItem(KEY,JSON.stringify(db));
-  renderSavedRecipes();
-  setRecipeStatus('Meal saved under Saved meals.','ok');
-}
-
-function openRecipeAddDialog(recipe){
-  if(!recipe||!Array.isArray(recipe.ingredients)||!recipe.ingredients.length)return;
-  recipePendingAdd=recipe;
-  $('#recipeAddName').textContent=recipe.name||'Generated recipe';
-  $('#recipeMealTarget').innerHTML=Array.from({length:6},(_,i)=>`<option value="${i}">Meal ${i+1}</option>`).join('');
-  $('#recipeAddDialog').showModal();
-}
-
-window.addSavedRecipe=i=>{const r=db.savedRecipes?.[i];if(r)openRecipeAddDialog(r)};
-window.deleteSavedRecipe=i=>{const r=db.savedRecipes?.[i];if(!r)return;if(confirm(`Delete ${r.name||'this saved meal'}?`)){db.savedRecipes.splice(i,1);localStorage.setItem(KEY,JSON.stringify(db));renderSavedRecipes()}};
-
-$('#generateRecipeBtn').onclick=generateRecipe;
-$('#closeRecipeAdd').onclick=()=>{$('#recipeAddDialog').close();recipePendingAdd=null};
-$('#recipeAddForm').onsubmit=e=>{
-  e.preventDefault();
-  if(!recipePendingAdd)return;
-  const target=Number($('#recipeMealTarget').value);
-  if(!Number.isInteger(target)||target<0||target>=day().meals.length)return;
-  const items=(recipePendingAdd.ingredients||[]).map(x=>structuredClone(x));
-  day().meals[target].push(...items);
-  recipePendingAdd=null;
-  $('#recipeAddDialog').close();
-  save();
-  setRecipeStatus(`Added recipe ingredients to Meal ${target+1}.`,'ok');
-};
-
-// =========================================================
-// BARCODE SCANNER
-// =========================================================
-
-let barcodeStream = null;
-let barcodeDetector = null;
-let barcodeFrame = null;
-let barcodeBusy = false;
-
-
-/* ---------------------------------------------------------
-   STATUS MESSAGE
---------------------------------------------------------- */
-
-function setBarcodeStatus(message, type = "") {
-
-  const status = $("#barcodeScanStatus");
-
-  if (!status) return;
-
-  status.textContent = message;
-
-  status.className =
-    "scan-status" +
-    (type ? " " + type : "");
-}
-
-
-/* ---------------------------------------------------------
-   STOP CAMERA
---------------------------------------------------------- */
-
-function stopBarcodeCamera() {
-
-  if (barcodeFrame) {
-    cancelAnimationFrame(barcodeFrame);
-    barcodeFrame = null;
-  }
-
-  if (barcodeStream) {
-
-    barcodeStream
-      .getTracks()
-      .forEach(track => track.stop());
-
-    barcodeStream = null;
-  }
-
-  const video =
-    $("#barcodeVideo");
-
-  if (video) {
-
-    video.pause();
-
-    video.srcObject = null;
-  }
-
-  barcodeBusy = false;
-}
-
-
-/* ---------------------------------------------------------
-   SEND BARCODE TO CLOUDFLARE
---------------------------------------------------------- */
-
-async function lookupBarcode(barcode) {
-
-  barcode =
-    String(barcode || "")
-      .replace(/\D/g, "");
-
-  if (!barcode) {
-
-    setBarcodeStatus(
-      "No barcode detected.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  $("#barcodeManual").value =
-    barcode;
-
-
-  setBarcodeStatus(
-    "Looking up barcode " +
-    barcode +
-    "…"
-  );
-
-
-  try {
-
-    /*
-     * We use the SAME Cloudflare Worker
-     * as the nutrition-label AI scanner.
-     */
-
-    const endpoint =
-      aiEndpoint();
-
-
-    const response =
-      await fetch(
-        endpoint +
-        "/barcode/" +
-        encodeURIComponent(barcode)
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.error ||
-        "Barcode lookup failed."
-      );
-    }
-
-
-    const nutrition =
-      data.nutrition;
-
-
-    if (!nutrition) {
-
-      throw new Error(
-        "No nutrition information received."
-      );
-    }
-
-
-    /*
-     * Fill the EXISTING Add Food form.
-     *
-     * Nothing is automatically saved.
-     * You still review the values and
-     * press Save Food yourself.
-     */
-
-
-    if (nutrition.product_name) {
-
-      $("#customName").value =
-        nutrition.product_name;
-    }
-
-
-    $("#customServing").value =
-      Number(
-        nutrition.reference_amount
-      ) || 100;
-
-
-    /*
-     * Convert Cloudflare units to the
-     * exact values already used by
-     * your existing app.
-     */
-
-    if (
-      nutrition.unit ===
-      "milliliters"
-    ) {
-
-      $("#customUnit").value =
-        "ml";
-
-    } else if (
-      nutrition.unit ===
-      "units"
-    ) {
-
-      $("#customUnit").value =
-        "Unit";
-
-    } else {
-
-      $("#customUnit").value =
-        "grams";
-    }
-
-
-    $("#customCarbs").value =
-      Number(
-        nutrition.carbs_g
-      ) || 0;
-
-
-    $("#customProtein").value =
-      Number(
-        nutrition.protein_g
-      ) || 0;
-
-
-    $("#customFat").value =
-      Number(
-        nutrition.fat_g
-      ) || 0;
-
-
-    $("#customKcal").value =
-      Number(
-        nutrition.calories_kcal
-      ) || 0;
-
-
-    /*
-     * Automatically determine
-     * carbohydrate / protein / fat base
-     * using your EXISTING function.
-     */
-
-    $("#customType").value =
-      dominantBase(
-
-        Number(
-          nutrition.carbs_g
-        ) || 0,
-
-        Number(
-          nutrition.protein_g
-        ) || 0,
-
-        Number(
-          nutrition.fat_g
-        ) || 0
-
-      );
-
-
-    /*
-     * Barcode products don't automatically
-     * receive a raw/cooked conversion.
-     */
-
-    $("#customRatio").value =
-      "";
-
-    $("#customConversion").value =
-      "none";
-
-
-    stopBarcodeCamera();
-
-
-    let message =
-      "Product found";
-
-
-    if (
-      nutrition.basis_label
-    ) {
-
-      message +=
-        " — " +
-        nutrition.basis_label;
-    }
-
-
-    message +=
-      ". Review the values, then press Save Food.";
-
-
-    if (
-      nutrition.warning
-    ) {
-
-      message +=
-        " " +
-        nutrition.warning;
-    }
-
-
-    setBarcodeStatus(
-      message,
-      "ok"
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "Barcode lookup error:",
-      error
-    );
-
-
-    setBarcodeStatus(
-
-      error.message ||
-      "Could not look up this barcode.",
-
-      "error"
-
-    );
-  }
-}
-
-
-/* ---------------------------------------------------------
-   CONTINUOUS CAMERA SCANNING
---------------------------------------------------------- */
-
-async function barcodeScanLoop() {
-
-  if (
-    !barcodeStream ||
-    !barcodeDetector
-  ) {
-
-    return;
-  }
-
-
-  try {
-
-    const codes =
-      await barcodeDetector.detect(
-        $("#barcodeVideo")
-      );
-
-
-    if (
-      codes.length > 0 &&
-      !barcodeBusy
-    ) {
-
-      barcodeBusy = true;
-
-
-      const barcode =
-        codes[0].rawValue;
-
-
-      await lookupBarcode(
-        barcode
-      );
-
-
-      return;
-    }
-
-  } catch (error) {
-
-    /*
-     * Individual detection failures are
-     * ignored because another camera
-     * frame will immediately be checked.
-     */
-
-  }
-
-
-  if (barcodeStream) {
-
-    barcodeFrame =
-      requestAnimationFrame(
-        barcodeScanLoop
-      );
-  }
-}
-
-
-/* ---------------------------------------------------------
-   OPEN / CLOSE BARCODE AREA
---------------------------------------------------------- */
-
-$("#scanBarcodeBtn").onclick =
-  () => {
-
-    const box =
-      $("#barcodeScanBox");
-
-
-    box.hidden =
-      !box.hidden;
-
-
-    if (box.hidden) {
-
-      stopBarcodeCamera();
-    }
-  };
-
-
-/* ---------------------------------------------------------
-   START CAMERA
---------------------------------------------------------- */
-
-$("#startBarcodeCamera").onclick =
-  async () => {
-
-    stopBarcodeCamera();
-
-
-    /*
-     * BarcodeDetector is available on
-     * supported browsers such as Chrome.
-     */
-
-    if (
-      !("BarcodeDetector" in window)
-    ) {
-
-      setBarcodeStatus(
-        "This browser does not support live barcode detection. You can enter the barcode number below.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    try {
-
-      const supportedFormats =
-        await BarcodeDetector
-          .getSupportedFormats();
-
-
-      const wantedFormats = [
-
-        "ean_13",
-        "ean_8",
-        "upc_a",
-        "upc_e",
-        "code_128"
-
-      ].filter(
-        format =>
-          supportedFormats.includes(
-            format
-          )
-      );
-
-
-      if (
-        wantedFormats.length
-      ) {
-
-        barcodeDetector =
-          new BarcodeDetector({
-
-            formats:
-              wantedFormats
-
-          });
-
-      } else {
-
-        barcodeDetector =
-          new BarcodeDetector();
-      }
-
-
-      barcodeStream =
-        await navigator
-          .mediaDevices
-          .getUserMedia({
-
-            video: {
-
-              facingMode: {
-                ideal:
-                  "environment"
-              }
-
-            },
-
-            audio: false
-
-          });
-
-
-      const video =
-        $("#barcodeVideo");
-
-
-      video.srcObject =
-        barcodeStream;
-
-
-      await video.play();
-
-
-      setBarcodeStatus(
-        "Point the camera at the barcode…"
-      );
-
-
-      barcodeFrame =
-        requestAnimationFrame(
-          barcodeScanLoop
-        );
-
-
-    } catch (error) {
-
-      console.error(
-        "Barcode camera error:",
-        error
-      );
-
-
-      stopBarcodeCamera();
-
-
-      setBarcodeStatus(
-        "Could not open the camera. Check camera permission or enter the barcode manually.",
-        "error"
-      );
-    }
-  };
-
-
-/* ---------------------------------------------------------
-   STOP BUTTON
---------------------------------------------------------- */
-
-$("#stopBarcodeCamera").onclick =
-  () => {
-
-    stopBarcodeCamera();
-
-    setBarcodeStatus(
-      "Scanner stopped."
-    );
-  };
-
-
-/* ---------------------------------------------------------
-   MANUAL BARCODE LOOKUP
---------------------------------------------------------- */
-
-$("#lookupBarcodeBtn").onclick =
-  () => {
-
-    lookupBarcode(
-      $("#barcodeManual").value
-    );
-  };
-
-
-/*
- * Also allow Enter after typing
- * the barcode.
- */
-
-$("#barcodeManual")
-  .addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key ===
-        "Enter"
-      ) {
-
-        event.preventDefault();
-
-        lookupBarcode(
-          event.target.value
-        );
-      }
-    }
-  );
-
-function dominantBase(c,p,f){if(p>=c&&p>=f)return 'Protein base';if(f>=c&&f>=p)return 'Fat base';return 'Carbohydrates base'}
-
-render();
-</script></div><script>
-(function(){
-function fit(){
-  var r=document.getElementById("desktopScaleRoot");if(!r)return;
-  var support=document.getElementById("supportView");
-  var w=document.documentElement.clientWidth||window.innerWidth||900;
-  var nativeSupport=w<900&&support&&!support.hidden;
-  r.classList.toggle("support-phone-native",nativeSupport);
-  r.style.transform="none";
-  r.style.marginLeft="";
-  document.body.style.height="";
-}
-window.addEventListener("resize",fit);
-window.addEventListener("orientationchange",function(){setTimeout(fit,120)});
-window.addEventListener("load",fit);
-new MutationObserver(fit).observe(document.getElementById("desktopScaleRoot"),{childList:true,subtree:true,attributes:true});
-fit();
-})();
-</script>
-<script>
-if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => navigator.serviceWorker.register('/Calorie-Count/sw.js', {scope:'/Calorie-Count/'}).catch(()=>{}));
-}
-</script>
-
-<script id="installPromptLogic">
-(()=>{
-  let deferredInstallPrompt=null;
-  let showingIosSteps=false;
-  const overlay=document.getElementById('installPromptOverlay');
-  const installBtn=document.getElementById('installAppNow');
-  const notNow=document.getElementById('installNotNow');
-  const iosSteps=document.getElementById('iosInstallSteps');
-  const note=document.getElementById('installPromptNote');
-  const text=document.getElementById('installPromptText');
-  const ua=navigator.userAgent||'';
-  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
-  const dismissed=()=>sessionStorage.getItem('cc_install_prompt_dismissed')==='1';
-  function hide(){overlay.hidden=true}
-  function showQuestion(){if(standalone||dismissed())return;overlay.hidden=false;text.textContent='Install Calorie Count for a standalone, offline experience.';installBtn.textContent='Install';installBtn.disabled=false;note.textContent='';iosSteps.hidden=true;showingIosSteps=false}
-  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event});
-  window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;hide()});
-  notNow.addEventListener('click',()=>{sessionStorage.setItem('cc_install_prompt_dismissed','1');hide()});
-  installBtn.addEventListener('click',async()=>{
-    if(isIOS){if(!showingIosSteps){showingIosSteps=true;iosSteps.hidden=false;iosSteps.innerHTML='<div><strong>1.</strong> Tap the <strong>Share</strong> button (□↑).</div><div><strong>2.</strong> Tap <strong>Add to Home Screen</strong>.</div><div><strong>3.</strong> Tap <strong>Add</strong>.</div>';installBtn.textContent='Got it';note.textContent='Safari requires Add to Home Screen to be confirmed manually.';return}sessionStorage.setItem('cc_install_prompt_dismissed','1');hide();return}
-    if(deferredInstallPrompt){const promptEvent=deferredInstallPrompt;try{await promptEvent.prompt();const choice=await promptEvent.userChoice;if(choice&&choice.outcome==='accepted'){deferredInstallPrompt=null;hide()}}catch(error){console.error('Install prompt error:',error)}return}
-    note.textContent='Automatic installation is not available in this browser right now.';installBtn.disabled=true;installBtn.textContent='Unavailable';
-  });
-  setTimeout(showQuestion,900);
-})();
-</script>
-
-</body></html>
+<script src="js/core.js"></script><script src="js/workouts.js"></script><script src="js/meals.js"></script><script src="js/seasons.js"></script><script src="js/support.js"></script><script src="js/barcode.js"></script><script src="js/recipes.js"></script><script src="js/analytics.js"></script><script src="js/install.js"></script></body></html>
