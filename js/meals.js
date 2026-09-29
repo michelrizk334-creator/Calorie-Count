@@ -1,3 +1,47 @@
+// =========================================================
+// v30.5.1 — DAILY MEAL NAMES + SAVED-MEAL TOGGLE
+// =========================================================
+
+function ensureMealNames(){
+  if(!Array.isArray(db.mealNames)){
+    db.mealNames=Array.from({length:6},(_,i)=>`Meal ${i+1}`);
+  }
+
+  while(db.mealNames.length<6){
+    db.mealNames.push(`Meal ${db.mealNames.length+1}`);
+  }
+
+  db.mealNames=db.mealNames.slice(0,6).map((name,i)=>{
+    const clean=String(name||'').trim();
+    return clean||`Meal ${i+1}`;
+  });
+}
+
+function mealDisplayName(index){
+  ensureMealNames();
+  return db.mealNames[index]||`Meal ${index+1}`;
+}
+
+function refreshMealSelectOptions(selectedIndex=null){
+  const select=$('#mealSelect');
+  if(!select)return;
+
+  const current=
+    selectedIndex!==null
+      ?Number(selectedIndex)
+      :Number(select.value||0);
+
+  select.innerHTML=Array.from({length:6},(_,i)=>
+    `<option value="${i}">${escapeHtml(mealDisplayName(i))}</option>`
+  ).join('');
+
+  if(Number.isInteger(current)&&current>=0&&current<6){
+    select.value=String(current);
+  }
+}
+
+ensureMealNames();
+
 function renderMeals(d){
   $('#meals').innerHTML=d.meals.map((meal,i)=>{
     let mt=meal.reduce((a,x)=>{
@@ -11,12 +55,15 @@ function renderMeals(d){
       typeof window.isDailyMealSaved==='function' &&
       window.isDailyMealSaved(meal);
 
-    const saveLabel=isSaved?'✓ Saved':'Save meal';
+    const saveLabel=isSaved?'✓ Saved meal':'Save meal';
     const saveClass=isSaved?'meal-save-template-btn saved':'meal-save-template-btn';
 
     return `<div class="meal" data-meal-index="${i}">
       <div class="meal-title">
-        <b>Meal ${i+1}</b>
+        <div class="meal-name-wrap">
+          <b>${escapeHtml(mealDisplayName(i))}</b>
+          <button type="button" class="meal-rename-btn" onclick="renameMealSlot(${i})" title="Rename meal" aria-label="Rename ${escapeHtml(mealDisplayName(i))}">✎</button>
+        </div>
         <div class="meal-header-right">
           <button
             type="button"
@@ -29,7 +76,7 @@ function renderMeals(d){
           <span class="meal-total">${Math.round(mt.kcal)} kcal</span>
           <button type="button" class="meal-add-btn" onclick="openMealActions(${i})">Edit</button>
           <button type="button" class="meal-clear-btn" onclick="clearMeal(${i})" aria-label="Clear Meal ${i+1}" title="Clear meal">🗑</button>
-          <button type="button" class="meal-drag" draggable="true" data-meal-index="${i}" aria-label="Move Meal ${i+1}" title="Drag to reorder">☰</button>
+          <button type="button" class="meal-drag" draggable="true" data-meal-index="${i}" aria-label="Move ${escapeHtml(mealDisplayName(i))}" title="Drag to reorder">☰</button>
         </div>
       </div>
       ${meal.length?meal.map((x,j)=>{
@@ -65,18 +112,42 @@ window.openMealActions=(mealIndex)=>{
   window.addFoodToMeal(mealIndex);
 };
 
+window.renameMealSlot=mealIndex=>{
+  ensureMealNames();
+
+  const current=mealDisplayName(mealIndex);
+  const next=prompt('Meal name',current);
+
+  if(next===null)return;
+
+  const clean=String(next).trim();
+
+  if(!clean)return;
+
+  db.mealNames[mealIndex]=clean.slice(0,60);
+  localStorage.setItem(KEY,JSON.stringify(db));
+  refreshMealSelectOptions(mealIndex);
+  render();
+};
+
 window.saveDailyMealTemplate=(mealIndex)=>{
+  if(typeof window.toggleCurrentMealSavedTemplate==='function'){
+    window.toggleCurrentMealSavedTemplate(mealIndex);
+    return;
+  }
+
   if(typeof window.saveCurrentMealAsTemplate==='function'){
     window.saveCurrentMealAsTemplate(mealIndex);
     return;
   }
+
   alert('Saved meals are still loading. Please try again.');
 };
 
 window.clearMeal=(mealIndex)=>{
   const meal=day().meals[mealIndex];
   if(!Array.isArray(meal)||!meal.length)return;
-  if(confirm(`Delete all foods from Meal ${mealIndex+1}?`)){
+  if(confirm(`Delete all foods from ${mealDisplayName(mealIndex)}?`)){
     day().meals[mealIndex]=[];
     save()
   }
@@ -178,7 +249,7 @@ $('#date').onchange=e=>{
   render()
 };
 
-$('#mealSelect').innerHTML=Array.from({length:6},(_,i)=>`<option value="${i}">Meal ${i+1}</option>`).join('');
+refreshMealSelectOptions(0);
 
 function allFoods(){return db.supportFoods}
 

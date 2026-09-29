@@ -121,30 +121,41 @@ function mealSnapshotSignature(items){
   })));
 }
 
-window.isDailyMealSaved=meal=>{
-  if(!Array.isArray(meal)||!meal.length)return false;
+
+function findSavedDailyMealIndex(meal){
+  if(!Array.isArray(meal)||!meal.length)return -1;
+
   const sig=mealSnapshotSignature(meal);
-  return (db.savedRecipes||[]).some(r=>r?.sourceMealSignature===sig);
+
+  return (db.savedRecipes||[]).findIndex(r=>
+    r?.source==='daily-meal' &&
+    r?.sourceMealSignature===sig
+  );
+}
+
+function currentMealName(index){
+  return typeof mealDisplayName==='function'
+    ?mealDisplayName(index)
+    :`Meal ${index+1}`;
+}
+
+window.isDailyMealSaved=meal=>{
+  return findSavedDailyMealIndex(meal)>=0;
 };
 
 window.saveCurrentMealAsTemplate=mealIndex=>{
   const meal=day().meals?.[mealIndex];
 
   if(!Array.isArray(meal)||!meal.length){
-    alert(`Meal ${mealIndex+1} is empty. Add food before saving it.`);
+    alert(`${currentMealName(mealIndex)} is empty. Add food before saving it.`);
     return;
   }
 
   const signature=mealSnapshotSignature(meal);
 
-  if((db.savedRecipes||[]).some(r=>r?.sourceMealSignature===signature)){
-    alert('This exact meal is already saved.');
-    return;
-  }
-
   const saved={
     id:makeSavedMealId(),
-    name:`Meal ${mealIndex+1}`,
+    name:currentMealName(mealIndex),
     ingredients:structuredClone(meal),
     instructions:[],
     assumptions:`Saved from Meals on ${date}.`,
@@ -162,8 +173,37 @@ window.saveCurrentMealAsTemplate=mealIndex=>{
   renderSavedRecipes();
   render();
 
-  setRecipeStatus(`Meal ${mealIndex+1} saved under Saved meals.`,'ok');
+  setRecipeStatus(`${saved.name} saved under Saved meals.`,'ok');
 };
+
+window.toggleCurrentMealSavedTemplate=mealIndex=>{
+  const meal=day().meals?.[mealIndex];
+
+  if(!Array.isArray(meal)||!meal.length){
+    alert(`${currentMealName(mealIndex)} is empty. Add food before saving it.`);
+    return;
+  }
+
+  const existingIndex=findSavedDailyMealIndex(meal);
+
+  if(existingIndex>=0){
+    const saved=db.savedRecipes[existingIndex];
+    const name=saved?.name||currentMealName(mealIndex);
+
+    if(confirm(`Remove "${name}" from Saved meals?`)){
+      db.savedRecipes.splice(existingIndex,1);
+      localStorage.setItem(KEY,JSON.stringify(db));
+      renderSavedRecipes();
+      render();
+      setRecipeStatus(`${name} removed from Saved meals.`,'ok');
+    }
+
+    return;
+  }
+
+  window.saveCurrentMealAsTemplate(mealIndex);
+};
+
 
 function renderGeneratedRecipe(){
   const root=$('#recipeResult');
@@ -203,6 +243,32 @@ function renderGeneratedRecipe(){
   $('#addGeneratedRecipeBtn').onclick=()=>openRecipeAddDialog(generatedRecipe);
   $('#saveGeneratedRecipeBtn').onclick=saveGeneratedRecipe;
 }
+
+
+function createBlankSavedMeal(){
+  ensureSavedMealUi();
+
+  savedMealEditorIndex=null;
+  savedMealEditorDraft={
+    id:makeSavedMealId(),
+    name:'New saved meal',
+    ingredients:[],
+    instructions:[],
+    assumptions:'',
+    source:'manual-saved-meal',
+    savedAt:new Date().toISOString()
+  };
+
+  renderSavedMealEditor();
+  $('#savedMealEditorDialog').showModal();
+
+  setTimeout(()=>{
+    $('#savedMealEditName')?.focus();
+    $('#savedMealEditName')?.select();
+  },50);
+}
+
+window.createBlankSavedMeal=createBlankSavedMeal;
 
 function renderSavedRecipes(){
   const root=$('#savedRecipesList');
@@ -339,7 +405,7 @@ function todayMealChoiceHtml(selectedIndex=0){
     return `<label class="saved-meal-destination ${foodCount?'has-food':'empty'}">
       <input type="radio" name="recipeMealTargetRadio" value="${i}" ${i===selectedIndex?'checked':''}>
       <span>
-        <b>Meal ${i+1}</b>
+        <b>${escapeHtml(currentMealName(i))}</b>
         <small>${escapeHtml(status)}</small>
       </span>
     </label>`;
@@ -390,7 +456,7 @@ window.openMealActions=mealIndex=>{
   const meal=day().meals?.[mealIndex]||[];
   const t=mealTotalsFromItems(meal);
 
-  $('#mealActionsTitle').textContent=`Meal ${mealIndex+1}`;
+  $('#mealActionsTitle').textContent=currentMealName(mealIndex);
   $('#mealActionsSummary').textContent=meal.length
     ?`${meal.length} food${meal.length===1?'':'s'} · ${Math.round(t.kcal)} kcal · C ${t.c.toFixed(1)} g · P ${t.p.toFixed(1)} g · F ${t.fat.toFixed(1)} g`
     :'This meal is empty.';
@@ -402,7 +468,7 @@ function openSavedMealImportPicker(mealIndex){
   ensureSavedMealUi();
 
   savedMealImportTarget=mealIndex;
-  $('#savedMealPickerTitle').textContent=`Import into Meal ${mealIndex+1}`;
+  $('#savedMealPickerTitle').textContent=`Import into ${currentMealName(mealIndex)}`;
 
   const list=db.savedRecipes||[];
 
@@ -456,6 +522,9 @@ window.editSavedRecipe=i=>{
 
 function renderSavedMealEditor(){
   if(!savedMealEditorDraft)return;
+
+  const title=$('#savedMealEditorDialog h2');
+  if(title)title.textContent=savedMealEditorIndex===null?'Create saved meal':'Edit saved meal';
 
   $('#savedMealEditName').value=savedMealEditorDraft.name||'Saved meal';
 
@@ -540,10 +609,27 @@ function updateSavedMealEditorTotals(){
    ========================================================= */
 
 function ensureSavedMealUi(){
+  const savedList=$('#savedRecipesList');
+
+  if(savedList){
+    const head=savedList.closest('.panel')?.querySelector('.section-head');
+
+    if(head&&!$('#createSavedMealBtn')){
+      const button=document.createElement('button');
+      button.id='createSavedMealBtn';
+      button.type='button';
+      button.textContent='+ Create saved meal';
+      button.onclick=createBlankSavedMeal;
+      head.appendChild(button);
+    }
+  }
+
   if(!$('#savedMealFeatureStyles')){
     const style=document.createElement('style');
     style.id='savedMealFeatureStyles';
     style.textContent=`
+      .meal-name-wrap{display:flex;align-items:center;gap:6px}
+      .meal-rename-btn{background:transparent;color:#a8c7ff;min-height:30px;min-width:30px;padding:4px 6px;font-size:13px}
       .meal-save-template-btn{background:#1a2338;color:#d9e0ef;min-height:34px;padding:6px 10px;font-size:12px}
       .meal-save-template-btn.saved{background:#174c37;color:#baf7d7;border:1px solid #2d7e5c}
       .meal-save-template-btn:disabled{opacity:.42;cursor:not-allowed}
@@ -704,7 +790,7 @@ function bindSavedMealUi(){
     $('#recipeAddDialog').close();
 
     save();
-    setRecipeStatus(`${addedName} added to Meal ${target+1}. Existing foods were kept.`,'ok');
+    setRecipeStatus(`${addedName} added to ${currentMealName(target)}. Existing foods were kept.`,'ok');
   };
 
   $('#closeMealActions').onclick=()=>{
@@ -762,7 +848,7 @@ function bindSavedMealUi(){
   $('#savedMealEditorForm').onsubmit=e=>{
     e.preventDefault();
 
-    if(savedMealEditorIndex===null||!savedMealEditorDraft)return;
+    if(!savedMealEditorDraft)return;
 
     const name=$('#savedMealEditName').value.trim();
 
@@ -780,7 +866,12 @@ function bindSavedMealUi(){
     savedMealEditorDraft.updatedAt=new Date().toISOString();
     savedMealEditorDraft.sourceMealSignature=mealSnapshotSignature(savedMealEditorDraft.ingredients);
 
-    db.savedRecipes[savedMealEditorIndex]=structuredClone(savedMealEditorDraft);
+    if(savedMealEditorIndex===null){
+      db.savedRecipes ||= [];
+      db.savedRecipes.unshift(structuredClone(savedMealEditorDraft));
+    }else{
+      db.savedRecipes[savedMealEditorIndex]=structuredClone(savedMealEditorDraft);
+    }
 
     localStorage.setItem(KEY,JSON.stringify(db));
 
