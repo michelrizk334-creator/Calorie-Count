@@ -1,5 +1,5 @@
 // =========================================================
-// v30.5 — RECIPE GENERATOR + FULL SAVED MEAL LIBRARY
+// v30.5.2 — SAVED MEAL SEARCH + QUANTITY BEFORE ADD
 // =========================================================
 
 let generatedRecipe=null;
@@ -520,6 +520,81 @@ window.editSavedRecipe=i=>{
   $('#savedMealEditorDialog').showModal();
 };
 
+
+function savedMealEditorFilteredFoods(query=''){
+  const q=String(query||'').trim().toLowerCase();
+
+  return (db.supportFoods||[])
+    .map((food,index)=>({food,index}))
+    .filter(({food})=>{
+      if(!q)return true;
+
+      return [
+        food?.name,
+        food?.description,
+        food?.type
+      ]
+        .filter(Boolean)
+        .some(value=>String(value).toLowerCase().includes(q));
+    });
+}
+
+function renderSavedMealFoodOptions(query=''){
+  const select=$('#savedMealEditorFoodSelect');
+  const qty=$('#savedMealEditorAddQty');
+  const unit=$('#savedMealEditorAddUnit');
+
+  if(!select)return;
+
+  const rows=savedMealEditorFilteredFoods(query);
+
+  select.innerHTML=rows.length
+    ?rows.map(({food,index})=>`
+      <option value="${index}">
+        ${escapeHtml(food.name)} · ${Math.round(Number(food.kcal)||0)} kcal / ${Number(food.serving)||1} ${escapeHtml(food.unit||'')}
+      </option>
+    `).join('')
+    :'<option value="">No matching foods</option>';
+
+  select.disabled=!rows.length;
+
+  if(rows.length){
+    const first=rows[0].food;
+
+    if(qty){
+      qty.value=Number(first.serving)||1;
+      qty.step=first.unit==='Unit'?'1':'0.1';
+    }
+
+    if(unit){
+      unit.textContent=first.unit||'';
+    }
+  }else{
+    if(qty)qty.value='';
+    if(unit)unit.textContent='';
+  }
+}
+
+function syncSavedMealAddQuantityToFood(){
+  const select=$('#savedMealEditorFoodSelect');
+  const qty=$('#savedMealEditorAddQty');
+  const unit=$('#savedMealEditorAddUnit');
+
+  if(!select||!qty)return;
+
+  const i=Number(select.value);
+  const food=db.supportFoods?.[i];
+
+  if(!food)return;
+
+  qty.value=Number(food.serving)||1;
+  qty.step=food.unit==='Unit'?'1':'0.1';
+
+  if(unit){
+    unit.textContent=food.unit||'';
+  }
+}
+
 function renderSavedMealEditor(){
   if(!savedMealEditorDraft)return;
 
@@ -586,11 +661,13 @@ function renderSavedMealEditor(){
     }
   });
 
-  const foodSelect=$('#savedMealEditorFoodSelect');
+  const search=$('#savedMealEditorFoodSearch');
 
-  foodSelect.innerHTML=(db.supportFoods||[])
-    .map((f,i)=>`<option value="${i}">${escapeHtml(f.name)} · ${Math.round(Number(f.kcal)||0)} kcal / ${Number(f.serving)||1} ${escapeHtml(f.unit||'')}</option>`)
-    .join('');
+  if(search){
+    search.value='';
+  }
+
+  renderSavedMealFoodOptions('');
 
   updateSavedMealEditorTotals();
 }
@@ -650,12 +727,16 @@ function ensureSavedMealUi(){
       .saved-meal-edit-food{display:grid;grid-template-columns:minmax(0,1.4fr) .75fr .75fr auto;gap:8px;align-items:end;border:1px solid #26324a;background:#0c1427;border-radius:12px;padding:10px}
       .saved-meal-edit-food-name{align-self:center;min-width:0}
       .saved-meal-edit-food-name small{display:block;margin-top:3px;color:#9aa7bd}
-      .saved-meal-editor-add{display:grid;grid-template-columns:1fr auto;gap:8px}
+      .saved-meal-editor-builder{display:grid;gap:9px;padding:11px;border:1px solid #26324a;background:#0c1427;border-radius:12px}
+      .saved-meal-editor-add{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(130px,.7fr) auto;gap:8px;align-items:end}
+      .saved-meal-editor-quantity{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}
+      .saved-meal-editor-quantity span{color:#9aa7bd;font-size:12px;white-space:nowrap}
       .saved-meal-editor-summary{padding:10px;border-radius:10px;background:#0c1427;color:#b7c2d6}
       @media(max-width:650px){
         .meal-save-template-btn{font-size:11px;padding:5px 7px}
         .saved-meal-edit-food{grid-template-columns:1fr 1fr}
         .saved-meal-edit-food-name{grid-column:1/-1}
+        .saved-meal-editor-add{grid-template-columns:1fr}
         .meal-action-buttons{grid-template-columns:1fr}
       }
     `;
@@ -738,12 +819,38 @@ function ensureSavedMealUi(){
 
           <div class="saved-meal-edit-foods" id="savedMealEditorFoods"></div>
 
-          <div class="saved-meal-editor-add">
+          <div class="saved-meal-editor-builder">
             <label>
-              Add food from Support List
-              <select id="savedMealEditorFoodSelect"></select>
+              Search Support List
+              <input
+                id="savedMealEditorFoodSearch"
+                autocomplete="off"
+                placeholder="Search foods…"
+              >
             </label>
-            <button type="button" id="savedMealEditorAddFood">+ Add</button>
+
+            <div class="saved-meal-editor-add">
+              <label>
+                Food
+                <select id="savedMealEditorFoodSelect"></select>
+              </label>
+
+              <label>
+                Quantity
+                <div class="saved-meal-editor-quantity">
+                  <input
+                    id="savedMealEditorAddQty"
+                    type="number"
+                    min="0.01"
+                    step="0.1"
+                    inputmode="decimal"
+                  >
+                  <span id="savedMealEditorAddUnit"></span>
+                </div>
+              </label>
+
+              <button type="button" id="savedMealEditorAddFood">+ Add food</button>
+            </div>
           </div>
 
           <button type="submit">Save changes</button>
@@ -828,17 +935,32 @@ function bindSavedMealUi(){
     savedMealEditorDraft=null
   };
 
+  $('#savedMealEditorFoodSearch').oninput=e=>{
+    renderSavedMealFoodOptions(e.target.value);
+  };
+
+  $('#savedMealEditorFoodSelect').onchange=()=>{
+    syncSavedMealAddQuantityToFood();
+  };
+
   $('#savedMealEditorAddFood').onclick=()=>{
     if(!savedMealEditorDraft)return;
 
     const i=Number($('#savedMealEditorFoodSelect').value);
     const food=db.supportFoods?.[i];
+    const qty=Number($('#savedMealEditorAddQty').value);
 
     if(!food)return;
 
+    if(!Number.isFinite(qty)||qty<=0){
+      alert('Enter a quantity greater than 0.');
+      $('#savedMealEditorAddQty')?.focus();
+      return;
+    }
+
     savedMealEditorDraft.ingredients.push({
       food:structuredClone(food),
-      qty:Number(food.serving)||1,
+      qty,
       state:'Raw'
     });
 
