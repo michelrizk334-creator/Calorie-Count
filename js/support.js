@@ -204,7 +204,7 @@ async function nutritionLabelImageDataUrl(file){
       image.src=objectUrl;
     });
 
-    const maxSide=1800;
+    const maxSide=2800;
     const scale=Math.min(1,maxSide/Math.max(img.naturalWidth||img.width,img.naturalHeight||img.height));
     const width=Math.max(1,Math.round((img.naturalWidth||img.width)*scale));
     const height=Math.max(1,Math.round((img.naturalHeight||img.height)*scale));
@@ -220,7 +220,7 @@ async function nutritionLabelImageDataUrl(file){
     ctx.fillRect(0,0,width,height);
     ctx.drawImage(img,0,0,width,height);
 
-    return canvas.toDataURL('image/jpeg',0.90);
+    return canvas.toDataURL('image/jpeg',0.95);
   }finally{
     URL.revokeObjectURL(objectUrl);
   }
