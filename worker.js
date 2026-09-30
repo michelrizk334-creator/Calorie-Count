@@ -5,6 +5,7 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 const FOOD_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+const LABEL_MODEL = "@cf/google/gemma-4-26b-a4b-it";
 
 function corsHeaders(origin = "") {
   const allowedOrigin = ALLOWED_ORIGINS.has(origin)
@@ -483,6 +484,1006 @@ function classifyAiError(error) {
   };
 }
 
+
+
+/* =========================================================
+   STABLE GENERIC FOOD LOOKUP
+   ========================================================= */
+
+/*
+ * One deliberately simple rule:
+ *
+ * - A plain food name with no quantity => exactly 100 g.
+ * - Look it up in USDA FoodData Central.
+ * - Prefer a clean SR Legacy/plain match.
+ * - If USDA cannot provide a clean match, fall back to Workers AI,
+ *   still hard-locked to exactly 100 g.
+ *
+ * Explicit portions and meals continue through the original AI lookup.
+ */
+
+function genericFoodWords(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(word => {
+      if (word === "yoghurt" || word === "yoghurts") return "yogurt";
+      if (word.length > 4 && word.endsWith("s")) return word.slice(0, -1);
+      return word;
+    });
+}
+
+function isSimpleGenericFoodQuery(query) {
+  const text = String(query || "").trim().toLowerCase();
+
+  if (!text) return false;
+
+  /*
+   * Any number or portion/measure wording means this is NOT the simple
+   * generic 100 g path.
+   */
+  if (
+    /\d/.test(text) ||
+    /\b(g|gram|grams|kg|ml|milliliter|milliliters|l|liter|liters|oz|ounce|ounces|lb|pound|pounds|cup|cups|tbsp|tablespoon|tablespoons|tsp|teaspoon|teaspoons|slice|slices|piece|pieces|serving|servings|plate|bowl|spoon|spoons|large|big|small|medium)\b/i.test(text)
+  ) {
+    return false;
+  }
+
+  const conversational =
+    /\b(how many|how much|calorie|calories|macro|macros|estimate|calculate|tell me)\b/i.test(text);
+
+  if (conversational) return false;
+
+  const words = genericFoodWords(text);
+
+  /*
+   * Covers inputs such as:
+   * banana
+   * goat yogurt
+   * chicken breast
+   * peanut butter
+   * cooked rice
+   */
+  return words.length >= 1 && words.length <= 4;
+}
+
+function usdaDataTypePriority(value) {
+  const type = String(value || "").toLowerCase();
+
+  if (type.includes("sr legacy")) return 0;
+  if (type.includes("foundation")) return 1;
+  if (type.includes("survey") || type.includes("fndds")) return 2;
+
+  return 3;
+}
+
+function usdaGetNutrient(food, ids, numbers, names) {
+  const list = Array.isArray(food?.foodNutrients)
+    ? food.foodNutrients
+    : [];
+
+  for (const nutrient of list) {
+    const id = Number(
+      nutrient?.nutrientId ??
+      nutrient?.id
+    );
+
+    const number = String(
+      nutrient?.nutrientNumber ??
+      nutrient?.number ??
+      ""
+    ).trim();
+
+    const name = String(
+      nutrient?.nutrientName ??
+      nutrient?.name ??
+      ""
+    ).trim().toLowerCase();
+
+    const unit = String(
+      nutrient?.unitName ??
+      nutrient?.unit ??
+      ""
+    ).trim().toUpperCase();
+
+    const value = numberOrNull(
+      nutrient?.value ??
+      nutrient?.amount
+    );
+
+    if (value === null) continue;
+
+    const idMatch =
+      Array.isArray(ids) &&
+      ids.includes(id);
+
+    const numberMatch =
+      Array.isArray(numbers) &&
+      numbers.includes(number);
+
+    const nameMatch =
+      Array.isArray(names) &&
+      names.some(expected => name === expected);
+
+    if (idMatch || numberMatch || nameMatch) {
+      return { value, unit };
+    }
+  }
+
+  return null;
+}
+
+function usdaEnergyKcal(food) {
+  /*
+   * USDA standard Energy:
+   * nutrient ID 1008 / legacy nutrient number 208.
+   */
+  const standard = usdaGetNutrient(
+    food,
+    [1008],
+    ["208"],
+    ["energy"]
+  );
+
+  if (standard) {
+    if (standard.unit === "KCAL") return standard.value;
+    if (standard.unit === "KJ") return standard.value / 4.184;
+  }
+
+  /*
+   * Foundation records can use Atwater energy fields instead.
+   * Use them only if standard Energy is unavailable.
+   */
+  const atwaterSpecific = usdaGetNutrient(
+    food,
+    [2048],
+    [],
+    ["metabolizable energy (atwater specific factor)"]
+  );
+
+  if (atwaterSpecific) {
+    return atwaterSpecific.unit === "KJ"
+      ? atwaterSpecific.value / 4.184
+      : atwaterSpecific.value;
+  }
+
+  const atwaterGeneral = usdaGetNutrient(
+    food,
+    [2047],
+    [],
+    ["metabolizable energy (atwater general factor)"]
+  );
+
+  if (atwaterGeneral) {
+    return atwaterGeneral.unit === "KJ"
+      ? atwaterGeneral.value / 4.184
+      : atwaterGeneral.value;
+  }
+
+  return null;
+}
+
+function usdaMacro(food, id, number, exactNames) {
+  const nutrient = usdaGetNutrient(
+    food,
+    [id],
+    [number],
+    exactNames
+  );
+
+  return nutrient
+    ? nutrient.value
+    : null;
+}
+
+const GENERIC_BLOCKED_VARIANTS = new Set([
+  "dried",
+  "dehydrated",
+  "chip",
+  "chips",
+  "powder",
+  "powdered",
+  "flour",
+  "sweetened",
+  "candied",
+  "fried",
+  "dessert",
+  "snack",
+  "bar",
+  "cereal",
+  "syrup",
+  "juice",
+  "nectar",
+  "babyfood",
+  "baby"
+]);
+
+const GENERIC_NEUTRAL_WORDS = new Set([
+  "raw",
+  "plain",
+  "fresh",
+  "ripe",
+  "whole",
+  "uncooked",
+  "cooked",
+  "boiled"
+]);
+
+function genericCandidateScore(food, query) {
+  const description =
+    cleanText(food?.description || "", 180);
+
+  if (!description) return null;
+
+  const queryWords = genericFoodWords(query);
+  const candidateWords = genericFoodWords(description);
+  const candidateSet = new Set(candidateWords);
+
+  /*
+   * Every query word must appear in the candidate, with a small
+   * singular/plural/prefix tolerance.
+   */
+  for (const q of queryWords) {
+    const matched =
+      candidateSet.has(q) ||
+      candidateWords.some(
+        word =>
+          (
+            word.startsWith(q) ||
+            q.startsWith(word)
+          ) &&
+          Math.min(word.length, q.length) >= 4
+      );
+
+    if (!matched) return null;
+  }
+
+  let blockedPenalty = 0;
+  let extraPenalty = 0;
+
+  for (const word of candidateWords) {
+    const isQueryWord =
+      queryWords.includes(word) ||
+      queryWords.some(
+        q =>
+          (
+            word.startsWith(q) ||
+            q.startsWith(word)
+          ) &&
+          Math.min(word.length, q.length) >= 4
+      );
+
+    if (isQueryWord) continue;
+
+    if (GENERIC_BLOCKED_VARIANTS.has(word)) {
+      blockedPenalty += 100;
+      continue;
+    }
+
+    if (!GENERIC_NEUTRAL_WORDS.has(word)) {
+      extraPenalty += 1;
+    }
+  }
+
+  const kcal = usdaEnergyKcal(food);
+
+  if (
+    kcal === null ||
+    !Number.isFinite(kcal) ||
+    kcal <= 0 ||
+    kcal > 950
+  ) {
+    return null;
+  }
+
+  return {
+    food,
+    description,
+    kcal,
+    blockedPenalty,
+    extraPenalty,
+    dataTypePriority:
+      usdaDataTypePriority(food?.dataType)
+  };
+}
+
+async function lookupGenericFoodInUsda(query, env) {
+  const apiKey =
+    cleanText(
+      env?.USDA_API_KEY ||
+      "DEMO_KEY",
+      200
+    );
+
+  const response =
+    await fetch(
+      "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=" +
+      encodeURIComponent(apiKey),
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "CalorieCount/1.0 stable generic food lookup"
+        },
+
+        body:
+          JSON.stringify({
+            query,
+            pageSize: 30,
+            dataType: [
+              "SR Legacy",
+              "Foundation",
+              "Survey (FNDDS)"
+            ]
+          })
+      }
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      "USDA FoodData Central returned HTTP " +
+      response.status
+    );
+  }
+
+  const data =
+    await response.json();
+
+  const foods =
+    Array.isArray(data?.foods)
+      ? data.foods
+      : [];
+
+  const scored =
+    foods
+      .map((food, index) => {
+        const score =
+          genericCandidateScore(
+            food,
+            query
+          );
+
+        if (!score) return null;
+
+        return {
+          ...score,
+          index
+        };
+      })
+      .filter(Boolean)
+      .sort(
+        (a, b) =>
+          a.blockedPenalty -
+            b.blockedPenalty ||
+          a.dataTypePriority -
+            b.dataTypePriority ||
+          a.extraPenalty -
+            b.extraPenalty ||
+          a.index -
+            b.index
+      );
+
+  if (!scored.length) {
+    return null;
+  }
+
+  const best = scored[0];
+
+  /*
+   * If the best match is actually a processed variant, do not use it.
+   * Fall back to AI instead.
+   */
+  if (best.blockedPenalty > 0) {
+    return null;
+  }
+
+  const food = best.food;
+
+  const carbs = usdaMacro(
+    food,
+    1005,
+    "205",
+    ["carbohydrate, by difference", "carbohydrate"]
+  );
+
+  const protein = usdaMacro(
+    food,
+    1003,
+    "203",
+    ["protein"]
+  );
+
+  const fat = usdaMacro(
+    food,
+    1004,
+    "204",
+    ["total lipid (fat)", "total fat"]
+  );
+
+  return {
+    name:
+      cleanText(query, 120),
+
+    description:
+      cleanText(query, 500),
+
+    reference_amount:
+      100,
+
+    unit:
+      "grams",
+
+    calories_kcal:
+      round2(best.kcal),
+
+    carbs_g:
+      carbs === null
+        ? 0
+        : round2(carbs),
+
+    protein_g:
+      protein === null
+        ? 0
+        : round2(protein),
+
+    fat_g:
+      fat === null
+        ? 0
+        : round2(fat),
+
+    basis_label:
+      "per 100 g",
+
+    assumptions:
+      cleanText(
+        "USDA FoodData Central " +
+        (food?.dataType || "") +
+        " match: " +
+        best.description +
+        ".",
+        700
+      )
+  };
+}
+
+async function aiFoodSearch(query, env, forceGeneric100g = false) {
+  const userContent =
+    forceGeneric100g
+      ? (
+          "Estimate EXACTLY 100 g of the plain/common food: " +
+          cleanText(query, 120) +
+          ". Do not convert it to a serving, piece, cup, or medium item."
+        )
+      : query;
+
+  const aiResponse =
+    await env.AI.run(
+      FOOD_MODEL,
+      {
+        messages: [
+          {
+            role: "system",
+            content: FOOD_SYSTEM_PROMPT
+          },
+          {
+            role: "user",
+            content: userContent
+          }
+        ],
+
+        response_format: {
+          type: "json_schema",
+          json_schema: FOOD_SCHEMA
+        },
+
+        max_tokens:
+          700,
+
+        temperature:
+          0.15,
+
+        top_p:
+          0.9,
+
+        seed:
+          42
+      }
+    );
+
+  const payload =
+    extractWorkersAiPayload(
+      aiResponse
+    );
+
+  if (!payload) {
+    return [];
+  }
+
+  return normalizeFoodResults(
+    payload
+  );
+}
+
+
+/* =========================================================
+   NUTRITION LABEL PHOTO SCANNER
+   ========================================================= */
+
+const LABEL_TRANSCRIBE_PROMPT = `
+You are an OCR/document-reading specialist.
+
+Read the photographed nutrition label carefully and TRANSCRIBE what is actually visible.
+
+Important:
+- Do not estimate nutrition from food knowledge.
+- Do not invent missing or blurry values.
+- Preserve table structure and column headers.
+- If the label contains both "per 100 g" and "per serving" columns, transcribe BOTH columns separately.
+- Preserve serving-size wording exactly when readable, for example:
+  "Serving size: 1 biscuit (28 g)"
+- Transcribe calories/energy, carbohydrate, protein and fat.
+- Also transcribe product name if it is visibly present.
+- Preserve units exactly as printed.
+- Ignore marketing text unless needed to identify the product.
+- If text is unclear, write [unreadable] instead of guessing.
+
+Return a plain-text transcription only.
+`;
+
+const LABEL_INTERPRET_PROMPT = `
+You convert an OCR transcription of a nutrition label into structured nutrition data for a calorie-tracking app.
+
+You MUST use only the transcription supplied by the previous vision pass.
+Do not use general food knowledge and do not invent missing values.
+
+Return JSON only with exactly these keys:
+{
+  "product_name": string or null,
+  "serving_amount": number or null,
+  "serving_unit": "grams" or "milliliters" or "units" or null,
+  "portion_description": string,
+  "basis_label": string,
+  "calories_kcal": number or null,
+  "carbs_g": number or null,
+  "protein_g": number or null,
+  "fat_g": number or null,
+  "warnings": string
+}
+
+SERVING RULES:
+1. Always identify the nutrition basis being used.
+2. "per 100 g" -> serving_amount = 100, serving_unit = "grams".
+3. "per 250 ml" -> serving_amount = 250, serving_unit = "milliliters".
+4. "Serving size: 1 biscuit" with no gram/ml equivalent -> serving_amount = 1, serving_unit = "units".
+5. "Serving size: 2 biscuits" -> serving_amount = 2, serving_unit = "units".
+6. If both count and gram/ml equivalent are shown, prefer the measurable gram/ml value:
+   "1 biscuit (28 g)" -> serving_amount = 28, serving_unit = "grams".
+   Preserve "1 biscuit (28 g)" in portion_description.
+7. If both "per 100 g" and "per serving" columns exist:
+   - if a clear serving size is printed, prefer the per-serving column;
+   - otherwise use the per-100-g / per-100-ml column.
+8. Calories, carbs, protein and fat MUST ALL come from the SAME selected column.
+9. Never mix a per-100-g value with a per-serving value.
+10. If serving amount or unit cannot be read, return null rather than guessing.
+
+NUTRITION RULES:
+- Prefer kcal if both kJ and kcal are present.
+- If only kJ is present and clearly readable, convert using kcal = kJ / 4.184 and mention that conversion in warnings.
+- Use total carbohydrate, total protein and total fat, not sugars or saturated fat.
+- Printed zero is valid.
+- Missing or unreadable values must be null.
+- Ignore % Daily Value when extracting gram amounts.
+
+TEXT RULES:
+- product_name: only if visible in the transcription.
+- portion_description: preserve useful serving text.
+- basis_label: concise, e.g. "per 100 g", "per 30 g serving", "per 1 unit".
+- warnings: mention uncertainty, unreadable fields, conversions, or multiple columns. Empty string if none.
+
+Return JSON only. No markdown.
+`;
+
+function extractAiText(aiResponse) {
+  if (
+    aiResponse === null ||
+    aiResponse === undefined
+  ) {
+    return "";
+  }
+
+  if (
+    typeof aiResponse === "string"
+  ) {
+    return aiResponse.trim();
+  }
+
+  if (
+    typeof aiResponse?.response === "string"
+  ) {
+    return aiResponse.response.trim();
+  }
+
+  const choiceContent =
+    aiResponse?.choices?.[0]?.message?.content;
+
+  if (
+    typeof choiceContent === "string"
+  ) {
+    return choiceContent.trim();
+  }
+
+  if (
+    Array.isArray(choiceContent)
+  ) {
+    return choiceContent
+      .map(part =>
+        typeof part === "string"
+          ? part
+          : part?.text || ""
+      )
+      .join("\n")
+      .trim();
+  }
+
+  if (
+    typeof aiResponse?.result === "string"
+  ) {
+    return aiResponse.result.trim();
+  }
+
+  return "";
+}
+
+function labelNumberOrNull(value, min = 0, max = 100000) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
+  }
+
+  if (
+    typeof value === "number"
+  ) {
+    return boundedNumber(
+      value,
+      min,
+      max
+    );
+  }
+
+  const normalized =
+    String(value)
+      .replace(",", ".")
+      .match(/-?\d+(?:\.\d+)?/);
+
+  if (!normalized) {
+    return null;
+  }
+
+  return boundedNumber(
+    normalized[0],
+    min,
+    max
+  );
+}
+
+function normalizeLabelUnit(value) {
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return null;
+  }
+
+  const unit =
+    String(value)
+      .trim()
+      .toLowerCase();
+
+  if (
+    [
+      "g",
+      "gram",
+      "grams"
+    ].includes(unit)
+  ) {
+    return "grams";
+  }
+
+  if (
+    [
+      "ml",
+      "milliliter",
+      "milliliters",
+      "millilitre",
+      "millilitres"
+    ].includes(unit)
+  ) {
+    return "milliliters";
+  }
+
+  if (
+    [
+      "unit",
+      "units",
+      "item",
+      "items",
+      "piece",
+      "pieces",
+      "biscuit",
+      "biscuits",
+      "cookie",
+      "cookies",
+      "bar",
+      "bars",
+      "serving",
+      "servings"
+    ].includes(unit)
+  ) {
+    return "units";
+  }
+
+  return null;
+}
+
+function normalizeLabelScanPayload(payload) {
+  if (
+    !payload ||
+    typeof payload !== "object"
+  ) {
+    return null;
+  }
+
+  const label = {
+    product_name:
+      cleanText(
+        payload.product_name,
+        120
+      ) || null,
+
+    serving_amount:
+      labelNumberOrNull(
+        payload.serving_amount,
+        0.01,
+        100000
+      ),
+
+    serving_unit:
+      normalizeLabelUnit(
+        payload.serving_unit
+      ),
+
+    portion_description:
+      cleanText(
+        payload.portion_description,
+        250
+      ),
+
+    basis_label:
+      cleanText(
+        payload.basis_label,
+        180
+      ),
+
+    calories_kcal:
+      labelNumberOrNull(
+        payload.calories_kcal,
+        0,
+        50000
+      ),
+
+    carbs_g:
+      labelNumberOrNull(
+        payload.carbs_g,
+        0,
+        10000
+      ),
+
+    protein_g:
+      labelNumberOrNull(
+        payload.protein_g,
+        0,
+        10000
+      ),
+
+    fat_g:
+      labelNumberOrNull(
+        payload.fat_g,
+        0,
+        10000
+      ),
+
+    warnings:
+      cleanText(
+        payload.warnings,
+        700
+      )
+  };
+
+  if (
+    !label.portion_description &&
+    label.serving_amount !== null &&
+    label.serving_unit
+  ) {
+    label.portion_description =
+      `Per ${label.serving_amount} ${
+        label.serving_unit === "milliliters"
+          ? "ml"
+          : label.serving_unit === "grams"
+          ? "g"
+          : "unit"
+      }`;
+  }
+
+  if (
+    !label.basis_label &&
+    label.serving_amount !== null &&
+    label.serving_unit
+  ) {
+    label.basis_label =
+      `per ${label.serving_amount} ${
+        label.serving_unit === "milliliters"
+          ? "ml"
+          : label.serving_unit === "grams"
+          ? "g"
+          : "unit"
+      }`;
+  }
+
+  return label;
+}
+
+async function scanNutritionLabel(image, env) {
+  /*
+   * PASS 1 — strong vision/OCR model.
+   * Gemma reads the image and produces a faithful table transcription.
+   */
+  const visionResponse =
+    await env.AI.run(
+      LABEL_MODEL,
+      {
+        messages: [
+          {
+            role:
+              "system",
+
+            content:
+              LABEL_TRANSCRIBE_PROMPT
+          },
+          {
+            role:
+              "user",
+
+            content: [
+              {
+                type:
+                  "text",
+
+                text:
+                  "Transcribe the nutrition label in this image. Preserve serving text, table headers and the nutrition rows."
+              },
+              {
+                type:
+                  "image_url",
+
+                image_url: {
+                  url:
+                    image
+                }
+              }
+            ]
+          }
+        ],
+
+        max_tokens:
+          1400,
+
+        temperature:
+          0,
+
+        top_p:
+          0.9,
+
+        chat_template_kwargs: {
+          enable_thinking:
+            false
+        }
+      }
+    );
+
+  const transcription =
+    extractAiText(
+      visionResponse
+    );
+
+  if (!transcription) {
+    return null;
+  }
+
+  /*
+   * PASS 2 — text reasoning/structuring model.
+   * It receives NO image. It only interprets the transcription,
+   * chooses one consistent nutrition basis, and returns app fields.
+   */
+  const structureResponse =
+    await env.AI.run(
+      FOOD_MODEL,
+      {
+        messages: [
+          {
+            role:
+              "system",
+
+            content:
+              LABEL_INTERPRET_PROMPT
+          },
+          {
+            role:
+              "user",
+
+            content:
+              "Nutrition-label transcription:\n\n" +
+              transcription
+          }
+        ],
+
+        max_tokens:
+          900,
+
+        temperature:
+          0,
+
+        top_p:
+          0.9,
+
+        seed:
+          42
+      }
+    );
+
+  const payload =
+    extractWorkersAiPayload(
+      structureResponse
+    );
+
+  const label =
+    normalizeLabelScanPayload(
+      payload
+    );
+
+  if (!label) {
+    return null;
+  }
+
+  /*
+   * Validation / traceability:
+   * keep a short warning when the OCR pass marked text unreadable.
+   */
+  if (
+    /\[unreadable\]/i.test(
+      transcription
+    )
+  ) {
+    label.warnings =
+      cleanText(
+        [
+          label.warnings,
+          "Some label text was unreadable in the photo."
+        ]
+          .filter(Boolean)
+          .join(" "),
+        700
+      );
+  }
+
+  return label;
+}
 
 /* =========================================================
    EXISTING BARCODE LOOKUP
@@ -992,7 +1993,6 @@ Return only the JSON required by the schema.
 `;
 
 
-
 /* =========================================================
    v28 RECIPE GENERATOR
    ========================================================= */
@@ -1319,11 +2319,20 @@ export default {
           service:
             "Calorie Count",
 
+          worker_version:
+            "v30.4.3-two-pass-label-scanner",
+
+          food_lookup_mode:
+            "generic no-quantity -> USDA 100 g; explicit portions/meals -> original Workers AI",
+
           barcode:
             "Open Food Facts",
 
           food_search:
             "Cloudflare Workers AI",
+
+          nutrition_label_scan:
+            "Cloudflare Workers AI Vision",
 
           recipe_generator:
             "Cloudflare Workers AI",
@@ -1336,6 +2345,124 @@ export default {
         200,
         origin
       );
+    }
+
+
+
+    /* -----------------------------------------------------
+       NUTRITION LABEL PHOTO SCANNER
+       ----------------------------------------------------- */
+
+    if (
+      request.method === "POST" &&
+      url.pathname === "/label-scan"
+    ) {
+      if (!env.AI) {
+        return json(
+          {
+            error:
+              "Workers AI is not configured."
+          },
+          500,
+          origin
+        );
+      }
+
+      let body;
+
+      try {
+        body =
+          await request.json();
+      } catch {
+        return json(
+          {
+            error:
+              "Invalid image request."
+          },
+          400,
+          origin
+        );
+      }
+
+      const image =
+        typeof body?.image === "string"
+          ? body.image.trim()
+          : "";
+
+      if (
+        !/^data:image\/(?:jpeg|jpg|png|webp);base64,/i.test(
+          image
+        )
+      ) {
+        return json(
+          {
+            error:
+              "Choose a JPEG, PNG or WebP nutrition-label photo."
+          },
+          400,
+          origin
+        );
+      }
+
+      if (
+        image.length > 8_000_000
+      ) {
+        return json(
+          {
+            error:
+              "This image is too large. Retake the photo closer to the nutrition label."
+          },
+          413,
+          origin
+        );
+      }
+
+      try {
+        const label =
+          await scanNutritionLabel(
+            image,
+            env
+          );
+
+        if (!label) {
+          return json(
+            {
+              error:
+                "The nutrition label could not be read. Try a clearer, closer photo."
+            },
+            422,
+            origin
+          );
+        }
+
+        return json(
+          {
+            label
+          },
+          200,
+          origin
+        );
+
+      } catch (error) {
+        console.error(
+          "Nutrition label scan error:",
+          error
+        );
+
+        const classified =
+          classifyAiError(
+            error
+          );
+
+        return json(
+          {
+            error:
+              classified.message
+          },
+          classified.status,
+          origin
+        );
+      }
     }
 
 
@@ -1516,6 +2643,48 @@ export default {
         );
       }
 
+      /*
+       * SIMPLE GENERIC FOOD ONLY:
+       * A query like "Banana" or "Goat yogurt" with no quantity
+       * first tries USDA and is returned per 100 g.
+       *
+       * If USDA fails, we simply continue into the exact original
+       * Workers AI food-search code below.
+       *
+       * Explicit portions such as "2 tablespoons peanut butter"
+       * do NOT enter this branch at all.
+       */
+      if (
+        isSimpleGenericFoodQuery(
+          query
+        )
+      ) {
+        try {
+          const usdaResult =
+            await lookupGenericFoodInUsda(
+              query,
+              env
+            );
+
+          if (usdaResult) {
+            return json(
+              {
+                results: [
+                  usdaResult
+                ]
+              },
+              200,
+              origin
+            );
+          }
+        } catch (usdaError) {
+          console.error(
+            "USDA generic lookup error; falling back to original AI:",
+            usdaError
+          );
+        }
+      }
+
       try {
 
         const aiResponse =
@@ -1637,6 +2806,7 @@ export default {
         );
       }
     }
+
 
 
 
