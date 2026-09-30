@@ -1,6 +1,17 @@
 // =========================================================
-// v30.5.1 — DAILY MEAL NAMES + SAVED-MEAL TOGGLE
+// v30.5.3 — MEALS EDIT FIX + DAILY MEAL NAMES
 // =========================================================
+
+// Local helper: meals.js loads before support.js, so it must not depend on support.js escapeHtml().
+function mealEscapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,ch=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  })[ch]);
+}
 
 function ensureMealNames(){
   if(!Array.isArray(db.mealNames)){
@@ -32,7 +43,7 @@ function refreshMealSelectOptions(selectedIndex=null){
       :Number(select.value||0);
 
   select.innerHTML=Array.from({length:6},(_,i)=>
-    `<option value="${i}">${escapeHtml(mealDisplayName(i))}</option>`
+    `<option value="${i}">${mealEscapeHtml(mealDisplayName(i))}</option>`
   ).join('');
 
   if(Number.isInteger(current)&&current>=0&&current<6){
@@ -61,8 +72,8 @@ function renderMeals(d){
     return `<div class="meal" data-meal-index="${i}">
       <div class="meal-title">
         <div class="meal-name-wrap">
-          <b>${escapeHtml(mealDisplayName(i))}</b>
-          <button type="button" class="meal-rename-btn" onclick="renameMealSlot(${i})" title="Rename meal" aria-label="Rename ${escapeHtml(mealDisplayName(i))}">✎</button>
+          <b>${mealEscapeHtml(mealDisplayName(i))}</b>
+          <button type="button" class="meal-rename-btn" onclick="renameMealSlot(${i})" title="Rename meal" aria-label="Rename ${mealEscapeHtml(mealDisplayName(i))}">✎</button>
         </div>
         <div class="meal-header-right">
           <button
@@ -76,7 +87,7 @@ function renderMeals(d){
           <span class="meal-total">${Math.round(mt.kcal)} kcal</span>
           <button type="button" class="meal-add-btn" onclick="openMealActions(${i})">Edit</button>
           <button type="button" class="meal-clear-btn" onclick="clearMeal(${i})" aria-label="Clear Meal ${i+1}" title="Clear meal">🗑</button>
-          <button type="button" class="meal-drag" draggable="true" data-meal-index="${i}" aria-label="Move ${escapeHtml(mealDisplayName(i))}" title="Drag to reorder">☰</button>
+          <button type="button" class="meal-drag" draggable="true" data-meal-index="${i}" aria-label="Move ${mealEscapeHtml(mealDisplayName(i))}" title="Drag to reorder">☰</button>
         </div>
       </div>
       ${meal.length?meal.map((x,j)=>{
