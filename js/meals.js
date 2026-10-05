@@ -1,5 +1,5 @@
 // =========================================================
-// v30.5.3 — MEALS EDIT FIX + DAILY MEAL NAMES
+// v30.5.4 — CHANGE FOOD COMPONENT WHILE EDITING
 // =========================================================
 
 // Local helper: meals.js loads before support.js, so it must not depend on support.js escapeHtml().
@@ -108,6 +108,10 @@ window.addFoodToMeal=(mealIndex)=>{
   editingMealIndex=null;
   editingMealItemIndex=null;
   selectedFood=null;
+  changingMealFood=false;
+  pendingMealFoodQty=null;
+  pendingMealFoodState='Raw';
+  setFoodDialogMode('add');
   $('#mealSelect').value=String(mealIndex);
   $('#foodDialog').showModal();
   $('#foodSearch').value='';
@@ -232,6 +236,54 @@ window.removeFood=(i,j)=>{
   save()
 };
 
+let changingMealFood=false;
+let pendingMealFoodQty=null;
+let pendingMealFoodState='Raw';
+
+function setFoodDialogMode(mode='add'){
+  const title=$('#foodDialog .section-head h2');
+  if(title)title.textContent=mode==='change'?'Change food':'Add food';
+}
+
+function ensureChangeMealFoodButton(){
+  const form=$('#qtyDialog form');
+  const confirm=$('#confirmFood');
+  if(!form||!confirm)return null;
+
+  let btn=$('#changeMealFoodBtn');
+
+  if(!btn){
+    btn=document.createElement('button');
+    btn.id='changeMealFoodBtn';
+    btn.type='button';
+    btn.className='ghost';
+    btn.textContent='Change food';
+    btn.style.marginBottom='8px';
+    form.insertBefore(btn,confirm);
+
+    btn.onclick=()=>{
+      if(
+        editingMealIndex===null ||
+        editingMealItemIndex===null ||
+        !selectedFood
+      )return;
+
+      pendingMealFoodQty=+$('#qty').value||selectedFood.serving||1;
+      pendingMealFoodState=$('#state').value||'Raw';
+      changingMealFood=true;
+
+      $('#qtyDialog').close();
+      setFoodDialogMode('change');
+      $('#foodSearch').value='';
+      showFoods('');
+      $('#foodDialog').showModal();
+      setTimeout(()=>$('#foodSearch').focus(),50);
+    };
+  }
+
+  return btn;
+}
+
 window.editMealFood=(i,j)=>{
   const x=day().meals[i][j];
   if(!x)return;
@@ -268,6 +320,10 @@ $('#addFoodBtn').onclick=()=>{
   editingMealIndex=null;
   editingMealItemIndex=null;
   selectedFood=null;
+  changingMealFood=false;
+  pendingMealFoodQty=null;
+  pendingMealFoodState='Raw';
+  setFoodDialogMode('add');
   $('#foodDialog').showModal();
   $('#foodSearch').value='';
   showFoods('')
@@ -297,12 +353,50 @@ function openQtyEditor(qty,state,isEdit=false){
   $('#conversionNote').textContent=selectedFood.ratio
     ?`Raw nutrition values. Cooked quantity is ${mode==='divide'?'divided by':'multiplied by'} ${selectedFood.ratio} to get the raw-equivalent quantity.`
     :'No raw/cooked conversion for this food; quantity is used directly.';
+
+  const changeBtn=ensureChangeMealFoodButton();
+  if(changeBtn)changeBtn.hidden=!isEdit;
+
   $('#confirmFood').textContent=isEdit?'Save changes':'Add to meal';
   $('#qtyDialog').showModal()
 }
 
 function pickFood(name){
-  selectedFood=allFoods().find(f=>f.name===name);
+  const newFood=allFoods().find(f=>f.name===name);
+  if(!newFood)return;
+
+  if(
+    changingMealFood &&
+    editingMealIndex!==null &&
+    editingMealItemIndex!==null &&
+    selectedFood
+  ){
+    const oldFood=selectedFood;
+    const sameUnit=String(oldFood.unit||'')===String(newFood.unit||'');
+
+    selectedFood=newFood;
+    changingMealFood=false;
+    setFoodDialogMode('add');
+    $('#foodDialog').close();
+
+    const nextQty=
+      sameUnit && pendingMealFoodQty!==null
+        ?pendingMealFoodQty
+        :(Number(newFood.serving)||1);
+
+    const nextState=
+      newFood.ratio
+        ?pendingMealFoodState
+        :'Raw';
+
+    pendingMealFoodQty=null;
+    pendingMealFoodState='Raw';
+
+    openQtyEditor(nextQty,nextState,true);
+    return;
+  }
+
+  selectedFood=newFood;
   $('#foodDialog').close();
   openQtyEditor(selectedFood.serving,'Raw',false)
 }
@@ -327,15 +421,52 @@ $('#confirmFood').onclick=e=>{
   editingMealIndex=null;
   editingMealItemIndex=null;
   selectedFood=null;
+  changingMealFood=false;
+  pendingMealFoodQty=null;
+  pendingMealFoodState='Raw';
+  setFoodDialogMode('add');
   $('#qtyDialog').close();
   save()
 };
 
-$('#closeFoodDialog').onclick=()=>$('#foodDialog').close();
+$('#closeFoodDialog').onclick=()=>{
+  $('#foodDialog').close();
+
+  if(
+    changingMealFood &&
+    editingMealIndex!==null &&
+    editingMealItemIndex!==null &&
+    selectedFood
+  ){
+    changingMealFood=false;
+    setFoodDialogMode('add');
+
+    const qty=
+      pendingMealFoodQty!==null
+        ?pendingMealFoodQty
+        :(Number(selectedFood.serving)||1);
+
+    const state=
+      selectedFood.ratio
+        ?pendingMealFoodState
+        :'Raw';
+
+    pendingMealFoodQty=null;
+    pendingMealFoodState='Raw';
+
+    openQtyEditor(qty,state,true);
+  }
+};
 $('#closeQtyDialog').onclick=()=>{
   $('#qtyDialog').close();
   selectedFood=null;
   editingMealIndex=null;
   editingMealItemIndex=null;
+  changingMealFood=false;
+  pendingMealFoodQty=null;
+  pendingMealFoodState='Raw';
+  setFoodDialogMode('add');
+  const changeBtn=$('#changeMealFoodBtn');
+  if(changeBtn)changeBtn.hidden=true;
   $('#confirmFood').textContent='Add to meal'
 };
