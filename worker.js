@@ -1500,7 +1500,8 @@ async function lookupBarcode(barcode) {
         "Invalid barcode."
       );
 
-    error.name = "INVALID_BARCODE";
+    error.name =
+      "INVALID_BARCODE";
 
     throw error;
   }
@@ -1557,7 +1558,8 @@ async function lookupBarcode(barcode) {
         "Product not found in the food database."
       );
 
-    error.name = "NOT_FOUND";
+    error.name =
+      "NOT_FOUND";
 
     throw error;
   }
@@ -1568,216 +1570,438 @@ async function lookupBarcode(barcode) {
   const n =
     product.nutriments || {};
 
-  let referenceAmount =
-    100;
+  const sourceBasis =
+    String(
+      product.nutrition_data_per ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
 
-  let unit =
-    "grams";
-
-  let basisLabel =
-    "per 100 g";
-
-  let carbs =
-    firstNumber(
-      n.carbohydrates_100g,
-      n.carbohydrates
-    );
-
-  let protein =
-    firstNumber(
-      n.proteins_100g,
-      n.proteins
-    );
-
-  let fat =
-    firstNumber(
-      n.fat_100g,
-      n.fat
-    );
-
-  let calories =
-    firstNumber(
-      n["energy-kcal_100g"],
-      n["energy-kcal"]
-    );
-
-  let warning =
-    "";
-
-  if (
-    calories === null
-  ) {
-    const kj =
-      firstNumber(
-        n["energy-kj_100g"],
-        n["energy-kj"]
+  function energyKcalFor(suffix) {
+    let kcal =
+      numberOrNull(
+        n["energy-kcal_" + suffix]
       );
 
-    if (
-      kj !== null
-    ) {
-      calories =
-        kj / 4.184;
-
-      warning =
-        "Calories converted from kJ.";
+    if (kcal !== null) {
+      return {
+        value:
+          kcal,
+        converted:
+          false
+      };
     }
+
+    const kj =
+      numberOrNull(
+        n["energy-kj_" + suffix]
+      );
+
+    if (kj !== null) {
+      return {
+        value:
+          kj / 4.184,
+        converted:
+          true
+      };
+    }
+
+    return {
+      value:
+        null,
+      converted:
+        false
+    };
   }
 
-  const missingPer100 =
-    carbs === null &&
-    protein === null &&
-    fat === null &&
-    calories === null;
+  const per100Energy =
+    energyKcalFor(
+      "100g"
+    );
 
-  if (
-    missingPer100
-  ) {
-    const servingQuantity =
+  const per100 = {
+    calories:
+      per100Energy.value,
+
+    carbs:
       numberOrNull(
-        product.serving_quantity
-      );
+        n.carbohydrates_100g
+      ),
 
-    const servingUnit =
-      String(
-        product.serving_quantity_unit ||
-        ""
+    protein:
+      numberOrNull(
+        n.proteins_100g
+      ),
+
+    fat:
+      numberOrNull(
+        n.fat_100g
       )
-        .trim()
-        .toLowerCase();
+  };
 
-    const servingCarbs =
-      numberOrNull(
-        n.carbohydrates_serving
-      );
+  let servingQuantity =
+    numberOrNull(
+      product.serving_quantity
+    );
 
-    const servingProtein =
-      numberOrNull(
-        n.proteins_serving
-      );
+  let servingUnitText =
+    String(
+      product.serving_quantity_unit ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
 
-    const servingFat =
-      numberOrNull(
-        n.fat_serving
-      );
-
-    let servingCalories =
-      numberOrNull(
-        n["energy-kcal_serving"]
-      );
-
-    if (
-      servingCalories === null
-    ) {
-      const servingKj =
-        numberOrNull(
-          n["energy-kj_serving"]
+  /*
+   * Some Open Food Facts records only expose serving_size,
+   * for example "30 g" or "250 ml". Use it as a fallback.
+   */
+  if (
+    servingQuantity === null &&
+    product.serving_size
+  ) {
+    const servingMatch =
+      String(
+        product.serving_size
+      )
+        .replace(",", ".")
+        .match(
+          /(\d+(?:\.\d+)?)\s*(g|gram|grams|ml|milliliter|milliliters|millilitre|millilitres|unit|units|piece|pieces|item|items)\b/i
         );
 
-      if (
-        servingKj !== null
-      ) {
-        servingCalories =
-          servingKj / 4.184;
+    if (servingMatch) {
+      servingQuantity =
+        numberOrNull(
+          servingMatch[1]
+        );
 
-        warning =
-          "Calories converted from kJ.";
-      }
-    }
-
-    if (
-      servingQuantity !== null &&
-      (
-        servingCarbs !== null ||
-        servingProtein !== null ||
-        servingFat !== null ||
-        servingCalories !== null
-      )
-    ) {
-      referenceAmount =
-        servingQuantity;
-
-      if (
-        [
-          "ml",
-          "milliliter",
-          "milliliters",
-          "millilitre",
-          "millilitres"
-        ].includes(
-          servingUnit
+      servingUnitText =
+        String(
+          servingMatch[2]
         )
-      ) {
-        unit =
-          "milliliters";
-
-      } else if (
-        [
-          "unit",
-          "units",
-          "piece",
-          "pieces",
-          "item",
-          "items"
-        ].includes(
-          servingUnit
-        )
-      ) {
-        unit =
-          "units";
-
-      } else {
-        unit =
-          "grams";
-      }
-
-      carbs =
-        servingCarbs;
-
-      protein =
-        servingProtein;
-
-      fat =
-        servingFat;
-
-      calories =
-        servingCalories;
-
-      basisLabel =
-        "per serving (" +
-        referenceAmount +
-        " " +
-        (
-          unit === "milliliters"
-            ? "ml"
-            : unit === "units"
-            ? "unit"
-            : "g"
-        ) +
-        ")";
+          .trim()
+          .toLowerCase();
     }
   }
 
+  let servingUnit =
+    "grams";
+
   if (
-    carbs === null &&
-    protein === null &&
-    fat === null &&
-    calories === null
+    [
+      "ml",
+      "milliliter",
+      "milliliters",
+      "millilitre",
+      "millilitres"
+    ].includes(
+      servingUnitText
+    )
   ) {
+    servingUnit =
+      "milliliters";
+
+  } else if (
+    [
+      "unit",
+      "units",
+      "piece",
+      "pieces",
+      "item",
+      "items"
+    ].includes(
+      servingUnitText
+    )
+  ) {
+    servingUnit =
+      "units";
+  }
+
+  const servingEnergy =
+    energyKcalFor(
+      "serving"
+    );
+
+  const serving = {
+    calories:
+      servingEnergy.value,
+
+    carbs:
+      numberOrNull(
+        n.carbohydrates_serving
+      ),
+
+    protein:
+      numberOrNull(
+        n.proteins_serving
+      ),
+
+    fat:
+      numberOrNull(
+        n.fat_serving
+      )
+  };
+
+  /*
+   * Unsuffixed Open Food Facts values refer to the basis in
+   * nutrition_data_per. Never treat them as 100 g automatically,
+   * because that was the source of the calorie/reference mismatch.
+   */
+  const genericEnergy =
+    (() => {
+      let kcal =
+        numberOrNull(
+          n["energy-kcal"]
+        );
+
+      if (kcal !== null) {
+        return {
+          value:
+            kcal,
+          converted:
+            false
+        };
+      }
+
+      const kj =
+        numberOrNull(
+          n["energy-kj"]
+        );
+
+      return {
+        value:
+          kj !== null
+            ? kj / 4.184
+            : null,
+
+        converted:
+          kj !== null
+      };
+    })();
+
+  if (
+    sourceBasis === "serving"
+  ) {
+    if (serving.calories === null) {
+      serving.calories =
+        genericEnergy.value;
+    }
+
+    if (serving.carbs === null) {
+      serving.carbs =
+        numberOrNull(
+          n.carbohydrates
+        );
+    }
+
+    if (serving.protein === null) {
+      serving.protein =
+        numberOrNull(
+          n.proteins
+        );
+    }
+
+    if (serving.fat === null) {
+      serving.fat =
+        numberOrNull(
+          n.fat
+        );
+    }
+
+  } else if (
+    sourceBasis === "100g" ||
+    sourceBasis === "100ml"
+  ) {
+    if (per100.calories === null) {
+      per100.calories =
+        genericEnergy.value;
+    }
+
+    if (per100.carbs === null) {
+      per100.carbs =
+        numberOrNull(
+          n.carbohydrates
+        );
+    }
+
+    if (per100.protein === null) {
+      per100.protein =
+        numberOrNull(
+          n.proteins
+        );
+    }
+
+    if (per100.fat === null) {
+      per100.fat =
+        numberOrNull(
+          n.fat
+        );
+    }
+  }
+
+  const hasAny =
+    values =>
+      values.some(
+        value =>
+          value !== null &&
+          Number.isFinite(
+            Number(value)
+          )
+      );
+
+  const per100HasData =
+    hasAny([
+      per100.calories,
+      per100.carbs,
+      per100.protein,
+      per100.fat
+    ]);
+
+  const servingHasData =
+    servingQuantity !== null &&
+    hasAny([
+      serving.calories,
+      serving.carbs,
+      serving.protein,
+      serving.fat
+    ]);
+
+  let derivedValues =
+    false;
+
+  /*
+   * If serving values are incomplete but a gram/ml serving size and
+   * per-100 values exist, derive ONLY the missing fields by scaling.
+   * This keeps calories/macros on one consistent serving basis.
+   */
+  if (
+    servingQuantity !== null &&
+    servingUnit !== "units" &&
+    per100HasData
+  ) {
+    const factor =
+      servingQuantity / 100;
+
+    for (
+      const key of
+      [
+        "calories",
+        "carbs",
+        "protein",
+        "fat"
+      ]
+    ) {
+      if (
+        serving[key] === null &&
+        per100[key] !== null
+      ) {
+        serving[key] =
+          per100[key] *
+          factor;
+
+        derivedValues =
+          true;
+      }
+    }
+  }
+
+  const usableServing =
+    servingQuantity !== null &&
+    hasAny([
+      serving.calories,
+      serving.carbs,
+      serving.protein,
+      serving.fat
+    ]);
+
+  /*
+   * Prefer the declared product serving when one exists.
+   * That makes reference_amount and total calories/macros match
+   * what the user sees as one serving on the package.
+   * Fall back to the standardized per-100 basis otherwise.
+   */
+  let referenceAmount;
+  let unit;
+  let basisLabel;
+  let selected;
+
+  if (usableServing) {
+    referenceAmount =
+      servingQuantity;
+
+    unit =
+      servingUnit;
+
+    selected =
+      serving;
+
+    basisLabel =
+      "per serving (" +
+      round2(
+        referenceAmount
+      ) +
+      " " +
+      (
+        unit === "milliliters"
+          ? "ml"
+          : unit === "units"
+          ? "unit"
+          : "g"
+      ) +
+      ")";
+
+  } else if (per100HasData) {
+    referenceAmount =
+      100;
+
+    unit =
+      sourceBasis === "100ml"
+        ? "milliliters"
+        : "grams";
+
+    selected =
+      per100;
+
+    basisLabel =
+      unit === "milliliters"
+        ? "per 100 ml"
+        : "per 100 g";
+
+  } else {
     const error =
       new Error(
         "Product found, but nutrition information is unavailable."
       );
 
-    error.name = "NO_NUTRITION";
+    error.name =
+      "NO_NUTRITION";
 
     throw error;
   }
 
-  const warningParts = [
-    warning,
+  const warningParts =
+    [];
+
+  if (
+    per100Energy.converted ||
+    servingEnergy.converted ||
+    genericEnergy.converted
+  ) {
+    warningParts.push(
+      "Calories converted from kJ."
+    );
+  }
+
+  if (derivedValues) {
+    warningParts.push(
+      "Some serving values were calculated from the product's per-100 nutrition data."
+    );
+  }
+
+  warningParts.push(
     "Open Food Facts is community-maintained. Review the package label before saving."
-  ].filter(Boolean);
+  );
 
   return {
     product_name:
@@ -1786,38 +2010,49 @@ async function lookupBarcode(barcode) {
       null,
 
     reference_amount:
-      referenceAmount,
+      round2(
+        referenceAmount
+      ),
 
     unit,
 
     calories_kcal:
-      calories !== null
-        ? round2(calories)
+      selected.calories !== null
+        ? round2(
+            selected.calories
+          )
         : 0,
 
     carbs_g:
-      carbs !== null
-        ? round2(carbs)
+      selected.carbs !== null
+        ? round2(
+            selected.carbs
+          )
         : 0,
 
     protein_g:
-      protein !== null
-        ? round2(protein)
+      selected.protein !== null
+        ? round2(
+            selected.protein
+          )
         : 0,
 
     fat_g:
-      fat !== null
-        ? round2(fat)
+      selected.fat !== null
+        ? round2(
+            selected.fat
+          )
         : 0,
 
     basis_label:
       basisLabel,
 
     warning:
-      warningParts.join(" ")
+      warningParts.join(
+        " "
+      )
   };
 }
-
 
 /* =========================================================
    AI FOOD SEARCH JSON SCHEMA
@@ -2320,7 +2555,7 @@ export default {
             "Calorie Count",
 
           worker_version:
-            "v30.4.3-two-pass-label-scanner",
+            "v30.5.5-barcode-reference-save-fix",
 
           food_lookup_mode:
             "generic no-quantity -> USDA 100 g; explicit portions/meals -> original Workers AI",
