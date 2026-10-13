@@ -1,5 +1,6 @@
 // =========================================================
 // BARCODE SCANNER
+// v30.5.5 — REFERENCE CALORIES + RELIABLE SAVE
 // =========================================================
 
 let barcodeStream = null;
@@ -23,6 +24,25 @@ function setBarcodeStatus(message, type = "") {
   status.className =
     "scan-status" +
     (type ? " " + type : "");
+}
+
+
+/* ---------------------------------------------------------
+   NORMALIZE VALUES BEFORE PUTTING THEM IN NUMBER INPUTS
+--------------------------------------------------------- */
+
+function barcodeFormNumber(value, fallback = 0) {
+
+  const n =
+    Number(value);
+
+  if (!Number.isFinite(n)) {
+    return fallback;
+  }
+
+  return Math.round(
+    n * 100
+  ) / 100;
 }
 
 
@@ -94,11 +114,6 @@ async function lookupBarcode(barcode) {
 
   try {
 
-    /*
-     * We use the SAME Cloudflare Worker
-     * as the nutrition-label AI scanner.
-     */
-
     const endpoint =
       aiEndpoint();
 
@@ -138,10 +153,8 @@ async function lookupBarcode(barcode) {
 
     /*
      * Fill the EXISTING Add Food form.
-     *
-     * Nothing is automatically saved.
-     * You still review the values and
-     * press Save Food yourself.
+     * Values are rounded to the form's 0.01 step so browser
+     * validation cannot silently block the Save Food button.
      */
 
 
@@ -153,16 +166,11 @@ async function lookupBarcode(barcode) {
 
 
     $("#customServing").value =
-      Number(
-        nutrition.reference_amount
-      ) || 100;
+      barcodeFormNumber(
+        nutrition.reference_amount,
+        100
+      );
 
-
-    /*
-     * Convert Cloudflare units to the
-     * exact values already used by
-     * your existing app.
-     */
 
     if (
       nutrition.unit ===
@@ -187,58 +195,63 @@ async function lookupBarcode(barcode) {
     }
 
 
-    $("#customCarbs").value =
-      Number(
-        nutrition.carbs_g
-      ) || 0;
+    const carbs =
+      barcodeFormNumber(
+        nutrition.carbs_g,
+        0
+      );
 
+    const protein =
+      barcodeFormNumber(
+        nutrition.protein_g,
+        0
+      );
 
-    $("#customProtein").value =
-      Number(
-        nutrition.protein_g
-      ) || 0;
+    const fat =
+      barcodeFormNumber(
+        nutrition.fat_g,
+        0
+      );
 
-
-    $("#customFat").value =
-      Number(
-        nutrition.fat_g
-      ) || 0;
-
-
-    $("#customKcal").value =
-      Number(
-        nutrition.calories_kcal
-      ) || 0;
-
-
-    /*
-     * Automatically determine
-     * carbohydrate / protein / fat base
-     * using your EXISTING function.
-     */
-
-    $("#customType").value =
-      dominantBase(
-
-        Number(
-          nutrition.carbs_g
-        ) || 0,
-
-        Number(
-          nutrition.protein_g
-        ) || 0,
-
-        Number(
-          nutrition.fat_g
-        ) || 0
-
+    const calories =
+      barcodeFormNumber(
+        nutrition.calories_kcal,
+        0
       );
 
 
-    /*
-     * Barcode products don't automatically
-     * receive a raw/cooked conversion.
-     */
+    $("#customCarbs").value =
+      carbs;
+
+
+    $("#customProtein").value =
+      protein;
+
+
+    $("#customFat").value =
+      fat;
+
+
+    $("#customKcal").value =
+      calories;
+
+
+    if (
+      nutrition.basis_label
+    ) {
+
+      $("#customDescription").value =
+        nutrition.basis_label;
+    }
+
+
+    $("#customType").value =
+      dominantBase(
+        carbs,
+        protein,
+        fat
+      );
+
 
     $("#customRatio").value =
       "";
@@ -265,7 +278,7 @@ async function lookupBarcode(barcode) {
 
 
     message +=
-      ". Review the values, then press Save Food.";
+      ". Calories and macros shown below are for that same reference amount. Review the values, then press Save Food.";
 
 
     if (
@@ -399,11 +412,6 @@ $("#startBarcodeCamera").onclick =
 
     stopBarcodeCamera();
 
-
-    /*
-     * BarcodeDetector is available on
-     * supported browsers such as Chrome.
-     */
 
     if (
       !("BarcodeDetector" in window)
@@ -548,11 +556,6 @@ $("#lookupBarcodeBtn").onclick =
   };
 
 
-/*
- * Also allow Enter after typing
- * the barcode.
- */
-
 $("#barcodeManual")
   .addEventListener(
     "keydown",
@@ -572,4 +575,273 @@ $("#barcodeManual")
     }
   );
 
-function dominantBase(c,p,f){if(p>=c&&p>=f)return 'Protein base';if(f>=c&&f>=p)return 'Fat base';return 'Carbohydrates base'}
+
+/* ---------------------------------------------------------
+   RELIABLE FOOD SAVE
+   barcode.js loads AFTER support.js, so this replaces the older
+   submit handler with explicit validation instead of relying on
+   browser step validation that could silently reject scanned values.
+--------------------------------------------------------- */
+
+const barcodeFoodEditorForm =
+  $("#foodEditorForm");
+
+if (barcodeFoodEditorForm) {
+
+  barcodeFoodEditorForm.noValidate =
+    true;
+
+  barcodeFoodEditorForm.onsubmit =
+    event => {
+
+      event.preventDefault();
+
+
+      const name =
+        $("#customName")
+          .value
+          .trim();
+
+
+      const serving =
+        Number(
+          $("#customServing").value
+        );
+
+
+      const carbs =
+        Number(
+          $("#customCarbs").value
+        );
+
+
+      const protein =
+        Number(
+          $("#customProtein").value
+        );
+
+
+      const fat =
+        Number(
+          $("#customFat").value
+        );
+
+
+      const kcal =
+        Number(
+          $("#customKcal").value
+        );
+
+
+      const mode =
+        $("#customConversion").value;
+
+
+      const ratioRaw =
+        Number(
+          $("#customRatio").value
+        );
+
+
+      if (!name) {
+
+        alert(
+          "Enter a food name before saving."
+        );
+
+        $("#customName").focus();
+
+        return;
+      }
+
+
+      if (
+        !Number.isFinite(serving) ||
+        serving <= 0
+      ) {
+
+        alert(
+          "Enter a valid reference amount greater than 0."
+        );
+
+        $("#customServing").focus();
+
+        return;
+      }
+
+
+      const nutritionValues = [
+        ["Carbohydrate", carbs, "#customCarbs"],
+        ["Protein", protein, "#customProtein"],
+        ["Fat", fat, "#customFat"],
+        ["Calories", kcal, "#customKcal"]
+      ];
+
+
+      for (
+        const [
+          label,
+          value,
+          selector
+        ]
+        of nutritionValues
+      ) {
+
+        if (
+          !Number.isFinite(value) ||
+          value < 0
+        ) {
+
+          alert(
+            label +
+            " must be 0 or greater."
+          );
+
+          $(selector).focus();
+
+          return;
+        }
+      }
+
+
+      let ratio =
+        null;
+
+
+      if (
+        mode !== "none"
+      ) {
+
+        if (
+          !Number.isFinite(ratioRaw) ||
+          ratioRaw < 1
+        ) {
+
+          alert(
+            "Enter a conversion ratio of 1 or greater."
+          );
+
+          $("#customRatio").focus();
+
+          return;
+        }
+
+        ratio =
+          ratioRaw;
+      }
+
+
+      const food = {
+
+        name,
+
+        description:
+          $("#customDescription")
+            .value
+            .trim(),
+
+        type:
+          $("#customType").value,
+
+        serving:
+          barcodeFormNumber(
+            serving,
+            1
+          ),
+
+        unit:
+          $("#customUnit").value,
+
+        carbs:
+          barcodeFormNumber(
+            carbs,
+            0
+          ),
+
+        protein:
+          barcodeFormNumber(
+            protein,
+            0
+          ),
+
+        fat:
+          barcodeFormNumber(
+            fat,
+            0
+          ),
+
+        kcal:
+          barcodeFormNumber(
+            kcal,
+            0
+          ),
+
+        ratio:
+          mode === "none"
+            ? null
+            : barcodeFormNumber(
+                ratio,
+                null
+              ),
+
+        conversion:
+          mode
+      };
+
+
+      if (
+        editingFoodIndex === null ||
+        editingFoodIndex === undefined
+      ) {
+
+        db.supportFoods.push(
+          food
+        );
+
+      } else {
+
+        db.supportFoods[
+          editingFoodIndex
+        ] =
+          food;
+      }
+
+
+      localStorage.setItem(
+        KEY,
+        JSON.stringify(db)
+      );
+
+
+      editingFoodIndex =
+        null;
+
+
+      stopBarcodeCamera();
+
+
+      if (
+        typeof resetNutritionLabelScanner ===
+        "function"
+      ) {
+
+        resetNutritionLabelScanner();
+      }
+
+
+      $("#foodEditorDialog")
+        .close();
+
+
+      renderSupportFoods();
+
+      render();
+    };
+}
+
+
+function dominantBase(c,p,f){
+  if(p>=c&&p>=f)return 'Protein base';
+  if(f>=c&&f>=p)return 'Fat base';
+  return 'Carbohydrates base';
+}
